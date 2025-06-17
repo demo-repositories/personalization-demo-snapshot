@@ -5,6 +5,7 @@ import { preview } from "sanity-plugin-icon-picker";
 
 import { iconField } from "../common";
 import { customRichText } from "../definitions/rich-text";
+import { GROUPS } from "../../utils/constant";
 
 const featureCardIcon = defineField({
   name: "featureCardIcon",
@@ -36,6 +37,7 @@ export const featureCardsIcon = defineType({
   name: "featureCardsIcon",
   type: "object",
   icon: LayoutGrid,
+  groups: GROUPS,
   description:
     "A grid of feature cards, each with an icon, title and description",
   fields: [

@@ -2,11 +2,14 @@ import { PhoneIcon } from "lucide-react";
 import { defineField, defineType } from "sanity";
 
 import { buttonsField, richTextField } from "../common";
+import { createCTAPersonalizationFields } from "../definitions/personalization";
+import { GROUPS } from "../../utils/constant";
 
 export const cta = defineType({
   name: "cta",
   type: "object",
   icon: PhoneIcon,
+  groups: GROUPS,
   fields: [
     defineField({
       name: "eyebrow",
@@ -23,6 +26,7 @@ export const cta = defineType({
     }),
     richTextField,
     buttonsField,
+    createCTAPersonalizationFields(),
   ],
   preview: {
     select: {

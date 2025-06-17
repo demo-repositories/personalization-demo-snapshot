@@ -10,6 +10,8 @@ import { FooterServer, FooterSkeleton } from "@/components/footer";
 import { CombinedJsonLd } from "@/components/json-ld";
 import { NavbarServer, NavbarSkeleton } from "@/components/navbar";
 import { PreviewBar } from "@/components/preview-bar";
+import { SegmentPreviewProvider } from "@/components/segment-preview-provider";
+import { SegmentPreviewDrawer } from "../components/segment-preview-drawer";
 import { SanityLive } from "@/lib/sanity/live";
 
 import { Providers } from "../components/providers";
@@ -41,22 +43,25 @@ export default async function RootLayout({
         className={`${fontGeist.variable} ${fontMono.variable} font-geist antialiased`}
       >
         <Providers>
-          <Suspense fallback={<NavbarSkeleton />}>
-            <NavbarServer />
-          </Suspense>
-          {children}
+          <SegmentPreviewProvider>
+            <SegmentPreviewDrawer />
+            <Suspense fallback={<NavbarSkeleton />}>
+              <NavbarServer />
+            </Suspense>
+            {children}
 
-          <Suspense fallback={<FooterSkeleton />}>
-            <FooterServer />
-          </Suspense>
-          <SanityLive />
-          <CombinedJsonLd includeWebsite includeOrganization />
-          {(await draftMode()).isEnabled && (
-            <>
-              <PreviewBar />
-              <VisualEditing />
-            </>
-          )}
+            <Suspense fallback={<FooterSkeleton />}>
+              <FooterServer />
+            </Suspense>
+            <SanityLive />
+            <CombinedJsonLd includeWebsite includeOrganization />
+            {(await draftMode()).isEnabled && (
+              <>
+                <PreviewBar />
+                <VisualEditing />
+              </>
+            )}
+          </SegmentPreviewProvider>
         </Providers>
       </body>
     </html>

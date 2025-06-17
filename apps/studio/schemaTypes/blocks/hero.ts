@@ -2,12 +2,15 @@ import { Star } from "lucide-react";
 import { defineField, defineType } from "sanity";
 
 import { buttonsField, richTextField } from "../common";
+import { createHeroPersonalizationFields } from "../definitions/personalization";
+import { GROUPS } from "../../utils/constant";
 
 export const hero = defineType({
   name: "hero",
   title: "Hero",
   icon: Star,
   type: "object",
+  groups: GROUPS,
   fields: [
     defineField({
       name: "badge",
@@ -35,6 +38,7 @@ export const hero = defineType({
       },
     }),
     buttonsField,
+    createHeroPersonalizationFields(),
   ],
   preview: {
     select: {

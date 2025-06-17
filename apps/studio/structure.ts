@@ -10,6 +10,7 @@ import {
   PanelBottomIcon,
   PanelTopDashedIcon,
   Settings2,
+  Target,
   User,
 } from "lucide-react";
 import type {
@@ -122,6 +123,7 @@ export const structure = (
         icon: MessageCircleQuestion,
       }),
       createList({ S, type: "author", title: "Authors", icon: User }),
+      createList({ S, type: "segment", title: "Audience Segments", icon: Target }),
       S.divider(),
       S.listItem()
         .title("Site Configuration")

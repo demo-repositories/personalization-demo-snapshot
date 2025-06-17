@@ -80,6 +80,20 @@ const ctaBlock = /* groq */ `
     ...,
     ${richTextFragment},
     ${buttonsFragment},
+    personalization{
+      enabled,
+      variants[]{
+        segment->{
+          _id,
+          name,
+          status,
+          priority,
+          conditions
+        },
+        holdoutPercentage,
+        content
+      }
+    }
   }
 `;
 const imageLinkCardsBlock = /* groq */ `
@@ -105,7 +119,21 @@ const heroBlock = /* groq */ `
     ...,
     ${imageFragment},
     ${buttonsFragment},
-    ${richTextFragment}
+    ${richTextFragment},
+    personalization{
+      enabled,
+      variants[]{
+        segment->{
+          _id,
+          name,
+          status,
+          priority,
+          conditions
+        },
+        holdoutPercentage,
+        content
+      }
+    }
   }
 `;
 
@@ -130,6 +158,20 @@ const faqAccordionBlock = /* groq */ `
         url.type == "external" => url.external,
         url.href
       )
+    },
+    personalization{
+      enabled,
+      variants[]{
+        segment->{
+          _id,
+          name,
+          status,
+          priority,
+          conditions
+        },
+        holdoutPercentage,
+        content
+      }
     }
   }
 `;
@@ -148,6 +190,27 @@ const subscribeNewsletterBlock = /* groq */ `
   }
 `;
 
+const featureCardsIconBlock = /* groq */ `
+  _type == "featureCardsIcon" => {
+    ...,
+    ${richTextFragment},
+    personalization{
+      enabled,
+      variants[]{
+        segment->{
+          _id,
+          name,
+          status,
+          priority,
+          conditions
+        },
+        holdoutPercentage,
+        content
+      }
+    }
+  }
+`;
+
 const pageBuilderFragment = /* groq */ `
   pageBuilder[]{
     ...,
@@ -156,7 +219,8 @@ const pageBuilderFragment = /* groq */ `
     ${heroBlock},
     ${faqAccordionBlock},
     ${subscribeNewsletterBlock},
-    ${imageLinkCardsBlock}
+    ${imageLinkCardsBlock},
+    ${featureCardsIconBlock}
   }
 `;
 
@@ -372,4 +436,22 @@ export const querySettingsData = defineQuery(`
     "socialLinks": socialLinks,
     "contactEmail": contactEmail,
   }
+`);
+
+export const queryPagePersonalizationSegments = defineQuery(`
+  *[_type in ["homePage", "page"] && (
+    _type == "homePage" && _id == "homePage" ||
+    _type == "page" && slug.current == $slug
+  )][0]{
+    "segments": array::unique(array::compact(
+      pageBuilder[defined(personalization.enabled) && personalization.enabled == true].personalization.variants[].segment->{
+        _id,
+        name,
+        title,
+        description,
+        status,
+        priority
+      }
+    ))
+  }.segments
 `);
