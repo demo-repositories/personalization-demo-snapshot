@@ -442,16 +442,21 @@ export const queryPagePersonalizationSegments = defineQuery(`
   *[_type in ["homePage", "page"] && (
     _type == "homePage" && _id == "homePage" ||
     _type == "page" && slug.current == $slug
-  )][0]{
-    "segments": array::unique(array::compact(
-      pageBuilder[defined(personalization.enabled) && personalization.enabled == true].personalization.variants[].segment->{
-        _id,
-        name,
-        title,
-        description,
-        status,
-        priority
-      }
-    ))
-  }.segments
+  )][0].pageBuilder[personalization.enabled == true]{
+    "segments": personalization.variants[].segment->{
+      _id,
+      name,
+      title,
+      description,
+      status,
+      priority
+    }
+  }.segments[] | {
+    _id,
+    name,
+    title,
+    description,
+    status,
+    priority
+  } | order(priority desc, name asc)
 `);

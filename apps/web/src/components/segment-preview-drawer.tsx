@@ -30,14 +30,51 @@ export function SegmentPreviewDrawer() {
       try {
         let fetchedSegments: Segment[] = [];
         
+        console.log('🔍 Fetching segments for path:', pathname);
+        
+        // Debug query to see what personalization data exists
+        const debugQuery = `
+          *[_type in ["homePage", "page"] && (
+            _type == "homePage" && _id == "homePage" ||
+            _type == "page" && slug.current == $slug
+          )][0]{
+            _type,
+            title,
+            "personalizedComponents": pageBuilder[defined(personalization)]{
+              _type,
+              "enabled": personalization.enabled,
+              "variantCount": count(personalization.variants),
+              "variants": personalization.variants[]{
+                "segmentId": segment._ref,
+                "segmentName": segment->name,
+                "holdout": holdoutPercentage
+              }
+            }
+          }
+        `;
+        
         if (pathname === '/') {
           fetchedSegments = await client.fetch(queryPagePersonalizationSegments, {});
+          const debugData = await client.fetch(debugQuery, {});
+          console.log('🔍 Debug data for homepage:', debugData);
         } else {
           const slug = pathname.startsWith('/') ? pathname.slice(1) : pathname;
+          console.log('🔍 Fetching with slug:', `/${slug}`);
           fetchedSegments = await client.fetch(queryPagePersonalizationSegments, { slug: `/${slug}` });
+          const debugData = await client.fetch(debugQuery, { slug: `/${slug}` });
+          console.log('🔍 Debug data for page:', debugData);
         }
         
-        const sortedSegments = (fetchedSegments || []).sort((a, b) => {
+        console.log('📊 Raw fetched segments:', fetchedSegments);
+        
+        // Filter out inactive segments and ensure we have valid data
+        const activeSegments = (fetchedSegments || []).filter(segment => 
+          segment && segment._id && segment.status === 'active'
+        );
+        
+        console.log('✅ Active segments:', activeSegments);
+        
+        const sortedSegments = activeSegments.sort((a, b) => {
           if (a.priority !== b.priority) {
             return b.priority - a.priority;
           }
@@ -46,6 +83,7 @@ export function SegmentPreviewDrawer() {
         
         setSegments(sortedSegments);
       } catch (error) {
+        console.error('❌ Error fetching segments:', error);
         setSegments([]);
       } finally {
         setLoading(false);
@@ -116,22 +154,15 @@ export function SegmentPreviewDrawer() {
                     <Button
                       key={segment._id}
                       variant={previewSegmentId === segment._id ? "default" : "outline"}
-                      className="w-full justify-start h-auto p-3"
+                      className="w-full justify-start p-3"
                       onClick={() => {
                         setPreviewSegmentId(segment._id);
                         setIsOpen(false);
                       }}
                     >
-                      <div className="flex flex-col items-start w-full min-w-0">
-                        <span className="font-medium text-left truncate w-full">
-                          {segment.title || segment.name}
-                        </span>
-                        {segment.description && (
-                          <span className="text-xs text-muted-foreground text-left mt-1 line-clamp-2 break-words">
-                            {segment.description}
-                          </span>
-                        )}
-                      </div>
+                      <span className="font-medium text-left truncate w-full">
+                        {segment.title || segment.name}
+                      </span>
                     </Button>
                   ))}
                 </div>
