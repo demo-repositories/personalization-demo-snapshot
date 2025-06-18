@@ -14,7 +14,7 @@ import { Logo } from "./components/logo";
 import { locations } from "./location";
 import { presentationUrl } from "./plugins/presentation-url";
 import { schemaTypes } from "./schemaTypes";
-import { structure } from "./structure";
+import { structure, defaultDocumentNodeResolver } from "./structure";
 import { createPageTemplate } from "./utils/helper";
 
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID ?? "";
@@ -46,6 +46,7 @@ export default defineConfig({
     assist(),
     structureTool({
       structure,
+      defaultDocumentNode: defaultDocumentNodeResolver,
     }),
     visionTool(),
     iconPicker(),
@@ -76,4 +77,5 @@ export default defineConfig({
     types: schemaTypes,
     templates: createPageTemplate(),
   },
+
 });
