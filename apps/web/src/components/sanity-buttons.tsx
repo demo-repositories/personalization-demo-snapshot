@@ -20,11 +20,6 @@ function SanityButton({
   className,
   ...props
 }: SanityButtonProps & ComponentProps<typeof Button>) {
-  if (!href) {
-    console.log("Link Broken", { text, href, variant, openInNewTab });
-    return <Button>Link Broken</Button>;
-  }
-
   return (
     <Button
       variant={variant}
