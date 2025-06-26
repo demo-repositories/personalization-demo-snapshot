@@ -11,10 +11,10 @@ import { CombinedJsonLd } from "@/components/json-ld";
 import { NavbarServer, NavbarSkeleton } from "@/components/navbar";
 import { PreviewBar } from "@/components/preview-bar";
 import { SegmentPreviewProvider } from "@/components/segment-preview-provider";
-import { SegmentPreviewDrawer } from "../components/segment-preview-drawer";
 import { SanityLive } from "@/lib/sanity/live";
 
 import { Providers } from "../components/providers";
+import { SegmentPreviewDrawer } from "../components/segment-preview-drawer";
 
 const fontGeist = Geist({
   subsets: ["latin"],

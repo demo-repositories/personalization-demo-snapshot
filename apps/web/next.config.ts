@@ -20,6 +20,7 @@ const nextConfig: NextConfig = {
         pathname: `/images/${process.env.NEXT_PUBLIC_SANITY_PROJECT_ID}/**`,
       },
     ],
+    domains: ["cdn.sanity.io"],
   },
 };
 
