@@ -32,6 +32,10 @@ export default defineConfig({
     enabled: true,
   },
   plugins: [
+    structureTool({
+      structure,
+      defaultDocumentNode: defaultDocumentNodeResolver,
+    }),
     presentationTool({
       resolve: {
         locations,
@@ -42,12 +46,12 @@ export default defineConfig({
           enable: "/api/presentation-draft",
         },
       },
+      allowOrigins: [
+        "localhost:3000",
+        "https://sanetti-personalization-turbo-start-sanity.sanity.studio/",
+      ],
     }),
     assist(),
-    structureTool({
-      structure,
-      defaultDocumentNode: defaultDocumentNodeResolver,
-    }),
     visionTool(),
     iconPicker(),
     media(),

@@ -18,10 +18,9 @@ import type {
   StructureResolverContext,
 } from "sanity/structure";
 
-import { AnalyticsView } from "./views/analytics-view";
-
 import type { SchemaType, SingletonType } from "./schemaTypes";
 import { getTitleCase } from "./utils/helper";
+import { AnalyticsView } from "./views/analytics-view";
 
 type Base<T = SchemaType> = {
   id?: string;
@@ -103,15 +102,21 @@ const createIndexListWithOrderableItems = ({
 };
 
 // Default document node resolver for adding custom views
-export const defaultDocumentNodeResolver = (S: StructureBuilder, { schemaType }: { schemaType: string }) => {
+export const defaultDocumentNodeResolver = (
+  S: StructureBuilder,
+  { schemaType }: { schemaType: string },
+) => {
   // Add analytics view to page and homePage documents
-  if (['page', 'homePage'].includes(schemaType)) {
+  if (["page", "homePage"].includes(schemaType)) {
     return S.document().views([
       S.view.form(),
-      S.view.component(AnalyticsView).title('Analytics').icon(() => '📊')
+      S.view
+        .component(AnalyticsView)
+        .title("Analytics")
+        .icon(() => "📊"),
     ]);
   }
-  
+
   // Return undefined for other document types to use default views
   return undefined;
 };
@@ -139,7 +144,12 @@ export const structure = (
         icon: MessageCircleQuestion,
       }),
       createList({ S, type: "author", title: "Authors", icon: User }),
-      createList({ S, type: "segment", title: "Audience Segments", icon: Target }),
+      createList({
+        S,
+        type: "segment",
+        title: "Audience Segments",
+        icon: Target,
+      }),
       S.divider(),
       S.listItem()
         .title("Site Configuration")
