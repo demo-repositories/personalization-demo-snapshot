@@ -10,7 +10,6 @@ import {
 import { iconPicker } from "sanity-plugin-icon-picker";
 import { media, mediaAssetSource } from "sanity-plugin-media";
 
-import { Logo } from "./components/logo";
 import { locations } from "./location";
 import { presentationUrl } from "./plugins/presentation-url";
 import { schemaTypes } from "./schemaTypes";
@@ -22,11 +21,13 @@ const dataset = process.env.SANITY_STUDIO_DATASET;
 const title = process.env.SANITY_STUDIO_TITLE;
 const presentationOriginUrl = process.env.SANITY_STUDIO_PRESENTATION_URL;
 
+import { SlidersHorizontal } from "lucide-react";
+
 export default defineConfig({
   name: "default",
   title: title ?? "Turbo Studio",
   projectId: projectId,
-  icon: Logo,
+  icon: SlidersHorizontal,
   dataset: dataset ?? "production",
   mediaLibrary: {
     enabled: true,
