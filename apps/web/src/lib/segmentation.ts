@@ -137,37 +137,49 @@ export interface UserContext {
 /**
  * Evaluates a single segmentation rule against user context
  */
-export function evaluateRule(rule: SegmentationRule, context: UserContext): boolean {
-  const { attribute, operator, value, values, rangeStart, rangeEnd, daysValue, countValue } = rule;
+export function evaluateRule(
+  rule: SegmentationRule,
+  context: UserContext,
+): boolean {
+  const {
+    attribute,
+    operator,
+    value,
+    values,
+    rangeStart,
+    rangeEnd,
+    daysValue,
+    countValue,
+  } = rule;
   const contextValue = context[attribute as keyof UserContext];
 
   switch (operator) {
     case "eq":
       return contextValue === value;
-    
+
     case "neq":
       return contextValue !== value;
-    
+
     case "contains":
-      return typeof contextValue === "string" && typeof value === "string" 
+      return typeof contextValue === "string" && typeof value === "string"
         ? contextValue.toLowerCase().includes(value.toLowerCase())
         : false;
-    
+
     case "not_contains":
       return typeof contextValue === "string" && typeof value === "string"
         ? !contextValue.toLowerCase().includes(value.toLowerCase())
         : true;
-    
+
     case "starts_with":
       return typeof contextValue === "string" && typeof value === "string"
         ? contextValue.toLowerCase().startsWith(value.toLowerCase())
         : false;
-    
+
     case "ends_with":
       return typeof contextValue === "string" && typeof value === "string"
         ? contextValue.toLowerCase().endsWith(value.toLowerCase())
         : false;
-    
+
     case "regex":
       if (typeof contextValue === "string" && typeof value === "string") {
         try {
@@ -178,27 +190,27 @@ export function evaluateRule(rule: SegmentationRule, context: UserContext): bool
         }
       }
       return false;
-    
+
     case "gt":
       return typeof contextValue === "number" && typeof value === "string"
         ? contextValue > parseFloat(value)
         : false;
-    
+
     case "lt":
       return typeof contextValue === "number" && typeof value === "string"
         ? contextValue < parseFloat(value)
         : false;
-    
+
     case "gte":
       return typeof contextValue === "number" && typeof value === "string"
         ? contextValue >= parseFloat(value)
         : false;
-    
+
     case "lte":
       return typeof contextValue === "number" && typeof value === "string"
         ? contextValue <= parseFloat(value)
         : false;
-    
+
     case "between":
       if (typeof contextValue === "number" && rangeStart && rangeEnd) {
         const start = parseFloat(rangeStart);
@@ -209,7 +221,7 @@ export function evaluateRule(rule: SegmentationRule, context: UserContext): bool
         return contextValue >= rangeStart && contextValue <= rangeEnd;
       }
       return false;
-    
+
     case "not_between":
       if (typeof contextValue === "number" && rangeStart && rangeEnd) {
         const start = parseFloat(rangeStart);
@@ -220,19 +232,27 @@ export function evaluateRule(rule: SegmentationRule, context: UserContext): bool
         return contextValue < rangeStart || contextValue > rangeEnd;
       }
       return true;
-    
+
     case "empty":
-      return contextValue === undefined || contextValue === null || contextValue === "";
-    
+      return (
+        contextValue === undefined ||
+        contextValue === null ||
+        contextValue === ""
+      );
+
     case "not_empty":
-      return contextValue !== undefined && contextValue !== null && contextValue !== "";
-    
+      return (
+        contextValue !== undefined &&
+        contextValue !== null &&
+        contextValue !== ""
+      );
+
     case "in":
       return values ? values.includes(String(contextValue)) : false;
-    
+
     case "not_in":
       return values ? !values.includes(String(contextValue)) : true;
-    
+
     case "last_days":
       if (typeof contextValue === "string" && daysValue) {
         try {
@@ -246,7 +266,7 @@ export function evaluateRule(rule: SegmentationRule, context: UserContext): bool
         }
       }
       return false;
-    
+
     case "more_than_days":
       if (typeof contextValue === "string" && daysValue) {
         try {
@@ -260,22 +280,22 @@ export function evaluateRule(rule: SegmentationRule, context: UserContext): bool
         }
       }
       return false;
-    
+
     case "count_eq":
       return typeof contextValue === "number" && countValue !== undefined
         ? contextValue === countValue
         : false;
-    
+
     case "count_gt":
       return typeof contextValue === "number" && countValue !== undefined
         ? contextValue > countValue
         : false;
-    
+
     case "count_lt":
       return typeof contextValue === "number" && countValue !== undefined
         ? contextValue < countValue
         : false;
-    
+
     default:
       return false;
   }
@@ -284,26 +304,36 @@ export function evaluateRule(rule: SegmentationRule, context: UserContext): bool
 /**
  * Evaluates segmentation conditions (multiple rules with AND/OR logic)
  */
-export function evaluateConditions(conditions: SegmentationConditions, context: UserContext): boolean {
+export function evaluateConditions(
+  conditions: SegmentationConditions,
+  context: UserContext,
+): boolean {
   const { operator, rules } = conditions;
-  
+
   if (!rules || rules.length === 0) {
     return true;
   }
 
-  const results = rules.map(rule => evaluateRule(rule, context));
+  const results = rules.map((rule) => evaluateRule(rule, context));
 
-  return operator === "and" 
-    ? results.every(result => result)
-    : results.some(result => result);
+  return operator === "and"
+    ? results.every((result) => result)
+    : results.some((result) => result);
 }
 
 /**
  * Finds the best matching segment variant for a user context
  */
-export function findMatchingSegmentVariant(segmentVariants: SegmentVariant[], context: UserContext): SegmentVariant | null {
+export function findMatchingSegmentVariant(
+  segmentVariants: SegmentVariant[],
+  context: UserContext,
+): SegmentVariant | null {
   const matchingVariants = segmentVariants
-    .filter(variant => variant.segment.status === "active" && evaluateConditions(variant.segment.conditions, context))
+    .filter(
+      (variant) =>
+        variant.segment.status === "active" &&
+        evaluateConditions(variant.segment.conditions, context),
+    )
     .sort((a, b) => b.segment.priority - a.segment.priority);
 
   return matchingVariants[0] || null;
@@ -315,21 +345,26 @@ export function findMatchingSegmentVariant(segmentVariants: SegmentVariant[], co
 export function getPersonalizedContent(
   segmentationData: SegmentationData,
   context: UserContext,
-  previewSegment?: string
+  previewSegment?: string,
 ): any {
   if (!segmentationData.enabled) {
     return segmentationData.fallbackContent;
   }
 
   if (previewSegment) {
-    const variant = segmentationData.segmentVariants.find(v => v.segment.name === previewSegment);
+    const variant = segmentationData.segmentVariants.find(
+      (v) => v.segment.name === previewSegment,
+    );
     if (variant) {
       return variant.content;
     }
   }
 
-  const matchingVariant = findMatchingSegmentVariant(segmentationData.segmentVariants, context);
-  
+  const matchingVariant = findMatchingSegmentVariant(
+    segmentationData.segmentVariants,
+    context,
+  );
+
   if (matchingVariant) {
     return matchingVariant.content;
   }
@@ -348,7 +383,7 @@ export function createUserContextFromBrowser(): UserContext {
   const userAgent = navigator.userAgent;
   const language = navigator.language;
   const screen = window.screen;
-  
+
   // Device detection
   const isMobile = /Mobile|Android|iPhone|iPad/i.test(userAgent);
   const isTablet = /iPad|Tablet/i.test(userAgent);
@@ -411,7 +446,7 @@ export function createUserContextFromBrowser(): UserContext {
   // Referrer analysis
   const referrer = document.referrer || undefined;
   let referrerDomain: string | undefined = undefined;
-  
+
   if (referrer) {
     try {
       const referrerUrl = new URL(referrer);
@@ -420,7 +455,7 @@ export function createUserContextFromBrowser(): UserContext {
       // Invalid URL, keep undefined
     }
   }
-  
+
   const isDirectTraffic = !referrer || referrer === window.location.origin;
 
   return {
@@ -463,7 +498,7 @@ export function createUserContextFromBrowser(): UserContext {
     is_business_hours: isBusinessHours,
 
     // Additional context that could be populated by your app
-    visit_count: parseInt(localStorage.getItem('visit_count') || '1'),
-    page_views: parseInt(sessionStorage.getItem('page_views') || '1'),
+    visit_count: parseInt(localStorage.getItem("visit_count") || "1"),
+    page_views: parseInt(sessionStorage.getItem("page_views") || "1"),
   };
-} 
+}
