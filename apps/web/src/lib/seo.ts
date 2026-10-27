@@ -1,11 +1,11 @@
-import type { Metadata } from "next";
+import type { Metadata } from 'next';
 
-import type { Maybe } from "@/types";
-import { capitalize } from "@/utils";
+import type { Maybe } from '@/types';
+import { capitalize } from '@/utils';
 
-import { getBaseUrl } from "../config";
-import { client } from "./sanity/client";
-import { queryGlobalSeoSettings } from "./sanity/query";
+import { getBaseUrl } from '../config';
+import { client } from './sanity/client';
+import { queryGlobalSeoSettings } from './sanity/query';
 
 interface MetaDataInput {
   _type?: Maybe<string>;
@@ -19,33 +19,32 @@ interface MetaDataInput {
 
 function getOgImage({ type, id }: { type?: string; id?: string } = {}): string {
   const params = new URLSearchParams();
-  if (id) params.set("id", id);
-  if (type) params.set("type", type);
+  if (id) params.set('id', id);
+  if (type) params.set('type', type);
   const baseUrl = getBaseUrl();
   return `${baseUrl}/api/og?${params.toString()}`;
 }
 
 export async function getMetaData(data: MetaDataInput = {}): Promise<Metadata> {
-  const { _type, seoDescription, seoTitle, slug, title, description, _id } =
-    data ?? {};
+  const { _type, seoDescription, seoTitle, slug, title, description, _id } = data ?? {};
 
   // Fetch global SEO settings
   const globalSettings = await client.fetch(queryGlobalSeoSettings);
   const { siteTitle, siteDescription, socialLinks } = globalSettings || {};
 
   const baseUrl = getBaseUrl();
-  const pageSlug = typeof slug === "string" ? slug : (slug?.current ?? "");
+  const pageSlug = typeof slug === 'string' ? slug : (slug?.current ?? '');
   const pageUrl = `${baseUrl}${pageSlug}`;
 
   const placeholderTitle = capitalize(pageSlug);
 
   const twitterHandle = socialLinks?.twitter
-    ? `@${socialLinks.twitter.split("/").pop()}`
-    : "@studioroboto";
+    ? `@${socialLinks.twitter.split('/').pop()}`
+    : '@studioroboto';
 
   const meta = {
     title: `${seoTitle ?? title ?? placeholderTitle}`,
-    description: seoDescription ?? description ?? siteDescription ?? "",
+    description: seoDescription ?? description ?? siteDescription ?? '',
   };
 
   const ogImage = getOgImage({
@@ -54,7 +53,7 @@ export async function getMetaData(data: MetaDataInput = {}): Promise<Metadata> {
   });
 
   // Use siteTitle from settings for branding, with a fallback only if settings are not available
-  const brandName = siteTitle || "Roboto Studio Demo";
+  const brandName = siteTitle || 'Roboto Studio Demo';
 
   return {
     title: `${meta.title} | ${brandName}`,
@@ -65,17 +64,9 @@ export async function getMetaData(data: MetaDataInput = {}): Promise<Metadata> {
     icons: {
       icon: `${baseUrl}/favicon.ico`,
     },
-    keywords: [
-      "roboto",
-      "studio",
-      "demo",
-      "sanity",
-      "next",
-      "react",
-      "template",
-    ],
+    keywords: ['roboto', 'studio', 'demo', 'sanity', 'next', 'react', 'template'],
     twitter: {
-      card: "summary_large_image",
+      card: 'summary_large_image',
       images: [ogImage],
       creator: twitterHandle,
       title: meta.title,
@@ -85,8 +76,8 @@ export async function getMetaData(data: MetaDataInput = {}): Promise<Metadata> {
       canonical: pageUrl,
     },
     openGraph: {
-      type: "website",
-      countryName: "UK",
+      type: 'website',
+      countryName: 'UK',
       description: meta.description,
       title: meta.title,
       images: [

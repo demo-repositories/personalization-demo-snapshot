@@ -1,34 +1,31 @@
-import { assist } from "@sanity/assist";
-import { visionTool } from "@sanity/vision";
-import { defineConfig } from "sanity";
-import { presentationTool } from "sanity/presentation";
-import { structureTool } from "sanity/structure";
-import {
-  unsplashAssetSource,
-  unsplashImageAsset,
-} from "sanity-plugin-asset-source-unsplash";
-import { iconPicker } from "sanity-plugin-icon-picker";
-import { media, mediaAssetSource } from "sanity-plugin-media";
+import { assist } from '@sanity/assist';
+import { visionTool } from '@sanity/vision';
+import { defineConfig } from 'sanity';
+import { presentationTool } from 'sanity/presentation';
+import { structureTool } from 'sanity/structure';
+import { unsplashAssetSource, unsplashImageAsset } from 'sanity-plugin-asset-source-unsplash';
+import { iconPicker } from 'sanity-plugin-icon-picker';
+import { media, mediaAssetSource } from 'sanity-plugin-media';
 
-import { locations } from "./location";
-import { presentationUrl } from "./plugins/presentation-url";
-import { schemaTypes } from "./schemaTypes";
-import { defaultDocumentNodeResolver, structure } from "./structure";
-import { createPageTemplate } from "./utils/helper";
+import { locations } from './location';
+import { presentationUrl } from './plugins/presentation-url';
+import { schemaTypes } from './schemaTypes';
+import { defaultDocumentNodeResolver, structure } from './structure';
+import { createPageTemplate } from './utils/helper';
 
-const projectId = process.env.SANITY_STUDIO_PROJECT_ID ?? "";
+const projectId = process.env.SANITY_STUDIO_PROJECT_ID ?? '';
 const dataset = process.env.SANITY_STUDIO_DATASET;
 const title = process.env.SANITY_STUDIO_TITLE;
 const presentationOriginUrl = process.env.SANITY_STUDIO_PRESENTATION_URL;
 
-import { SlidersHorizontal } from "lucide-react";
+import { SlidersHorizontal } from 'lucide-react';
 
 export default defineConfig({
-  name: "default",
-  title: title ?? "Turbo Studio",
+  name: 'default',
+  title: title ?? 'Turbo Studio',
   projectId: projectId,
   icon: SlidersHorizontal,
-  dataset: dataset ?? "production",
+  dataset: dataset ?? 'production',
 
   mediaLibrary: {
     enabled: true,
@@ -44,14 +41,14 @@ export default defineConfig({
         locations,
       },
       previewUrl: {
-        origin: presentationOriginUrl ?? "http://localhost:3000",
+        origin: presentationOriginUrl ?? 'http://localhost:3000',
         previewMode: {
-          enable: "/api/presentation-draft",
+          enable: '/api/presentation-draft',
         },
       },
       allowOrigins: [
-        "localhost:3000",
-        "https://sanetti-personalization-turbo-start-sanity.sanity.studio/",
+        'localhost:3000',
+        'https://sanetti-personalization-turbo-start-sanity.sanity.studio/',
       ],
     }),
     assist(),
@@ -64,20 +61,18 @@ export default defineConfig({
 
   form: {
     image: {
-      assetSources: (sources) =>
-        sources.filter((source) => source.name !== "sanity-default"),
+      assetSources: (sources) => sources.filter((source) => source.name !== 'sanity-default'),
     },
     // Disable the default for file assets
     file: {
-      assetSources: (sources) =>
-        sources.filter((source) => source.name !== "sanity-default"),
+      assetSources: (sources) => sources.filter((source) => source.name !== 'sanity-default'),
     },
   },
 
   document: {
     newDocumentOptions: (prev, { creationContext }) => {
       const { type } = creationContext;
-      if (type === "global") return [];
+      if (type === 'global') return [];
       return prev;
     },
   },
@@ -88,10 +83,16 @@ export default defineConfig({
   },
 
   auth: {
-    providers: prev => process.env.SANITY_STUDIO_SSO_LOGIN_URL ? [...prev, {
-      name: 'saml',
-      title: 'Sanity SSO',
-      url: process.env.SANITY_STUDIO_SSO_LOGIN_URL
-    }] : prev
-  }
+    providers: (prev) =>
+      process.env.SANITY_STUDIO_SSO_LOGIN_URL
+        ? [
+            ...prev,
+            {
+              name: 'saml',
+              title: 'Sanity SSO',
+              url: process.env.SANITY_STUDIO_SSO_LOGIN_URL,
+            },
+          ]
+        : prev,
+  },
 });

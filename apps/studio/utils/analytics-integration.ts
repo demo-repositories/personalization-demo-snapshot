@@ -37,7 +37,7 @@ export class SegmentIntegration {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Basic ${btoa(this.config.writeKey + ':')}`,
+          Authorization: `Basic ${btoa(this.config.writeKey + ':')}`,
         },
         body: JSON.stringify({
           userId: event.userId,
@@ -64,11 +64,14 @@ export class SegmentIntegration {
   async getExperimentMetrics(segmentId: string, timeRange: string): Promise<any> {
     try {
       // This would use Segment's Data Warehouse or Personas API
-      const response = await fetch(`${this.config.apiUrl}/v1/experiments/${segmentId}/metrics?timeRange=${timeRange}`, {
-        headers: {
-          'Authorization': `Basic ${btoa(this.config.writeKey + ':')}`,
+      const response = await fetch(
+        `${this.config.apiUrl}/v1/experiments/${segmentId}/metrics?timeRange=${timeRange}`,
+        {
+          headers: {
+            Authorization: `Basic ${btoa(this.config.writeKey + ':')}`,
+          },
         },
-      });
+      );
 
       return await response.json();
     } catch (error) {
@@ -91,24 +94,29 @@ export class GoogleAnalyticsIntegration {
   // Send custom events to GA4
   async trackPersonalizationEvent(event: ExperimentEvent): Promise<void> {
     try {
-      const response = await fetch(`https://www.google-analytics.com/mp/collect?measurement_id=${this.config.measurementId}&api_secret=${this.config.apiSecret}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `https://www.google-analytics.com/mp/collect?measurement_id=${this.config.measurementId}&api_secret=${this.config.apiSecret}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            client_id: event.userId,
+            events: [
+              {
+                name: 'personalization_event',
+                parameters: {
+                  segment_id: event.segmentId,
+                  component_type: event.componentType,
+                  event_type: event.eventType,
+                  custom_parameter_1: event.metadata?.value || '',
+                },
+              },
+            ],
+          }),
         },
-        body: JSON.stringify({
-          client_id: event.userId,
-          events: [{
-            name: 'personalization_event',
-            parameters: {
-              segment_id: event.segmentId,
-              component_type: event.componentType,
-              event_type: event.eventType,
-              custom_parameter_1: event.metadata?.value || '',
-            },
-          }],
-        }),
-      });
+      );
 
       if (!response.ok) {
         throw new Error(`GA4 API error: ${response.statusText}`);
@@ -122,35 +130,44 @@ export class GoogleAnalyticsIntegration {
   async getExperimentMetrics(segmentId: string, timeRange: string): Promise<any> {
     try {
       // This would use GA4 Reporting API
-      const response = await fetch('https://analyticsreporting.googleapis.com/v4/reports:batchGet', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${await this.getAccessToken()}`,
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        'https://analyticsreporting.googleapis.com/v4/reports:batchGet',
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${await this.getAccessToken()}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            reportRequests: [
+              {
+                viewId: this.config.measurementId,
+                dateRanges: [{ startDate: timeRange, endDate: 'today' }],
+                metrics: [
+                  { expression: 'ga:sessions' },
+                  { expression: 'ga:pageviews' },
+                  { expression: 'ga:goalCompletionsAll' },
+                ],
+                dimensions: [
+                  { name: 'ga:customDimension1' }, // segment_id
+                  { name: 'ga:customDimension2' }, // component_type
+                ],
+                dimensionFilterClauses: [
+                  {
+                    filters: [
+                      {
+                        dimensionName: 'ga:customDimension1',
+                        operator: 'EXACT',
+                        expressions: [segmentId],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          }),
         },
-        body: JSON.stringify({
-          reportRequests: [{
-            viewId: this.config.measurementId,
-            dateRanges: [{ startDate: timeRange, endDate: 'today' }],
-            metrics: [
-              { expression: 'ga:sessions' },
-              { expression: 'ga:pageviews' },
-              { expression: 'ga:goalCompletionsAll' },
-            ],
-            dimensions: [
-              { name: 'ga:customDimension1' }, // segment_id
-              { name: 'ga:customDimension2' }, // component_type
-            ],
-            dimensionFilterClauses: [{
-              filters: [{
-                dimensionName: 'ga:customDimension1',
-                operator: 'EXACT',
-                expressions: [segmentId],
-              }],
-            }],
-          }],
-        }),
-      });
+      );
 
       return await response.json();
     } catch (error) {
@@ -173,10 +190,7 @@ export class PersonalizationAnalytics {
   private segment?: SegmentIntegration;
   private ga4?: GoogleAnalyticsIntegration;
 
-  constructor(
-    segmentConfig?: SegmentConfig,
-    gaConfig?: GoogleAnalyticsConfig
-  ) {
+  constructor(segmentConfig?: SegmentConfig, gaConfig?: GoogleAnalyticsConfig) {
     if (segmentConfig) {
       this.segment = new SegmentIntegration(segmentConfig);
     }
@@ -248,4 +262,4 @@ await analytics.trackEvent({
 
 // Get metrics
 const metrics = await analytics.getAggregatedMetrics('mobile-users', '30daysAgo');
-*/ 
+*/

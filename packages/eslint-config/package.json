@@ -1,4 +1,13 @@
 {
+  "name": "@workspace/eslint-config",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./base": "./base.js",
+    "./next-js": "./next.js",
+    "./react-internal": "./react-internal.js"
+  },
   "devDependencies": {
     "@next/eslint-plugin-next": "^15.2.5",
     "@typescript-eslint/eslint-plugin": "^8.29.0",
@@ -14,14 +23,5 @@
     "eslint-plugin-turbo": "^2.4.4",
     "globals": "^16.0.0",
     "typescript-eslint": "^8.29.0"
-  },
-  "exports": {
-    "./base": "./base.js",
-    "./next-js": "./next.js",
-    "./react-internal": "./react-internal.js"
-  },
-  "name": "@workspace/eslint-config",
-  "private": true,
-  "type": "module",
-  "version": "0.0.0"
+  }
 }

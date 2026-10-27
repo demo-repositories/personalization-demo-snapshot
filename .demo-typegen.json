@@ -14,9 +14,7 @@
       "config": "apps/web/sanity.cli.ts",
       "directory": "apps/web",
       "output": "apps/web/src/lib/sanity/sanity.types.ts",
-      "paths": [
-        "src/**/*.{ts,tsx,js,jsx}"
-      ],
+      "paths": ["src/**/*.{ts,tsx,js,jsx}"],
       "schema": "apps/studio/schema.json"
     }
   ]

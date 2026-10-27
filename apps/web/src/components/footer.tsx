@@ -1,23 +1,17 @@
-import Link from "next/link";
+import Link from 'next/link';
 
-import { sanityFetch } from "@/lib/sanity/live";
-import { queryFooterData, queryGlobalSeoSettings } from "@/lib/sanity/query";
+import { sanityFetch } from '@/lib/sanity/live';
+import { queryFooterData, queryGlobalSeoSettings } from '@/lib/sanity/query';
 import type {
   QueryFooterDataResult,
   QueryGlobalSeoSettingsResult,
-} from "@/lib/sanity/sanity.types";
+} from '@/lib/sanity/sanity.types';
 
-import { Logo } from "./logo";
-import {
-  FacebookIcon,
-  InstagramIcon,
-  LinkedinIcon,
-  XIcon,
-  YoutubeIcon,
-} from "./social-icons";
+import { Logo } from './logo';
+import { FacebookIcon, InstagramIcon, LinkedinIcon, XIcon, YoutubeIcon } from './social-icons';
 
 interface SocialLinksProps {
-  data: NonNullable<QueryGlobalSeoSettingsResult>["socialLinks"];
+  data: NonNullable<QueryGlobalSeoSettingsResult>['socialLinks'];
 }
 
 interface FooterProps {
@@ -48,15 +42,15 @@ function SocialLinks({ data }: SocialLinksProps) {
     {
       url: instagram,
       Icon: InstagramIcon,
-      label: "Follow us on Instagram",
+      label: 'Follow us on Instagram',
     },
-    { url: facebook, Icon: FacebookIcon, label: "Follow us on Facebook" },
-    { url: twitter, Icon: XIcon, label: "Follow us on Twitter" },
-    { url: linkedin, Icon: LinkedinIcon, label: "Follow us on LinkedIn" },
+    { url: facebook, Icon: FacebookIcon, label: 'Follow us on Facebook' },
+    { url: twitter, Icon: XIcon, label: 'Follow us on Twitter' },
+    { url: linkedin, Icon: LinkedinIcon, label: 'Follow us on LinkedIn' },
     {
       url: youtube,
       Icon: YoutubeIcon,
-      label: "Subscribe to our YouTube channel",
+      label: 'Subscribe to our YouTube channel',
     },
   ].filter((link) => link.url);
 
@@ -68,7 +62,7 @@ function SocialLinks({ data }: SocialLinksProps) {
           className="font-medium hover:text-primary"
         >
           <Link
-            href={url ?? "#"}
+            href={url ?? '#'}
             target="_blank"
             prefetch={false}
             rel="noopener noreferrer"
@@ -98,10 +92,7 @@ export function FooterSkeleton() {
               </div>
               <div className="flex items-center space-x-6">
                 {[1, 2, 3, 4, 5].map((i) => (
-                  <div
-                    key={i}
-                    className="h-6 w-6 bg-muted rounded animate-pulse"
-                  />
+                  <div key={i} className="h-6 w-6 bg-muted rounded animate-pulse" />
                 ))}
               </div>
             </div>
@@ -111,10 +102,7 @@ export function FooterSkeleton() {
                   <div className="mb-6 h-6 w-24 bg-muted rounded animate-pulse" />
                   <div className="space-y-4">
                     {[1, 2, 3, 4].map((item) => (
-                      <div
-                        key={item}
-                        className="h-4 w-full bg-muted rounded animate-pulse"
-                      />
+                      <div key={item} className="h-4 w-full bg-muted rounded animate-pulse" />
                     ))}
                   </div>
                 </div>
@@ -170,13 +158,9 @@ function Footer({ data, settingsData }: FooterProps) {
                             className="font-medium hover:text-primary"
                           >
                             <Link
-                              href={link.href ?? "#"}
-                              target={link.openInNewTab ? "_blank" : undefined}
-                              rel={
-                                link.openInNewTab
-                                  ? "noopener noreferrer"
-                                  : undefined
-                              }
+                              href={link.href ?? '#'}
+                              target={link.openInNewTab ? '_blank' : undefined}
+                              rel={link.openInNewTab ? 'noopener noreferrer' : undefined}
                             >
                               {link.name}
                             </Link>

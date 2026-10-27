@@ -1,4 +1,17 @@
 {
+  "name": "web",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "next build",
+    "check-types": "node ../../.github/scripts/sanity-typegen.mjs ../.. --check && tsc --noEmit",
+    "dev": "node ../../.github/scripts/sanity-typegen.mjs ../.. --ensure && next dev --turbopack",
+    "format": "prettier --write .",
+    "start": "next start",
+    "typecheck": "node ../../.github/scripts/sanity-typegen.mjs ../.. --check && tsc --noEmit",
+    "typegen": "node ../../.github/scripts/sanity-typegen.mjs ../.. --ensure"
+  },
   "dependencies": {
     "@sanity/asset-utils": "^2.2.1",
     "@sanity/client": "^6.28.4",
@@ -26,18 +39,5 @@
     "sanity": "6.14.1",
     "tailwindcss": "^3.4.17",
     "typescript": "7.0.2"
-  },
-  "name": "web",
-  "private": true,
-  "scripts": {
-    "build": "next build",
-    "check-types": "node ../../.github/scripts/sanity-typegen.mjs ../.. --check && tsc --noEmit",
-    "dev": "node ../../.github/scripts/sanity-typegen.mjs ../.. --ensure && next dev --turbopack",
-    "format": "prettier --write .",
-    "start": "next start",
-    "typecheck": "node ../../.github/scripts/sanity-typegen.mjs ../.. --check && tsc --noEmit",
-    "typegen": "node ../../.github/scripts/sanity-typegen.mjs ../.. --ensure"
-  },
-  "type": "module",
-  "version": "0.0.1"
+  }
 }

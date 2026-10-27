@@ -2,29 +2,19 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@workspace/ui/*": [
-        "../../packages/ui/src/*"
-      ]
+      "@/*": ["./src/*"],
+      "@workspace/ui/*": ["../../packages/ui/src/*"]
     },
     "plugins": [
       {
         "name": "next"
       }
     ],
-    "types": [
-      "node"
-    ]
+    "types": ["node"]
   },
-  "exclude": [
-    "node_modules"
-  ],
+  "exclude": ["node_modules"],
   "extends": "@workspace/typescript-config/nextjs.json",
-  "files": [
-    "src/lib/sanity/sanity.types.ts"
-  ],
+  "files": ["src/lib/sanity/sanity.types.ts"],
   "include": [
     "next-env.d.ts",
     "next.config.ts",

@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 import {
   createUserContextFromBrowser,
   getPersonalizedContent,
   type SegmentationData,
   type UserContext,
-} from "@/lib/segmentation";
+} from '@/lib/segmentation';
 
 /**
  * React hook for handling content personalization
@@ -46,7 +46,7 @@ export function useSegmentation(segmentationData: SegmentationData | null) {
  */
 export function useSegmentationPreview(
   segmentationData: SegmentationData | null,
-  previewSegment?: string
+  previewSegment?: string,
 ) {
   const [userContext, setUserContext] = useState<UserContext>({});
   const [personalizedContent, setPersonalizedContent] = useState<any>(null);
@@ -57,11 +57,7 @@ export function useSegmentationPreview(
     setUserContext(context);
 
     if (segmentationData) {
-      const content = getPersonalizedContent(
-        segmentationData,
-        context,
-        previewSegment
-      );
+      const content = getPersonalizedContent(segmentationData, context, previewSegment);
       setPersonalizedContent(content);
     } else {
       setPersonalizedContent(null);
@@ -77,4 +73,4 @@ export function useSegmentationPreview(
     isPersonalized: Boolean(segmentationData?.enabled && personalizedContent),
     previewSegment,
   };
-} 
+}

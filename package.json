@@ -1,18 +1,6 @@
 {
-  "devDependencies": {
-    "@workspace/eslint-config": "workspace:*",
-    "@workspace/typescript-config": "workspace:*",
-    "oxfmt": "0.66.0",
-    "oxlint": "1.81.0",
-    "prettier": "^3.5.3",
-    "turbo": "^2.5.3",
-    "typescript": "7.0.2"
-  },
-  "engines": {
-    "node": ">=22.23.2"
-  },
   "name": "personalization-demo",
-  "packageManager": "pnpm@10.34.5",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "build": "pnpm --recursive --if-present build",
@@ -28,5 +16,17 @@
     "typegen": "node .github/scripts/sanity-typegen.mjs .",
     "typegen:check": "node .github/scripts/sanity-typegen.mjs . --check"
   },
-  "version": "1.0.0"
+  "devDependencies": {
+    "@workspace/eslint-config": "workspace:*",
+    "@workspace/typescript-config": "workspace:*",
+    "oxfmt": "0.66.0",
+    "oxlint": "1.81.0",
+    "prettier": "^3.5.3",
+    "turbo": "^2.5.3",
+    "typescript": "7.0.2"
+  },
+  "engines": {
+    "node": ">=22.23.2"
+  },
+  "packageManager": "pnpm@10.34.5"
 }

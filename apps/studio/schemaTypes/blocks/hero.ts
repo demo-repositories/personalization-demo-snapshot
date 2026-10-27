@@ -1,38 +1,36 @@
-import { Star } from "lucide-react";
-import { defineField, defineType } from "sanity";
+import { Star } from 'lucide-react';
+import { defineField, defineType } from 'sanity';
 
-import { buttonsField, richTextField } from "../common";
-import { createHeroPersonalizationFields } from "../definitions/personalization";
-import { GROUPS } from "../../utils/constant";
+import { buttonsField, richTextField } from '../common';
+import { createHeroPersonalizationFields } from '../definitions/personalization';
+import { GROUPS } from '../../utils/constant';
 
 export const hero = defineType({
-  name: "hero",
-  title: "Hero",
+  name: 'hero',
+  title: 'Hero',
   icon: Star,
-  type: "object",
+  type: 'object',
   groups: GROUPS,
   fields: [
     defineField({
-      name: "badge",
-      type: "string",
-      title: "Badge",
+      name: 'badge',
+      type: 'string',
+      title: 'Badge',
       description:
-        "Optional badge text displayed above the title, useful for highlighting new features or promotions",
+        'Optional badge text displayed above the title, useful for highlighting new features or promotions',
     }),
     defineField({
-      name: "title",
-      type: "string",
-      title: "Title",
-      description:
-        "The main heading text for the hero section that captures attention",
+      name: 'title',
+      type: 'string',
+      title: 'Title',
+      description: 'The main heading text for the hero section that captures attention',
     }),
     richTextField,
     defineField({
-      name: "image",
-      type: "image",
-      title: "Image",
-      description:
-        "The main hero image - should be high quality and visually impactful",
+      name: 'image',
+      type: 'image',
+      title: 'Image',
+      description: 'The main hero image - should be high quality and visually impactful',
       options: {
         hotspot: true,
       },
@@ -42,11 +40,11 @@ export const hero = defineType({
   ],
   preview: {
     select: {
-      title: "title",
+      title: 'title',
     },
     prepare: ({ title }) => ({
       title,
-      subtitle: "Hero Block",
+      subtitle: 'Hero Block',
     }),
   },
 });

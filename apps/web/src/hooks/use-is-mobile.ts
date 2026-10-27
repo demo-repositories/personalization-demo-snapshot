@@ -1,25 +1,16 @@
-import * as React from "react";
+import * as React from 'react';
 
 interface MediaQueryResult {
   matches: boolean;
-  addEventListener: (
-    type: string,
-    listener: (event: MediaQueryListEvent) => void,
-  ) => void;
-  removeEventListener: (
-    type: string,
-    listener: (event: MediaQueryListEvent) => void,
-  ) => void;
+  addEventListener: (type: string, listener: (event: MediaQueryListEvent) => void) => void;
+  removeEventListener: (type: string, listener: (event: MediaQueryListEvent) => void) => void;
   addListener?: (listener: (event: MediaQueryListEvent) => void) => void;
   removeListener?: (listener: (event: MediaQueryListEvent) => void) => void;
 }
 
 export function useIsMobile(mobileScreenSize = 768) {
   const [isMobile, setIsMobile] = React.useState(() => {
-    if (
-      typeof window === "undefined" ||
-      typeof window.matchMedia !== "function"
-    ) {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
       return undefined;
     }
     return window.matchMedia(`(max-width: ${mobileScreenSize}px)`).matches;
@@ -30,20 +21,15 @@ export function useIsMobile(mobileScreenSize = 768) {
   }, []);
 
   React.useEffect(() => {
-    if (
-      typeof window === "undefined" ||
-      typeof window.matchMedia !== "function"
-    ) {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
       return;
     }
 
-    const mediaListener: MediaQueryResult = window.matchMedia(
-      `(max-width: ${mobileScreenSize}px)`,
-    );
+    const mediaListener: MediaQueryResult = window.matchMedia(`(max-width: ${mobileScreenSize}px)`);
 
     const attachListener = () => {
       if (mediaListener.addEventListener) {
-        mediaListener.addEventListener("change", checkIsMobile);
+        mediaListener.addEventListener('change', checkIsMobile);
       } else if (mediaListener.addListener) {
         mediaListener.addListener(checkIsMobile);
       }
@@ -51,7 +37,7 @@ export function useIsMobile(mobileScreenSize = 768) {
 
     const removeListener = () => {
       if (mediaListener.removeEventListener) {
-        mediaListener.removeEventListener("change", checkIsMobile);
+        mediaListener.removeEventListener('change', checkIsMobile);
       } else if (mediaListener.removeListener) {
         mediaListener.removeListener(checkIsMobile);
       }

@@ -1,21 +1,19 @@
-import { sanityFetch } from "@/lib/sanity/live";
-import { queryGlobalSeoSettings, queryNavbarData } from "@/lib/sanity/query";
+import { sanityFetch } from '@/lib/sanity/live';
+import { queryGlobalSeoSettings, queryNavbarData } from '@/lib/sanity/query';
 import type {
   QueryGlobalSeoSettingsResult,
   QueryNavbarDataResult,
-} from "@/lib/sanity/sanity.types";
+} from '@/lib/sanity/sanity.types';
 
-import { Logo } from "./logo";
-import { NavbarClient, NavbarSkeletonResponsive } from "./navbar-client";
+import { Logo } from './logo';
+import { NavbarClient, NavbarSkeletonResponsive } from './navbar-client';
 
 export async function NavbarServer() {
   const [navbarData, settingsData] = await Promise.all([
     sanityFetch({ query: queryNavbarData }),
     sanityFetch({ query: queryGlobalSeoSettings }),
   ]);
-  return (
-    <Navbar navbarData={navbarData.data} settingsData={settingsData.data} />
-  );
+  return <Navbar navbarData={navbarData.data} settingsData={settingsData.data} />;
 }
 
 export function Navbar({

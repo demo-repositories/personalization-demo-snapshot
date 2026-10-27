@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useSegmentation } from "@/hooks/use-segmentation";
-import type { SegmentationData } from "@/lib/segmentation";
+import { useSegmentation } from '@/hooks/use-segmentation';
+import type { SegmentationData } from '@/lib/segmentation';
 
 interface PersonalizedBlogCardProps {
   title: string;
@@ -20,7 +20,9 @@ export function PersonalizedBlogCard({
   personalization,
   className,
 }: PersonalizedBlogCardProps) {
-  const { personalizedContent, isPersonalized, isLoading } = useSegmentation(personalization || null);
+  const { personalizedContent, isPersonalized, isLoading } = useSegmentation(
+    personalization || null,
+  );
 
   if (isLoading) {
     return (
@@ -40,7 +42,7 @@ export function PersonalizedBlogCard({
   const displayTitle = personalizedContent?.title || title;
   const displayDescription = personalizedContent?.description || description;
   const displayImage = personalizedContent?.image || imageUrl;
-  const displayCtaText = personalizedContent?.ctaText || "Read More";
+  const displayCtaText = personalizedContent?.ctaText || 'Read More';
 
   return (
     <div className={`bg-white rounded-lg shadow-md overflow-hidden ${className}`}>
@@ -91,4 +93,4 @@ export function PersonalizedBlogList({ posts }: { posts: any[] }) {
       ))}
     </div>
   );
-} 
+}

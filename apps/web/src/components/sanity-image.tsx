@@ -1,31 +1,31 @@
-import { getImageDimensions } from "@sanity/asset-utils";
-import { cn } from "@workspace/ui/lib/utils";
-import Image, { type ImageProps as NextImageProps } from "next/image";
+import { getImageDimensions } from '@sanity/asset-utils';
+import { cn } from '@workspace/ui/lib/utils';
+import Image, { type ImageProps as NextImageProps } from 'next/image';
 
-import { urlFor } from "@/lib/sanity/client";
-import type { SanityImageProps } from "@/types";
+import { urlFor } from '@/lib/sanity/client';
+import type { SanityImageProps } from '@/types';
 
 type ImageProps = {
   asset: SanityImageProps;
   alt?: string;
-} & Omit<NextImageProps, "alt" | "src">;
+} & Omit<NextImageProps, 'alt' | 'src'>;
 
 function getImageConfig(asset: unknown) {
   const config: {
     blurDataURL?: string;
-    placeholder?: "blur";
+    placeholder?: 'blur';
     alt?: string;
   } = {};
 
-  if (asset && typeof asset === "object") {
+  if (asset && typeof asset === 'object') {
     // Add blur data if available
-    if ("blurData" in asset && asset.blurData) {
+    if ('blurData' in asset && asset.blurData) {
       config.blurDataURL = asset.blurData as string;
-      config.placeholder = "blur";
+      config.placeholder = 'blur';
     }
 
     // Add alt text if available
-    if ("alt" in asset && typeof asset.alt === "string") {
+    if ('alt' in asset && typeof asset.alt === 'string') {
       config.alt = asset.alt;
     }
   }
@@ -47,12 +47,9 @@ export function SanityImage({
   const dimensions = getImageDimensions(asset.asset);
 
   const url = urlFor({ ...asset, _id: asset?.asset?._ref })
-    .size(
-      Number(width ?? dimensions.width),
-      Number(height ?? dimensions.height),
-    )
+    .size(Number(width ?? dimensions.width), Number(height ?? dimensions.height))
     .dpr(2)
-    .auto("format")
+    .auto('format')
     .quality(Number(quality))
     .url();
 
@@ -60,8 +57,8 @@ export function SanityImage({
 
   // Base image props
   const imageProps = {
-    alt: alt ?? imageConfig.alt ?? "Image",
-    "aria-label": alt ?? imageConfig.alt ?? "Image",
+    alt: alt ?? imageConfig.alt ?? 'Image',
+    'aria-label': alt ?? imageConfig.alt ?? 'Image',
     src: url,
     className: cn(className),
     // Optimize image sizes for performance and LCP
@@ -72,8 +69,7 @@ export function SanityImage({
     // - Tablet (<768px): Image takes up 50% of viewport width
     // - Small desktop (<1200px): Image takes up 33% of viewport width
     // - Large desktop (>1200px): Image takes up 25% of viewport width
-    sizes:
-      "(max-width: 640px) 75vw, (max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw",
+    sizes: '(max-width: 640px) 75vw, (max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw',
     ...imageConfig,
     ...props,
   };

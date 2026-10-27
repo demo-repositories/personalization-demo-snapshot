@@ -16,10 +16,7 @@
     "apps/studio/schema.json",
     "apps/web/src/lib/sanity/sanity.types.ts"
   ],
-  "plugins": [
-    "typescript",
-    "react"
-  ],
+  "plugins": ["typescript", "react"],
   "rules": {
     "no-console": "off",
     "no-unused-vars": "warn",

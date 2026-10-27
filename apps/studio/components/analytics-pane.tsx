@@ -46,9 +46,16 @@ interface PersonalizationConfig {
 }
 
 // Generate realistic marketing metrics for segments
-const generateMarketingMetrics = (segmentName: string, componentType: string, baselineConversion: number = 1.2) => {
+const generateMarketingMetrics = (
+  segmentName: string,
+  componentType: string,
+  baselineConversion: number = 1.2,
+) => {
   // Create realistic variations based on segment characteristics
-  const segmentMultipliers: Record<string, { conversion: number; ctr: number; revenue: number; confidence: number }> = {
+  const segmentMultipliers: Record<
+    string,
+    { conversion: number; ctr: number; revenue: number; confidence: number }
+  > = {
     'mobile users': { conversion: 1.45, ctr: 1.25, revenue: 0.85, confidence: 96.5 },
     'desktop users': { conversion: 0.95, ctr: 0.88, revenue: 1.35, confidence: 94.2 },
     'new visitors': { conversion: 0.78, ctr: 1.15, revenue: 0.92, confidence: 89.1 },
@@ -62,11 +69,11 @@ const generateMarketingMetrics = (segmentName: string, componentType: string, ba
   };
 
   const normalizedName = segmentName.toLowerCase();
-  const multiplier = segmentMultipliers[normalizedName] || { 
-    conversion: 0.9 + Math.random() * 0.6, 
-    ctr: 0.85 + Math.random() * 0.5, 
+  const multiplier = segmentMultipliers[normalizedName] || {
+    conversion: 0.9 + Math.random() * 0.6,
+    ctr: 0.85 + Math.random() * 0.5,
     revenue: 0.8 + Math.random() * 0.8,
-    confidence: 85 + Math.random() * 12
+    confidence: 85 + Math.random() * 12,
   };
 
   const baseImpressions = Math.floor(Math.random() * 8000) + 4000;
@@ -92,7 +99,11 @@ const generateMarketingMetrics = (segmentName: string, componentType: string, ba
 };
 
 // Generate analytics data based on document personalization
-const generateAnalyticsData = (documentId: string, documentType: string, personalizationConfig: PersonalizationConfig): {
+const generateAnalyticsData = (
+  documentId: string,
+  documentType: string,
+  personalizationConfig: PersonalizationConfig,
+): {
   experiments: ExperimentMetrics[];
   timeSeries: TimeSeriesData[];
   summary: {
@@ -123,9 +134,11 @@ const generateAnalyticsData = (documentId: string, documentType: string, persona
     confidence: 99.5,
     isWinner: false,
   };
-  
+
   // Calculate dependent metrics for control
-  controlMetrics.clicks = Math.floor(controlMetrics.impressions * (controlMetrics.clickThroughRate / 100));
+  controlMetrics.clicks = Math.floor(
+    controlMetrics.impressions * (controlMetrics.clickThroughRate / 100),
+  );
   controlMetrics.conversions = Math.floor(controlMetrics.impressions * (baselineConversion / 100));
   controlMetrics.revenue = controlMetrics.conversions * (100 + Math.random() * 50); // Lower revenue per conversion
 
@@ -138,8 +151,12 @@ const generateAnalyticsData = (documentId: string, documentType: string, persona
 
   // Generate realistic data for actual segments used in the document (always better than control)
   personalizationConfig.usedSegments.forEach((segmentUsage) => {
-    const metrics = generateMarketingMetrics(segmentUsage.segmentName, segmentUsage.componentType, baselineConversion);
-    
+    const metrics = generateMarketingMetrics(
+      segmentUsage.segmentName,
+      segmentUsage.componentType,
+      baselineConversion,
+    );
+
     experiments.push({
       segmentId: segmentUsage.segmentId,
       segmentName: segmentUsage.segmentName,
@@ -173,7 +190,7 @@ const generateAnalyticsData = (documentId: string, documentType: string, persona
       totalExperiments: experiments.length,
       totalImpressions: experiments.reduce((sum, exp) => sum + exp.impressions, 0),
       averageUplift: 24.3,
-      activeSegments: experiments.filter(exp => exp.segmentId !== 'default').length,
+      activeSegments: experiments.filter((exp) => exp.segmentId !== 'default').length,
     },
     pageInfo: {
       documentId,
@@ -200,10 +217,7 @@ const MetricCard: React.FC<{
           {value}
         </Text>
         {change && (
-          <Badge
-            tone={positive ? 'positive' : 'critical'}
-            mode="outline"
-          >
+          <Badge tone={positive ? 'positive' : 'critical'} mode="outline">
             {change}
           </Badge>
         )}
@@ -221,8 +235,8 @@ const ComparisonChart: React.FC<{
   metricType: string;
   description?: string;
 }> = ({ data, title, valueLabel, metricType, description }) => {
-  const maxValue = Math.max(...data.map(d => d.value));
-  
+  const maxValue = Math.max(...data.map((d) => d.value));
+
   const formatValue = (value: number) => {
     switch (metricType) {
       case 'currency':
@@ -237,14 +251,18 @@ const ComparisonChart: React.FC<{
         return value.toFixed(2);
     }
   };
-  
+
   return (
     <Card padding={4} border>
       <Stack gap={3}>
         <Stack gap={2}>
-          <Text size={2} weight="bold">{title}</Text>
+          <Text size={2} weight="bold">
+            {title}
+          </Text>
           {description && (
-            <Text size={1} muted>{description}</Text>
+            <Text size={1} muted>
+              {description}
+            </Text>
           )}
         </Stack>
         <Stack gap={2}>
@@ -253,8 +271,14 @@ const ComparisonChart: React.FC<{
               <Flex align="center" justify="space-between" style={{ marginBottom: '4px' }}>
                 <Text size={1}>{item.label}</Text>
                 <Flex align="center" gap={1}>
-                  <Text size={1} weight="medium">{formatValue(item.value)}</Text>
-                  {item.isWinner && <Badge tone="positive" mode="outline">Winner</Badge>}
+                  <Text size={1} weight="medium">
+                    {formatValue(item.value)}
+                  </Text>
+                  {item.isWinner && (
+                    <Badge tone="positive" mode="outline">
+                      Winner
+                    </Badge>
+                  )}
                 </Flex>
               </Flex>
               <Box
@@ -293,23 +317,36 @@ const TimeSeriesChart: React.FC<{
   const getMetricValue = (point: TimeSeriesData, isPersonalized: boolean = false) => {
     let baseValue: number;
     switch (metricType) {
-      case 'conversion': baseValue = point.conversionRate; break;
-      case 'revenue': baseValue = point.revenue; break;
-      case 'ctr': baseValue = point.clickThroughRate; break;
-      case 'views': baseValue = point.impressions; break;
-      case 'time': baseValue = point.averageTimeOnPage; break;
-      case 'bounce': baseValue = point.bounceRate; break;
-      default: baseValue = point.conversions;
+      case 'conversion':
+        baseValue = point.conversionRate;
+        break;
+      case 'revenue':
+        baseValue = point.revenue;
+        break;
+      case 'ctr':
+        baseValue = point.clickThroughRate;
+        break;
+      case 'views':
+        baseValue = point.impressions;
+        break;
+      case 'time':
+        baseValue = point.averageTimeOnPage;
+        break;
+      case 'bounce':
+        baseValue = point.bounceRate;
+        break;
+      default:
+        baseValue = point.conversions;
     }
-    
+
     if (isPersonalized) {
       // Calculate average uplift from personalized segments
-      const personalizedSegments = experiments.filter(exp => exp.segmentId !== 'default');
-      const controlSegment = experiments.find(exp => exp.segmentId === 'default');
-      
+      const personalizedSegments = experiments.filter((exp) => exp.segmentId !== 'default');
+      const controlSegment = experiments.find((exp) => exp.segmentId === 'default');
+
       if (personalizedSegments.length > 0 && controlSegment) {
         let avgUpliftMultiplier = 0;
-        personalizedSegments.forEach(segment => {
+        personalizedSegments.forEach((segment) => {
           const segmentValue = getSegmentMetricValue(segment, metricType);
           const controlValue = getSegmentMetricValue(controlSegment, metricType);
           if (controlValue > 0) {
@@ -320,58 +357,92 @@ const TimeSeriesChart: React.FC<{
         return baseValue * avgUpliftMultiplier;
       }
     }
-    
+
     return baseValue;
   };
 
   const getSegmentMetricValue = (segment: ExperimentMetrics, metric: string) => {
     switch (metric) {
-      case 'conversion': return segment.conversionRate;
-      case 'revenue': return segment.revenue;
-      case 'ctr': return segment.clickThroughRate;
-      case 'views': return segment.impressions;
-      case 'time': return segment.averageTimeOnPage;
-      case 'bounce': return segment.bounceRate;
-      default: return segment.conversions;
+      case 'conversion':
+        return segment.conversionRate;
+      case 'revenue':
+        return segment.revenue;
+      case 'ctr':
+        return segment.clickThroughRate;
+      case 'views':
+        return segment.impressions;
+      case 'time':
+        return segment.averageTimeOnPage;
+      case 'bounce':
+        return segment.bounceRate;
+      default:
+        return segment.conversions;
     }
   };
 
   const formatValue = (value: number) => {
     switch (metricType) {
-      case 'conversion': return `${value.toFixed(1)}%`;
-      case 'revenue': return `$${value.toLocaleString()}`;
-      case 'ctr': return `${value.toFixed(1)}%`;
-      case 'views': return value.toLocaleString();
-      case 'time': return `${Math.floor(value / 60)}:${(value % 60).toString().padStart(2, '0')}`;
-      case 'bounce': return `${value.toFixed(1)}%`;
-      default: return value.toString();
+      case 'conversion':
+        return `${value.toFixed(1)}%`;
+      case 'revenue':
+        return `$${value.toLocaleString()}`;
+      case 'ctr':
+        return `${value.toFixed(1)}%`;
+      case 'views':
+        return value.toLocaleString();
+      case 'time':
+        return `${Math.floor(value / 60)}:${(value % 60).toString().padStart(2, '0')}`;
+      case 'bounce':
+        return `${value.toFixed(1)}%`;
+      default:
+        return value.toString();
     }
   };
 
-  const defaultValues = data.map(point => getMetricValue(point, false));
-  const personalizedValues = data.map(point => getMetricValue(point, true));
+  const defaultValues = data.map((point) => getMetricValue(point, false));
+  const personalizedValues = data.map((point) => getMetricValue(point, true));
   const allValues = [...defaultValues, ...personalizedValues];
   const maxValue = Math.max(...allValues);
   const minValue = Math.min(...allValues);
   const range = maxValue - minValue || 1;
-  
+
   return (
     <Card padding={4} border>
       <Stack gap={3}>
-        <Text size={2} weight="bold">{title}</Text>
-        
+        <Text size={2} weight="bold">
+          {title}
+        </Text>
+
         {/* Legend */}
         <Flex gap={4}>
           <Flex align="center" gap={2}>
-            <Box style={{ width: '12px', height: '12px', backgroundColor: '#6b7280', borderRadius: '50%' }} />
-            <Text size={1} muted>Default Content</Text>
+            <Box
+              style={{
+                width: '12px',
+                height: '12px',
+                backgroundColor: '#6b7280',
+                borderRadius: '50%',
+              }}
+            />
+            <Text size={1} muted>
+              Default Content
+            </Text>
           </Flex>
           <Flex align="center" gap={2}>
-            <Box style={{ width: '12px', height: '12px', backgroundColor: '#10b981', borderRadius: '50%' }} />
-            <Text size={1} muted>Personalized Content</Text>
+            <Box
+              style={{
+                width: '12px',
+                height: '12px',
+                backgroundColor: '#10b981',
+                borderRadius: '50%',
+              }}
+            />
+            <Text size={1} muted>
+              Personalized Content
+            </Text>
           </Flex>
         </Flex>
-        
+
         <Box style={{ height: '200px', position: 'relative' }}>
           <svg width="100%" height="100%" style={{ overflow: 'visible' }}>
             {/* Default content line */}
@@ -380,15 +451,10 @@ const TimeSeriesChart: React.FC<{
               const value = getMetricValue(point, false);
               const y = 100 - ((value - minValue) / range) * 80;
               const nextPoint = data[index + 1];
-              
+
               return (
                 <g key={`default-${index}`}>
-                  <circle
-                    cx={`${x}%`}
-                    cy={`${y}%`}
-                    r="3"
-                    fill="#6b7280"
-                  />
+                  <circle cx={`${x}%`} cy={`${y}%`} r="3" fill="#6b7280" />
                   {nextPoint && (
                     <line
                       x1={`${x}%`}
@@ -403,22 +469,17 @@ const TimeSeriesChart: React.FC<{
                 </g>
               );
             })}
-            
+
             {/* Personalized content line */}
             {data.map((point, index) => {
               const x = (index / (data.length - 1)) * 100;
               const value = getMetricValue(point, true);
               const y = 100 - ((value - minValue) / range) * 80;
               const nextPoint = data[index + 1];
-              
+
               return (
                 <g key={`personalized-${index}`}>
-                  <circle
-                    cx={`${x}%`}
-                    cy={`${y}%`}
-                    r="3"
-                    fill="#10b981"
-                  />
+                  <circle cx={`${x}%`} cy={`${y}%`} r="3" fill="#10b981" />
                   {nextPoint && (
                     <line
                       x1={`${x}%`}
@@ -434,25 +495,32 @@ const TimeSeriesChart: React.FC<{
             })}
           </svg>
         </Box>
-        
+
         <Flex justify="space-between">
-          <Text size={1} muted>{data[0]?.date}</Text>
-          <Text size={1} muted>{data[data.length - 1]?.date}</Text>
+          <Text size={1} muted>
+            {data[0]?.date}
+          </Text>
+          <Text size={1} muted>
+            {data[data.length - 1]?.date}
+          </Text>
         </Flex>
-        
+
         {/* Performance summary */}
         <Card padding={3} tone="positive" border>
           <Flex align="center" justify="space-between">
-            <Text size={1} weight="medium">📈 Personalization Impact</Text>
+            <Text size={1} weight="medium">
+              📈 Personalization Impact
+            </Text>
             <Text size={1} weight="bold">
               {(() => {
                 const avgDefault = defaultValues.reduce((a, b) => a + b, 0) / defaultValues.length;
-                const avgPersonalized = personalizedValues.reduce((a, b) => a + b, 0) / personalizedValues.length;
+                const avgPersonalized =
+                  personalizedValues.reduce((a, b) => a + b, 0) / personalizedValues.length;
                 const improvement = ((avgPersonalized - avgDefault) / avgDefault) * 100;
                 const isPositive = metricType === 'bounce' ? improvement < 0 : improvement > 0;
-                return isPositive ? 
-                  `+${Math.abs(improvement).toFixed(1)}% improvement` : 
-                  `${improvement.toFixed(1)}% change`;
+                return isPositive
+                  ? `+${Math.abs(improvement).toFixed(1)}% improvement`
+                  : `${improvement.toFixed(1)}% change`;
               })()}
             </Text>
           </Flex>
@@ -486,16 +554,28 @@ const ExperimentRow: React.FC<{ experiment: ExperimentMetrics }> = ({ experiment
 
       <Grid gridTemplateColumns={3} gap={3}>
         <Stack gap={1}>
-          <Text size={1} muted>Conversion Rate</Text>
-          <Text weight="bold" size={2}>{experiment.conversionRate}%</Text>
+          <Text size={1} muted>
+            Conversion Rate
+          </Text>
+          <Text weight="bold" size={2}>
+            {experiment.conversionRate}%
+          </Text>
         </Stack>
         <Stack gap={1}>
-          <Text size={1} muted>Views</Text>
-          <Text weight="bold" size={2}>{experiment.impressions.toLocaleString()}</Text>
+          <Text size={1} muted>
+            Views
+          </Text>
+          <Text weight="bold" size={2}>
+            {experiment.impressions.toLocaleString()}
+          </Text>
         </Stack>
         <Stack gap={1}>
-          <Text size={1} muted>Revenue</Text>
-          <Text weight="bold" size={2}>${experiment.revenue.toLocaleString()}</Text>
+          <Text size={1} muted>
+            Revenue
+          </Text>
+          <Text weight="bold" size={2}>
+            ${experiment.revenue.toLocaleString()}
+          </Text>
         </Stack>
       </Grid>
     </Grid>
@@ -512,11 +592,16 @@ interface AnalyticsPaneProps {
   personalizationConfig?: PersonalizationConfig;
 }
 
-export const AnalyticsPane: React.FC<AnalyticsPaneProps> = ({ document, personalizationConfig }) => {
+export const AnalyticsPane: React.FC<AnalyticsPaneProps> = ({
+  document,
+  personalizationConfig,
+}) => {
   const [data, setData] = useState<ReturnType<typeof generateAnalyticsData> | null>(null);
   const [loading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d'>('30d');
-  const [selectedMetric, setSelectedMetric] = useState<'conversion' | 'revenue' | 'ctr' | 'views' | 'time' | 'bounce'>('conversion');
+  const [selectedMetric, setSelectedMetric] = useState<
+    'conversion' | 'revenue' | 'ctr' | 'views' | 'time' | 'bounce'
+  >('conversion');
 
   // Safety check for document prop
   if (!document || typeof document !== 'object') {
@@ -540,19 +625,22 @@ export const AnalyticsPane: React.FC<AnalyticsPaneProps> = ({ document, personal
     // Generate analytics data based on personalization configuration
     const fetchAnalytics = async () => {
       setLoading(true);
-      
+
       try {
         // Load analytics data
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        const config = personalizationConfig || { usedSegments: [], totalPersonalizedComponents: 0 };
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        const config = personalizationConfig || {
+          usedSegments: [],
+          totalPersonalizedComponents: 0,
+        };
         setData(generateAnalyticsData(safeDocument._id, safeDocument._type, config));
       } catch (error) {
         console.error('Error loading analytics:', error);
         const emptyConfig = { usedSegments: [], totalPersonalizedComponents: 0 };
         setData(generateAnalyticsData(safeDocument._id, safeDocument._type, emptyConfig));
       }
-      
+
       setLoading(false);
     };
 
@@ -648,8 +736,12 @@ export const AnalyticsPane: React.FC<AnalyticsPaneProps> = ({ document, personal
           <Card padding={4} tone="positive" border>
             <Stack gap={3}>
               <Flex align="center" gap={2}>
-                <Text size={2} weight="bold">🎯 Personalized for</Text>
-                <Badge tone="positive" mode="default">{personalizationConfig.usedSegments.length} audiences</Badge>
+                <Text size={2} weight="bold">
+                  🎯 Personalized for
+                </Text>
+                <Badge tone="positive" mode="default">
+                  {personalizationConfig.usedSegments.length} audiences
+                </Badge>
               </Flex>
               <Flex gap={2} wrap="wrap">
                 {personalizationConfig.usedSegments.map((segment) => (
@@ -668,7 +760,9 @@ export const AnalyticsPane: React.FC<AnalyticsPaneProps> = ({ document, personal
             {/* Metric Selector */}
             <Card padding={3} tone="transparent">
               <Stack gap={3}>
-                <Text size={2} weight="bold">📊 Compare Audiences</Text>
+                <Text size={2} weight="bold">
+                  📊 Compare Audiences
+                </Text>
                 <Flex gap={2} wrap="wrap">
                   <Button
                     mode={selectedMetric === 'conversion' ? 'default' : 'ghost'}
@@ -716,75 +810,76 @@ export const AnalyticsPane: React.FC<AnalyticsPaneProps> = ({ document, personal
                 switch (selectedMetric) {
                   case 'conversion':
                     return {
-                      data: data.experiments.map(exp => ({
+                      data: data.experiments.map((exp) => ({
                         label: exp.segmentName.replace(' (Control)', ''),
                         value: exp.conversionRate,
-                        isWinner: exp.isWinner
+                        isWinner: exp.isWinner,
                       })),
-                      title: "Conversion Rate Comparison",
-                      description: "Percentage of visitors who complete desired actions",
-                      metricType: "percentage",
-                      valueLabel: "%"
+                      title: 'Conversion Rate Comparison',
+                      description: 'Percentage of visitors who complete desired actions',
+                      metricType: 'percentage',
+                      valueLabel: '%',
                     };
                   case 'revenue':
                     return {
-                      data: data.experiments.map(exp => ({
+                      data: data.experiments.map((exp) => ({
                         label: exp.segmentName.replace(' (Control)', ''),
                         value: exp.revenue,
-                        isWinner: exp.isWinner
+                        isWinner: exp.isWinner,
                       })),
-                      title: "Revenue Comparison",
-                      description: "Total revenue generated by each audience segment",
-                      metricType: "currency",
-                      valueLabel: "$"
+                      title: 'Revenue Comparison',
+                      description: 'Total revenue generated by each audience segment',
+                      metricType: 'currency',
+                      valueLabel: '$',
                     };
                   case 'ctr':
                     return {
-                      data: data.experiments.map(exp => ({
+                      data: data.experiments.map((exp) => ({
                         label: exp.segmentName.replace(' (Control)', ''),
                         value: exp.clickThroughRate,
-                        isWinner: exp.isWinner
+                        isWinner: exp.isWinner,
                       })),
-                      title: "Click-Through Rate Comparison",
-                      description: "Percentage of visitors who click on interactive elements",
-                      metricType: "percentage",
-                      valueLabel: "%"
+                      title: 'Click-Through Rate Comparison',
+                      description: 'Percentage of visitors who click on interactive elements',
+                      metricType: 'percentage',
+                      valueLabel: '%',
                     };
                   case 'views':
                     return {
-                      data: data.experiments.map(exp => ({
+                      data: data.experiments.map((exp) => ({
                         label: exp.segmentName.replace(' (Control)', ''),
                         value: exp.impressions,
-                        isWinner: exp.isWinner
+                        isWinner: exp.isWinner,
                       })),
-                      title: "Page Views Comparison",
-                      description: "Total number of page views by audience segment",
-                      metricType: "number",
-                      valueLabel: ""
+                      title: 'Page Views Comparison',
+                      description: 'Total number of page views by audience segment',
+                      metricType: 'number',
+                      valueLabel: '',
                     };
                   case 'time':
                     return {
-                      data: data.experiments.map(exp => ({
+                      data: data.experiments.map((exp) => ({
                         label: exp.segmentName.replace(' (Control)', ''),
                         value: exp.averageTimeOnPage,
-                        isWinner: exp.isWinner && exp.averageTimeOnPage > 120
+                        isWinner: exp.isWinner && exp.averageTimeOnPage > 120,
                       })),
-                      title: "Time on Page Comparison",
-                      description: "Average time visitors spend on the page",
-                      metricType: "time",
-                      valueLabel: "s"
+                      title: 'Time on Page Comparison',
+                      description: 'Average time visitors spend on the page',
+                      metricType: 'time',
+                      valueLabel: 's',
                     };
                   case 'bounce':
                     return {
-                      data: data.experiments.map(exp => ({
+                      data: data.experiments.map((exp) => ({
                         label: exp.segmentName.replace(' (Control)', ''),
                         value: exp.bounceRate,
-                        isWinner: exp.isWinner && exp.bounceRate < 50
+                        isWinner: exp.isWinner && exp.bounceRate < 50,
                       })),
-                      title: "Bounce Rate Comparison",
-                      description: "Percentage of visitors who leave without interacting (lower is better)",
-                      metricType: "percentage",
-                      valueLabel: "%"
+                      title: 'Bounce Rate Comparison',
+                      description:
+                        'Percentage of visitors who leave without interacting (lower is better)',
+                      metricType: 'percentage',
+                      valueLabel: '%',
                     };
                   default:
                     return null;
@@ -813,13 +908,20 @@ export const AnalyticsPane: React.FC<AnalyticsPaneProps> = ({ document, personal
             data={data.timeSeries}
             title={(() => {
               switch (selectedMetric) {
-                case 'conversion': return "Conversion Rate: Default vs Personalized";
-                case 'revenue': return "Revenue: Default vs Personalized";
-                case 'ctr': return "Click-Through Rate: Default vs Personalized";
-                case 'views': return "Page Views: Default vs Personalized";
-                case 'time': return "Time on Page: Default vs Personalized";
-                case 'bounce': return "Bounce Rate: Default vs Personalized";
-                default: return "Default vs Personalized";
+                case 'conversion':
+                  return 'Conversion Rate: Default vs Personalized';
+                case 'revenue':
+                  return 'Revenue: Default vs Personalized';
+                case 'ctr':
+                  return 'Click-Through Rate: Default vs Personalized';
+                case 'views':
+                  return 'Page Views: Default vs Personalized';
+                case 'time':
+                  return 'Time on Page: Default vs Personalized';
+                case 'bounce':
+                  return 'Bounce Rate: Default vs Personalized';
+                default:
+                  return 'Default vs Personalized';
               }
             })()}
             metricType={selectedMetric}
@@ -835,10 +937,7 @@ export const AnalyticsPane: React.FC<AnalyticsPaneProps> = ({ document, personal
             </Text>
             <Stack gap={3}>
               {data.experiments.map((experiment) => (
-                <ExperimentRow
-                  key={experiment.segmentId}
-                  experiment={experiment}
-                />
+                <ExperimentRow key={experiment.segmentId} experiment={experiment} />
               ))}
             </Stack>
           </Stack>
@@ -853,15 +952,19 @@ export const AnalyticsPane: React.FC<AnalyticsPaneProps> = ({ document, personal
               </Text>
               {(() => {
                 const sortedByConversion = [...data.experiments]
-                  .filter(exp => exp.segmentId !== 'default')
+                  .filter((exp) => exp.segmentId !== 'default')
                   .sort((a, b) => b.conversionRate - a.conversionRate);
                 const bestSegment = sortedByConversion[0];
-                const control = data.experiments.find(exp => exp.segmentId === 'default');
-                
+                const control = data.experiments.find((exp) => exp.segmentId === 'default');
+
                 if (bestSegment && control) {
-                  const uplift = ((bestSegment.conversionRate - control.conversionRate) / control.conversionRate * 100).toFixed(0);
-                  const winners = data.experiments.filter(exp => exp.isWinner).length;
-                  
+                  const uplift = (
+                    ((bestSegment.conversionRate - control.conversionRate) /
+                      control.conversionRate) *
+                    100
+                  ).toFixed(0);
+                  const winners = data.experiments.filter((exp) => exp.isWinner).length;
+
                   return (
                     <Stack gap={2}>
                       <Text size={2} weight="medium">
@@ -872,7 +975,8 @@ export const AnalyticsPane: React.FC<AnalyticsPaneProps> = ({ document, personal
                       </Text>
                       {winners > 0 && (
                         <Text size={1} muted>
-                          {winners} of {data.experiments.length - 1} audiences exceed baseline performance
+                          {winners} of {data.experiments.length - 1} audiences exceed baseline
+                          performance
                         </Text>
                       )}
                     </Stack>
@@ -883,9 +987,7 @@ export const AnalyticsPane: React.FC<AnalyticsPaneProps> = ({ document, personal
             </Stack>
           </Card>
         )}
-
-
       </Stack>
     </Box>
   );
-}; 
+};

@@ -1,14 +1,18 @@
-import { Badge } from "@workspace/ui/components/badge";
+import { Badge } from '@workspace/ui/components/badge';
 
-import type { PagebuilderType } from "@/types";
-import { useHeroPersonalization, type ComponentPersonalization, type HeroContent } from "@/lib/component-personalization";
-import { useSegmentPreview } from "@/hooks/use-segment-preview";
+import type { PagebuilderType } from '@/types';
+import {
+  useHeroPersonalization,
+  type ComponentPersonalization,
+  type HeroContent,
+} from '@/lib/component-personalization';
+import { useSegmentPreview } from '@/hooks/use-segment-preview';
 
-import { RichText } from "../richtext";
-import { SanityButtons } from "../sanity-buttons";
-import { SanityImage } from "../sanity-image";
+import { RichText } from '../richtext';
+import { SanityButtons } from '../sanity-buttons';
+import { SanityImage } from '../sanity-image';
 
-type HeroBlockProps = PagebuilderType<"hero"> & {
+type HeroBlockProps = PagebuilderType<'hero'> & {
   personalization?: ComponentPersonalization<HeroContent>;
 };
 
@@ -21,7 +25,7 @@ export function HeroBlock({
   personalization,
 }: HeroBlockProps) {
   const { previewSegmentId } = useSegmentPreview();
-  
+
   // Create fallback content from component props
   const fallbackContent = {
     badge,
@@ -34,7 +38,7 @@ export function HeroBlock({
   const { content, isPersonalized, matchedSegment } = useHeroPersonalization(
     personalization || null,
     fallbackContent,
-    previewSegmentId
+    previewSegmentId,
   );
 
   // Use personalized content if available, otherwise use fallback
@@ -43,13 +47,9 @@ export function HeroBlock({
   return (
     <section id="hero" className="mt-4 md:my-16">
       <div className="container mx-auto px-4 md:px-6">
-
-        
         <div className="grid items-center gap-8 lg:grid-cols-2">
           <div className="grid h-full grid-rows-[auto_1fr_auto] gap-4 items-center justify-items-center text-center lg:items-start lg:justify-items-start lg:text-left">
-            {finalContent.badge && (
-              <Badge variant="secondary">{finalContent.badge}</Badge>
-            )}
+            {finalContent.badge && <Badge variant="secondary">{finalContent.badge}</Badge>}
             <div className="grid gap-4">
               <h1 className="text-4xl lg:text-6xl font-semibold text-balance">
                 {finalContent.title}

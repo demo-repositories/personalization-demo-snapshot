@@ -3,12 +3,12 @@
  * This module provides functions to handle personalized content for individual components
  */
 
-import { 
-  UserContext, 
-  Segment, 
+import {
+  UserContext,
+  Segment,
   evaluateConditions,
-  createUserContextFromBrowser 
-} from "./segmentation";
+  createUserContextFromBrowser,
+} from './segmentation';
 
 export interface PersonalizedVariant<T = any> {
   segment: Segment;
@@ -43,7 +43,7 @@ export function getPersonalizedComponentContent<T>(
   personalization: ComponentPersonalization<T> | null,
   context: UserContext,
   fallbackContent?: T,
-  previewSegment?: string
+  previewSegment?: string,
 ): T | null {
   if (!personalization || !personalization.enabled) {
     return fallbackContent || null;
@@ -51,8 +51,8 @@ export function getPersonalizedComponentContent<T>(
 
   // Handle preview mode
   if (previewSegment) {
-    const variant = personalization.variants.find(v => 
-      v.segment._id === previewSegment || v.segment.name === previewSegment
+    const variant = personalization.variants.find(
+      (v) => v.segment._id === previewSegment || v.segment.name === previewSegment,
     );
     if (variant) {
       return variant.content;
@@ -61,10 +61,10 @@ export function getPersonalizedComponentContent<T>(
 
   // Find matching variants
   const matchingVariants = personalization.variants
-    .filter(variant => {
+    .filter((variant) => {
       // Only consider active segments
-      if (variant.segment.status !== "active") return false;
-      
+      if (variant.segment.status !== 'active') return false;
+
       // Check if segment conditions match
       return evaluateConditions(variant.segment.conditions, context);
     })
@@ -72,7 +72,7 @@ export function getPersonalizedComponentContent<T>(
 
   // Use the highest priority matching variant
   const selectedVariant = matchingVariants[0];
-  
+
   if (selectedVariant) {
     // Apply holdout logic
     const holdoutPercentage = selectedVariant.holdoutPercentage || 0;
@@ -80,13 +80,13 @@ export function getPersonalizedComponentContent<T>(
       const userId = context.user_id || 'anonymous';
       const hash = simpleHash(userId + selectedVariant.segment._id);
       const random = Math.abs(hash) % 100;
-      
+
       if (random < holdoutPercentage) {
         // User is in holdout group, show default content
         return fallbackContent || null;
       }
     }
-    
+
     return selectedVariant.content;
   }
 
@@ -101,7 +101,7 @@ function simpleHash(str: string): number {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
+    hash = (hash << 5) - hash + char;
     hash = hash & hash; // Convert to 32-bit integer
   }
   return hash;
@@ -113,30 +113,28 @@ function simpleHash(str: string): number {
 export function useComponentPersonalization<T>(
   personalization: ComponentPersonalization<T> | null,
   fallbackContent?: T,
-  previewSegmentFromContext?: string | null
+  previewSegmentFromContext?: string | null,
 ) {
   const context = createUserContextFromBrowser();
-  
+
   // Use preview segment from context (reactive to changes)
   const previewSegment = previewSegmentFromContext || undefined;
-  
+
   const personalizedContent = getPersonalizedComponentContent(
-    personalization, 
+    personalization,
     context,
     fallbackContent,
-    previewSegment
+    previewSegment,
   );
-  
-  const matchingVariant = personalization?.variants.find(variant => {
+
+  const matchingVariant = personalization?.variants.find((variant) => {
     if (previewSegment) {
       return variant.segment._id === previewSegment || variant.segment.name === previewSegment;
     }
-    
-    if (variant.segment.status !== "active") return false;
+
+    if (variant.segment.status !== 'active') return false;
     return evaluateConditions(variant.segment.conditions, context);
   });
-
-
 
   return {
     content: personalizedContent,
@@ -152,9 +150,13 @@ export function useComponentPersonalization<T>(
 export function useHeroPersonalization(
   personalization: ComponentPersonalization<HeroContent> | null,
   fallbackContent?: HeroContent,
-  previewSegmentFromContext?: string | null
+  previewSegmentFromContext?: string | null,
 ) {
-  return useComponentPersonalization<HeroContent>(personalization, fallbackContent, previewSegmentFromContext);
+  return useComponentPersonalization<HeroContent>(
+    personalization,
+    fallbackContent,
+    previewSegmentFromContext,
+  );
 }
 
 /**
@@ -163,9 +165,13 @@ export function useHeroPersonalization(
 export function useCTAPersonalization(
   personalization: ComponentPersonalization<CTAContent> | null,
   fallbackContent?: CTAContent,
-  previewSegmentFromContext?: string | null
+  previewSegmentFromContext?: string | null,
 ) {
-  return useComponentPersonalization<CTAContent>(personalization, fallbackContent, previewSegmentFromContext);
+  return useComponentPersonalization<CTAContent>(
+    personalization,
+    fallbackContent,
+    previewSegmentFromContext,
+  );
 }
 
 /**
@@ -173,23 +179,23 @@ export function useCTAPersonalization(
  */
 export function debugComponentPersonalization<T>(
   personalization: ComponentPersonalization<T> | null,
-  context: UserContext
+  context: UserContext,
 ) {
   if (!personalization) {
     return {
       enabled: false,
-      message: "No personalization data provided"
+      message: 'No personalization data provided',
     };
   }
 
   if (!personalization.enabled) {
     return {
       enabled: false,
-      message: "Personalization is disabled"
+      message: 'Personalization is disabled',
     };
   }
 
-  const variantResults = personalization.variants.map(variant => {
+  const variantResults = personalization.variants.map((variant) => {
     const matches = evaluateConditions(variant.segment.conditions, context);
     return {
       segment: variant.segment.name,
@@ -200,7 +206,7 @@ export function debugComponentPersonalization<T>(
     };
   });
 
-  const matchingVariants = variantResults.filter(v => v.matches && v.status === "active");
+  const matchingVariants = variantResults.filter((v) => v.matches && v.status === 'active');
   const selectedVariant = matchingVariants.sort((a, b) => b.priority - a.priority)[0];
 
   return {
@@ -209,6 +215,6 @@ export function debugComponentPersonalization<T>(
     matchingVariants,
     selectedVariant,
     hasFallback: true, // Always has fallback (component content)
-    selectedContent: selectedVariant ? "personalized" : "default"
+    selectedContent: selectedVariant ? 'personalized' : 'default',
   };
-} 
+}

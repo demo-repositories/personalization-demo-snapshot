@@ -1,4 +1,23 @@
 {
+  "name": "studio",
+  "version": "1.0.0",
+  "private": true,
+  "keywords": [
+    "sanity"
+  ],
+  "license": "UNLICENSED",
+  "main": "package.json",
+  "scripts": {
+    "build": "sanity build",
+    "check-types": "tsc --noEmit",
+    "deploy": "sanity deploy",
+    "dev": "sanity dev",
+    "format": "prettier --write .",
+    "postinstall": "sanity exec scripts/cli-alert-for-data.ts",
+    "start": "sanity start",
+    "type": "pnpm --dir ../.. typegen",
+    "typecheck": "tsc --noEmit"
+  },
   "dependencies": {
     "@sanity/assist": "6.2.5",
     "@sanity/icons": "5.2.3",
@@ -26,24 +45,5 @@
     "@types/react-dom": "19.2.5",
     "jsdom": "^26.1.0",
     "typescript": "7.0.2"
-  },
-  "keywords": [
-    "sanity"
-  ],
-  "license": "UNLICENSED",
-  "main": "package.json",
-  "name": "studio",
-  "private": true,
-  "scripts": {
-    "build": "sanity build",
-    "check-types": "tsc --noEmit",
-    "deploy": "sanity deploy",
-    "dev": "sanity dev",
-    "format": "prettier --write .",
-    "postinstall": "sanity exec scripts/cli-alert-for-data.ts",
-    "start": "sanity start",
-    "type": "pnpm --dir ../.. typegen",
-    "typecheck": "tsc --noEmit"
-  },
-  "version": "1.0.0"
+  }
 }

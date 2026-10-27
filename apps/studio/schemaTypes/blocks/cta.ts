@@ -1,28 +1,27 @@
-import { PhoneIcon } from "lucide-react";
-import { defineField, defineType } from "sanity";
+import { PhoneIcon } from 'lucide-react';
+import { defineField, defineType } from 'sanity';
 
-import { buttonsField, richTextField } from "../common";
-import { createCTAPersonalizationFields } from "../definitions/personalization";
-import { GROUPS } from "../../utils/constant";
+import { buttonsField, richTextField } from '../common';
+import { createCTAPersonalizationFields } from '../definitions/personalization';
+import { GROUPS } from '../../utils/constant';
 
 export const cta = defineType({
-  name: "cta",
-  type: "object",
+  name: 'cta',
+  type: 'object',
   icon: PhoneIcon,
   groups: GROUPS,
   fields: [
     defineField({
-      name: "eyebrow",
-      title: "Eyebrow",
-      type: "string",
-      description:
-        "The smaller text that sits above the title to provide context",
+      name: 'eyebrow',
+      title: 'Eyebrow',
+      type: 'string',
+      description: 'The smaller text that sits above the title to provide context',
     }),
     defineField({
-      name: "title",
-      title: "Title",
-      type: "string",
-      description: "The large text that is the primary focus of the block",
+      name: 'title',
+      title: 'Title',
+      type: 'string',
+      description: 'The large text that is the primary focus of the block',
     }),
     richTextField,
     buttonsField,
@@ -30,11 +29,11 @@ export const cta = defineType({
   ],
   preview: {
     select: {
-      title: "title",
+      title: 'title',
     },
     prepare: ({ title }) => ({
       title,
-      subtitle: "CTA Block",
+      subtitle: 'CTA Block',
     }),
   },
 });
