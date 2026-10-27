@@ -1,23 +1,32 @@
 {
-  "name": "personalization-demo",
-  "version": "1.0.0",
-  "private": true,
-  "scripts": {
-    "build": "turbo build",
-    "dev": "turbo dev",
-    "lint": "turbo lint",
-    "check-types": "turbo check-types",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
-  },
   "devDependencies": {
     "@workspace/eslint-config": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
+    "oxfmt": "0.66.0",
+    "oxlint": "1.81.0",
     "prettier": "^3.5.3",
     "turbo": "^2.5.3",
-    "typescript": "5.7.3"
+    "typescript": "7.0.2"
   },
-  "packageManager": "pnpm@9.12.3",
   "engines": {
-    "node": ">=20"
-  }
+    "node": ">=22.23.2"
+  },
+  "name": "personalization-demo",
+  "packageManager": "pnpm@10.34.5",
+  "private": true,
+  "scripts": {
+    "build": "pnpm --recursive --if-present build",
+    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "deploy:studio": "if [ ! -f apps/studio/.env.local ]; then echo \"Missing apps/studio/.env.local. Download the local environment bundle from Demo Library.\" >&2; exit 1; fi; export SANITY_STUDIO_HOST=\"$(node -e 'const {readFileSync}=require(\"node:fs\");const {parseEnv}=require(\"node:util\");process.stdout.write(parseEnv(readFileSync(\"apps/studio/.env.local\", \"utf8\")).SANITY_STUDIO_HOST ?? \"\")')\"; if [ -z \"$SANITY_STUDIO_HOST\" ]; then echo \"Missing SANITY_STUDIO_HOST in apps/studio/.env.local. Download a new local environment bundle from Demo Library.\" >&2; exit 1; fi; pnpm --dir apps/studio exec sanity deploy --url \"$SANITY_STUDIO_HOST\" --yes",
+    "dev": "node .github/scripts/sanity-typegen.mjs . --run-script dev",
+    "format": "oxfmt .",
+    "format:check": "oxfmt --check .",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint --fix .",
+    "test": "pnpm --recursive --if-present test",
+    "typecheck": "node .github/scripts/sanity-typegen.mjs . --check --run-script typecheck",
+    "typegen": "node .github/scripts/sanity-typegen.mjs .",
+    "typegen:check": "node .github/scripts/sanity-typegen.mjs . --check"
+  },
+  "version": "1.0.0"
 }

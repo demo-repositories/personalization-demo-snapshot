@@ -1,40 +1,43 @@
 {
-  "name": "web",
-  "version": "0.0.1",
-  "type": "module",
-  "private": true,
-  "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint .",
-    "format": "prettier --write .",
-    "check-types": "tsc --noEmit"
-  },
   "dependencies": {
     "@sanity/asset-utils": "^2.2.1",
     "@sanity/client": "^6.28.4",
     "@sanity/image-url": "^1.1.0",
-    "@sanity/visual-editing": "^2.13.21",
+    "@sanity/visual-editing": "6.1.2",
     "@workspace/ui": "workspace:*",
     "babel-plugin-react-compiler": "19.0.0-beta-e993439-20250328",
     "lucide-react": "0.487.0",
-    "next": "15.2.4",
-    "next-sanity": "^9.9.9",
+    "next": "16.3.4",
+    "next-sanity": "13.3.4",
     "next-themes": "^0.4.6",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
     "schema-dts": "^1.1.5",
     "server-only": "^0.0.1",
     "slugify": "^1.6.6"
   },
   "devDependencies": {
     "@types/node": "^22",
-    "@types/react": "19.1.0",
-    "@types/react-dom": "19.1.0",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.5",
     "@workspace/eslint-config": "workspace:^",
     "@workspace/typescript-config": "workspace:*",
     "postcss": "^8",
-    "tailwindcss": "^3.4.17"
-  }
+    "sanity": "6.14.1",
+    "tailwindcss": "^3.4.17",
+    "typescript": "7.0.2"
+  },
+  "name": "web",
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "check-types": "node ../../.github/scripts/sanity-typegen.mjs ../.. --check && tsc --noEmit",
+    "dev": "node ../../.github/scripts/sanity-typegen.mjs ../.. --ensure && next dev --turbopack",
+    "format": "prettier --write .",
+    "start": "next start",
+    "typecheck": "node ../../.github/scripts/sanity-typegen.mjs ../.. --check && tsc --noEmit",
+    "typegen": "node ../../.github/scripts/sanity-typegen.mjs ../.. --ensure"
+  },
+  "type": "module",
+  "version": "0.0.1"
 }

@@ -29,9 +29,11 @@ export default defineConfig({
   projectId: projectId,
   icon: SlidersHorizontal,
   dataset: dataset ?? "production",
+
   mediaLibrary: {
     enabled: true,
   },
+
   plugins: [
     structureTool({
       structure,
@@ -71,6 +73,7 @@ export default defineConfig({
         sources.filter((source) => source.name !== "sanity-default"),
     },
   },
+
   document: {
     newDocumentOptions: (prev, { creationContext }) => {
       const { type } = creationContext;
@@ -78,8 +81,17 @@ export default defineConfig({
       return prev;
     },
   },
+
   schema: {
     types: schemaTypes,
     templates: createPageTemplate(),
   },
+
+  auth: {
+    providers: prev => process.env.SANITY_STUDIO_SSO_LOGIN_URL ? [...prev, {
+      name: 'saml',
+      title: 'Sanity SSO',
+      url: process.env.SANITY_STUDIO_SSO_LOGIN_URL
+    }] : prev
+  }
 });

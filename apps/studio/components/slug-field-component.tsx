@@ -1,9 +1,7 @@
-import {
-  CopyIcon,
-  EditIcon,
-  FolderIcon,
-  WarningOutlineIcon,
-} from "@sanity/icons";
+import { CopyIcon } from '@sanity/icons/Copy';
+import { EditIcon } from '@sanity/icons/Edit';
+import { FolderIcon } from '@sanity/icons/Folder';
+import { WarningOutlineIcon } from '@sanity/icons/WarningOutline';
 import {
   Badge,
   Box,
@@ -178,7 +176,7 @@ export function PathnameFieldComponent(props: ObjectFieldProps<SlugValue>) {
   const pathInput = useMemo(() => {
     if (folderLocked && segments.length > 1) {
       return (
-        <Stack space={2} width="100%" style={{ flex: 1 }}>
+        <Stack gap={2} width="100%" style={{ flex: 1 }}>
           <Flex gap={2} wrap="wrap">
             {segments.slice(0, -1).map((segment) => (
               <Flex key={segment} gap={1} align="center">
@@ -227,7 +225,7 @@ export function PathnameFieldComponent(props: ObjectFieldProps<SlugValue>) {
     }
 
     return (
-      <Stack space={2} style={{ flex: 1, width: "100%" }}>
+      <Stack gap={2} style={{ flex: 1, width: "100%" }}>
         <Box width="100%">
           <TextInput
             value={value?.current || ""}
@@ -252,8 +250,8 @@ export function PathnameFieldComponent(props: ObjectFieldProps<SlugValue>) {
   ]);
 
   return (
-    <Stack space={3}>
-      <Stack space={2} flex={1}>
+    <Stack gap={3}>
+      <Stack gap={2} flex={1}>
         <Text size={1} weight="semibold">
           {title}
         </Text>

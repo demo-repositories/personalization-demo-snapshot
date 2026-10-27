@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Grid, Box, Text, Flex, Badge, Button, Stack } from '@sanity/ui';
-import { ChartUpwardIcon, TrendUpwardIcon, UsersIcon, EyeOpenIcon } from '@sanity/icons';
+import { ChartUpwardIcon } from '@sanity/icons/ChartUpward';
+import { EyeOpenIcon } from '@sanity/icons/EyeOpen';
+import { TrendUpwardIcon } from '@sanity/icons/TrendUpward';
+import { UsersIcon } from '@sanity/icons/Users';
 
 // Mock analytics data structure (would come from Segment.io/GA in real implementation)
 interface ExperimentMetrics {
@@ -189,7 +192,7 @@ const MetricCard: React.FC<{
 }> = ({ title, value, change, positive, icon }) => (
   <Card padding={4} tone="default" border>
     <Flex align="center" justify="space-between">
-      <Stack space={2}>
+      <Stack gap={2}>
         <Text size={1} weight="medium" muted>
           {title}
         </Text>
@@ -237,14 +240,14 @@ const ComparisonChart: React.FC<{
   
   return (
     <Card padding={4} border>
-      <Stack space={3}>
-        <Stack space={2}>
+      <Stack gap={3}>
+        <Stack gap={2}>
           <Text size={2} weight="bold">{title}</Text>
           {description && (
             <Text size={1} muted>{description}</Text>
           )}
         </Stack>
-        <Stack space={2}>
+        <Stack gap={2}>
           {data.map((item, index) => (
             <Box key={index}>
               <Flex align="center" justify="space-between" style={{ marginBottom: '4px' }}>
@@ -354,7 +357,7 @@ const TimeSeriesChart: React.FC<{
   
   return (
     <Card padding={4} border>
-      <Stack space={3}>
+      <Stack gap={3}>
         <Text size={2} weight="bold">{title}</Text>
         
         {/* Legend */}
@@ -461,8 +464,8 @@ const TimeSeriesChart: React.FC<{
 
 const ExperimentRow: React.FC<{ experiment: ExperimentMetrics }> = ({ experiment }) => (
   <Card padding={4} tone={experiment.isWinner ? 'positive' : 'default'} border>
-    <Grid columns={[1, 1, 3]} gap={3}>
-      <Stack space={2}>
+    <Grid gridTemplateColumns={[1, 1, 3]} gap={3}>
+      <Stack gap={2}>
         <Flex align="center" gap={2}>
           <Text weight="bold">{experiment.segmentName}</Text>
           {experiment.isWinner && (
@@ -481,16 +484,16 @@ const ExperimentRow: React.FC<{ experiment: ExperimentMetrics }> = ({ experiment
         </Text>
       </Stack>
 
-      <Grid columns={3} gap={3}>
-        <Stack space={1}>
+      <Grid gridTemplateColumns={3} gap={3}>
+        <Stack gap={1}>
           <Text size={1} muted>Conversion Rate</Text>
           <Text weight="bold" size={2}>{experiment.conversionRate}%</Text>
         </Stack>
-        <Stack space={1}>
+        <Stack gap={1}>
           <Text size={1} muted>Views</Text>
           <Text weight="bold" size={2}>{experiment.impressions.toLocaleString()}</Text>
         </Stack>
-        <Stack space={1}>
+        <Stack gap={1}>
           <Text size={1} muted>Revenue</Text>
           <Text weight="bold" size={2}>${experiment.revenue.toLocaleString()}</Text>
         </Stack>
@@ -578,10 +581,10 @@ export const AnalyticsPane: React.FC<AnalyticsPaneProps> = ({ document, personal
 
   return (
     <Box padding={4}>
-      <Stack space={5}>
+      <Stack gap={5}>
         {/* Header */}
         <Flex align="center" justify="space-between">
-          <Stack space={2}>
+          <Stack gap={2}>
             <Text size={4} weight="bold">
               Personalization Analytics
             </Text>
@@ -617,7 +620,7 @@ export const AnalyticsPane: React.FC<AnalyticsPaneProps> = ({ document, personal
         </Flex>
 
         {/* Key Metrics */}
-        <Grid columns={[1, 2, 3]} gap={4}>
+        <Grid gridTemplateColumns={[1, 2, 3]} gap={4}>
           <MetricCard
             title="Page Views"
             value={data.summary.totalImpressions.toLocaleString()}
@@ -643,7 +646,7 @@ export const AnalyticsPane: React.FC<AnalyticsPaneProps> = ({ document, personal
         {/* Active Segments */}
         {personalizationConfig && personalizationConfig.usedSegments.length > 0 && (
           <Card padding={4} tone="positive" border>
-            <Stack space={3}>
+            <Stack gap={3}>
               <Flex align="center" gap={2}>
                 <Text size={2} weight="bold">🎯 Personalized for</Text>
                 <Badge tone="positive" mode="default">{personalizationConfig.usedSegments.length} audiences</Badge>
@@ -661,10 +664,10 @@ export const AnalyticsPane: React.FC<AnalyticsPaneProps> = ({ document, personal
 
         {/* Interactive Comparison Chart */}
         {data.experiments.length > 1 && (
-          <Stack space={4}>
+          <Stack gap={4}>
             {/* Metric Selector */}
             <Card padding={3} tone="transparent">
-              <Stack space={3}>
+              <Stack gap={3}>
                 <Text size={2} weight="bold">📊 Compare Audiences</Text>
                 <Flex gap={2} wrap="wrap">
                   <Button
@@ -826,11 +829,11 @@ export const AnalyticsPane: React.FC<AnalyticsPaneProps> = ({ document, personal
 
         {/* Detailed Results */}
         {data.experiments.length > 0 && (
-          <Stack space={3}>
+          <Stack gap={3}>
             <Text size={2} weight="bold">
               📊 Detailed Performance
             </Text>
-            <Stack space={3}>
+            <Stack gap={3}>
               {data.experiments.map((experiment) => (
                 <ExperimentRow
                   key={experiment.segmentId}
@@ -844,7 +847,7 @@ export const AnalyticsPane: React.FC<AnalyticsPaneProps> = ({ document, personal
         {/* Key Results */}
         {data.experiments.length > 1 && (
           <Card padding={4} tone="positive" border>
-            <Stack space={3}>
+            <Stack gap={3}>
               <Text size={2} weight="bold">
                 ✨ Results
               </Text>
@@ -860,7 +863,7 @@ export const AnalyticsPane: React.FC<AnalyticsPaneProps> = ({ document, personal
                   const winners = data.experiments.filter(exp => exp.isWinner).length;
                   
                   return (
-                    <Stack space={2}>
+                    <Stack gap={2}>
                       <Text size={2} weight="medium">
                         🏆 Top performing audience: <strong>{bestSegment.segmentName}</strong>
                       </Text>
