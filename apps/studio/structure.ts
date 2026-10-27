@@ -1,4 +1,4 @@
-import { orderableDocumentListDeskItem } from "@sanity/orderable-document-list";
+import { orderableDocumentListDeskItem } from '@sanity/orderable-document-list';
 import {
   BookMarked,
   CogIcon,
@@ -12,15 +12,12 @@ import {
   Settings2,
   Target,
   User,
-} from "lucide-react";
-import type {
-  StructureBuilder,
-  StructureResolverContext,
-} from "sanity/structure";
+} from 'lucide-react';
+import type { StructureBuilder, StructureResolverContext } from 'sanity/structure';
 
-import type { SchemaType, SingletonType } from "./schemaTypes";
-import { getTitleCase } from "./utils/helper";
-import { AnalyticsView } from "./views/analytics-view";
+import type { SchemaType, SingletonType } from './schemaTypes';
+import { getTitleCase } from './utils/helper';
+import { AnalyticsView } from './views/analytics-view';
 
 type Base<T = SchemaType> = {
   id?: string;
@@ -66,12 +63,7 @@ type CreateIndexList = {
   context: StructureResolverContext;
 };
 
-const createIndexListWithOrderableItems = ({
-  S,
-  index,
-  list,
-  context,
-}: CreateIndexList) => {
+const createIndexListWithOrderableItems = ({ S, index, list, context }: CreateIndexList) => {
   const indexTitle = index.title ?? getTitleCase(index.type);
   const listTitle = list.title ?? getTitleCase(list.type);
   return S.listItem()
@@ -85,10 +77,7 @@ const createIndexListWithOrderableItems = ({
             .title(indexTitle)
             .icon(index.icon ?? File)
             .child(
-              S.document()
-                .views([S.view.form()])
-                .schemaType(index.type)
-                .documentId(index.type),
+              S.document().views([S.view.form()]).schemaType(index.type).documentId(index.type),
             ),
           orderableDocumentListDeskItem({
             type: list.type,
@@ -107,13 +96,13 @@ export const defaultDocumentNodeResolver = (
   { schemaType }: { schemaType: string },
 ) => {
   // Add analytics view to page and homePage documents
-  if (["page", "homePage"].includes(schemaType)) {
+  if (['page', 'homePage'].includes(schemaType)) {
     return S.document().views([
       S.view.form(),
       S.view
         .component(AnalyticsView)
-        .title("Analytics")
-        .icon(() => "📊"),
+        .title('Analytics')
+        .icon(() => '📊'),
     ]);
   }
 
@@ -121,59 +110,56 @@ export const defaultDocumentNodeResolver = (
   return undefined;
 };
 
-export const structure = (
-  S: StructureBuilder,
-  context: StructureResolverContext,
-) => {
+export const structure = (S: StructureBuilder, context: StructureResolverContext) => {
   return S.list()
-    .title("Content")
+    .title('Content')
     .items([
-      createSingleTon({ S, type: "homePage", icon: HomeIcon }),
+      createSingleTon({ S, type: 'homePage', icon: HomeIcon }),
       S.divider(),
-      createList({ S, type: "page", title: "Pages" }),
+      createList({ S, type: 'page', title: 'Pages' }),
       createIndexListWithOrderableItems({
         S,
-        index: { type: "blogIndex", icon: BookMarked },
-        list: { type: "blog", title: "Blogs", icon: FileText },
+        index: { type: 'blogIndex', icon: BookMarked },
+        list: { type: 'blog', title: 'Blogs', icon: FileText },
         context,
       }),
       createList({
         S,
-        type: "faq",
-        title: "FAQs",
+        type: 'faq',
+        title: 'FAQs',
         icon: MessageCircleQuestion,
       }),
-      createList({ S, type: "author", title: "Authors", icon: User }),
+      createList({ S, type: 'author', title: 'Authors', icon: User }),
       createList({
         S,
-        type: "segment",
-        title: "Audience Segments",
+        type: 'segment',
+        title: 'Audience Segments',
         icon: Target,
       }),
       S.divider(),
       S.listItem()
-        .title("Site Configuration")
+        .title('Site Configuration')
         .icon(Settings2)
         .child(
           S.list()
-            .title("Site Configuration")
+            .title('Site Configuration')
             .items([
               createSingleTon({
                 S,
-                type: "navbar",
-                title: "Navigation",
+                type: 'navbar',
+                title: 'Navigation',
                 icon: PanelTopDashedIcon,
               }),
               createSingleTon({
                 S,
-                type: "footer",
-                title: "Footer",
+                type: 'footer',
+                title: 'Footer',
                 icon: PanelBottomIcon,
               }),
               createSingleTon({
                 S,
-                type: "settings",
-                title: "Global Settings",
+                type: 'settings',
+                title: 'Global Settings',
                 icon: CogIcon,
               }),
             ]),

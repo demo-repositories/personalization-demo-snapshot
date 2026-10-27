@@ -16,7 +16,7 @@ export interface SegmentationRule {
 }
 
 export interface SegmentationConditions {
-  operator: "and" | "or";
+  operator: 'and' | 'or';
   rules: SegmentationRule[];
 }
 
@@ -26,7 +26,7 @@ export interface Segment {
   slug: { current: string };
   description?: string;
   priority: number;
-  status: "active" | "draft" | "archived";
+  status: 'active' | 'draft' | 'archived';
   conditions: SegmentationConditions;
   tags?: string[];
   notes?: string;
@@ -137,53 +137,41 @@ export interface UserContext {
 /**
  * Evaluates a single segmentation rule against user context
  */
-export function evaluateRule(
-  rule: SegmentationRule,
-  context: UserContext,
-): boolean {
-  const {
-    attribute,
-    operator,
-    value,
-    values,
-    rangeStart,
-    rangeEnd,
-    daysValue,
-    countValue,
-  } = rule;
+export function evaluateRule(rule: SegmentationRule, context: UserContext): boolean {
+  const { attribute, operator, value, values, rangeStart, rangeEnd, daysValue, countValue } = rule;
   const contextValue = context[attribute as keyof UserContext];
 
   switch (operator) {
-    case "eq":
+    case 'eq':
       return contextValue === value;
 
-    case "neq":
+    case 'neq':
       return contextValue !== value;
 
-    case "contains":
-      return typeof contextValue === "string" && typeof value === "string"
+    case 'contains':
+      return typeof contextValue === 'string' && typeof value === 'string'
         ? contextValue.toLowerCase().includes(value.toLowerCase())
         : false;
 
-    case "not_contains":
-      return typeof contextValue === "string" && typeof value === "string"
+    case 'not_contains':
+      return typeof contextValue === 'string' && typeof value === 'string'
         ? !contextValue.toLowerCase().includes(value.toLowerCase())
         : true;
 
-    case "starts_with":
-      return typeof contextValue === "string" && typeof value === "string"
+    case 'starts_with':
+      return typeof contextValue === 'string' && typeof value === 'string'
         ? contextValue.toLowerCase().startsWith(value.toLowerCase())
         : false;
 
-    case "ends_with":
-      return typeof contextValue === "string" && typeof value === "string"
+    case 'ends_with':
+      return typeof contextValue === 'string' && typeof value === 'string'
         ? contextValue.toLowerCase().endsWith(value.toLowerCase())
         : false;
 
-    case "regex":
-      if (typeof contextValue === "string" && typeof value === "string") {
+    case 'regex':
+      if (typeof contextValue === 'string' && typeof value === 'string') {
         try {
-          const regex = new RegExp(value, "i");
+          const regex = new RegExp(value, 'i');
           return regex.test(contextValue);
         } catch {
           return false;
@@ -191,70 +179,62 @@ export function evaluateRule(
       }
       return false;
 
-    case "gt":
-      return typeof contextValue === "number" && typeof value === "string"
+    case 'gt':
+      return typeof contextValue === 'number' && typeof value === 'string'
         ? contextValue > parseFloat(value)
         : false;
 
-    case "lt":
-      return typeof contextValue === "number" && typeof value === "string"
+    case 'lt':
+      return typeof contextValue === 'number' && typeof value === 'string'
         ? contextValue < parseFloat(value)
         : false;
 
-    case "gte":
-      return typeof contextValue === "number" && typeof value === "string"
+    case 'gte':
+      return typeof contextValue === 'number' && typeof value === 'string'
         ? contextValue >= parseFloat(value)
         : false;
 
-    case "lte":
-      return typeof contextValue === "number" && typeof value === "string"
+    case 'lte':
+      return typeof contextValue === 'number' && typeof value === 'string'
         ? contextValue <= parseFloat(value)
         : false;
 
-    case "between":
-      if (typeof contextValue === "number" && rangeStart && rangeEnd) {
+    case 'between':
+      if (typeof contextValue === 'number' && rangeStart && rangeEnd) {
         const start = parseFloat(rangeStart);
         const end = parseFloat(rangeEnd);
         return contextValue >= start && contextValue <= end;
       }
-      if (typeof contextValue === "string" && rangeStart && rangeEnd) {
+      if (typeof contextValue === 'string' && rangeStart && rangeEnd) {
         return contextValue >= rangeStart && contextValue <= rangeEnd;
       }
       return false;
 
-    case "not_between":
-      if (typeof contextValue === "number" && rangeStart && rangeEnd) {
+    case 'not_between':
+      if (typeof contextValue === 'number' && rangeStart && rangeEnd) {
         const start = parseFloat(rangeStart);
         const end = parseFloat(rangeEnd);
         return contextValue < start || contextValue > end;
       }
-      if (typeof contextValue === "string" && rangeStart && rangeEnd) {
+      if (typeof contextValue === 'string' && rangeStart && rangeEnd) {
         return contextValue < rangeStart || contextValue > rangeEnd;
       }
       return true;
 
-    case "empty":
-      return (
-        contextValue === undefined ||
-        contextValue === null ||
-        contextValue === ""
-      );
+    case 'empty':
+      return contextValue === undefined || contextValue === null || contextValue === '';
 
-    case "not_empty":
-      return (
-        contextValue !== undefined &&
-        contextValue !== null &&
-        contextValue !== ""
-      );
+    case 'not_empty':
+      return contextValue !== undefined && contextValue !== null && contextValue !== '';
 
-    case "in":
+    case 'in':
       return values ? values.includes(String(contextValue)) : false;
 
-    case "not_in":
+    case 'not_in':
       return values ? !values.includes(String(contextValue)) : true;
 
-    case "last_days":
-      if (typeof contextValue === "string" && daysValue) {
+    case 'last_days':
+      if (typeof contextValue === 'string' && daysValue) {
         try {
           const targetDate = new Date(contextValue);
           const now = new Date();
@@ -267,8 +247,8 @@ export function evaluateRule(
       }
       return false;
 
-    case "more_than_days":
-      if (typeof contextValue === "string" && daysValue) {
+    case 'more_than_days':
+      if (typeof contextValue === 'string' && daysValue) {
         try {
           const targetDate = new Date(contextValue);
           const now = new Date();
@@ -281,18 +261,18 @@ export function evaluateRule(
       }
       return false;
 
-    case "count_eq":
-      return typeof contextValue === "number" && countValue !== undefined
+    case 'count_eq':
+      return typeof contextValue === 'number' && countValue !== undefined
         ? contextValue === countValue
         : false;
 
-    case "count_gt":
-      return typeof contextValue === "number" && countValue !== undefined
+    case 'count_gt':
+      return typeof contextValue === 'number' && countValue !== undefined
         ? contextValue > countValue
         : false;
 
-    case "count_lt":
-      return typeof contextValue === "number" && countValue !== undefined
+    case 'count_lt':
+      return typeof contextValue === 'number' && countValue !== undefined
         ? contextValue < countValue
         : false;
 
@@ -316,9 +296,7 @@ export function evaluateConditions(
 
   const results = rules.map((rule) => evaluateRule(rule, context));
 
-  return operator === "and"
-    ? results.every((result) => result)
-    : results.some((result) => result);
+  return operator === 'and' ? results.every((result) => result) : results.some((result) => result);
 }
 
 /**
@@ -331,7 +309,7 @@ export function findMatchingSegmentVariant(
   const matchingVariants = segmentVariants
     .filter(
       (variant) =>
-        variant.segment.status === "active" &&
+        variant.segment.status === 'active' &&
         evaluateConditions(variant.segment.conditions, context),
     )
     .sort((a, b) => b.segment.priority - a.segment.priority);
@@ -352,18 +330,13 @@ export function getPersonalizedContent(
   }
 
   if (previewSegment) {
-    const variant = segmentationData.segmentVariants.find(
-      (v) => v.segment.name === previewSegment,
-    );
+    const variant = segmentationData.segmentVariants.find((v) => v.segment.name === previewSegment);
     if (variant) {
       return variant.content;
     }
   }
 
-  const matchingVariant = findMatchingSegmentVariant(
-    segmentationData.segmentVariants,
-    context,
-  );
+  const matchingVariant = findMatchingSegmentVariant(segmentationData.segmentVariants, context);
 
   if (matchingVariant) {
     return matchingVariant.content;
@@ -376,7 +349,7 @@ export function getPersonalizedContent(
  * Creates user context from browser environment (for client-side)
  */
 export function createUserContextFromBrowser(): UserContext {
-  if (typeof window === "undefined") {
+  if (typeof window === 'undefined') {
     return {};
   }
 
@@ -388,43 +361,43 @@ export function createUserContextFromBrowser(): UserContext {
   const isMobile = /Mobile|Android|iPhone|iPad/i.test(userAgent);
   const isTablet = /iPad|Tablet/i.test(userAgent);
   const isDesktop = !isMobile && !isTablet;
-  const deviceType = isMobile ? "mobile" : isTablet ? "tablet" : "desktop";
+  const deviceType = isMobile ? 'mobile' : isTablet ? 'tablet' : 'desktop';
 
   // Browser detection with version
-  let browser = "unknown";
-  let browserVersion = "";
-  if (userAgent.includes("Chrome")) {
-    browser = "chrome";
+  let browser = 'unknown';
+  let browserVersion = '';
+  if (userAgent.includes('Chrome')) {
+    browser = 'chrome';
     const match = userAgent.match(/Chrome\/([0-9.]+)/);
-    browserVersion = match ? match[1] : "";
-  } else if (userAgent.includes("Firefox")) {
-    browser = "firefox";
+    browserVersion = match ? match[1] : '';
+  } else if (userAgent.includes('Firefox')) {
+    browser = 'firefox';
     const match = userAgent.match(/Firefox\/([0-9.]+)/);
-    browserVersion = match ? match[1] : "";
-  } else if (userAgent.includes("Safari")) {
-    browser = "safari";
+    browserVersion = match ? match[1] : '';
+  } else if (userAgent.includes('Safari')) {
+    browser = 'safari';
     const match = userAgent.match(/Version\/([0-9.]+)/);
-    browserVersion = match ? match[1] : "";
-  } else if (userAgent.includes("Edge")) {
-    browser = "edge";
+    browserVersion = match ? match[1] : '';
+  } else if (userAgent.includes('Edge')) {
+    browser = 'edge';
     const match = userAgent.match(/Edge\/([0-9.]+)/);
-    browserVersion = match ? match[1] : "";
+    browserVersion = match ? match[1] : '';
   }
 
-  let operatingSystem = "unknown";
-  if (userAgent.includes("Windows")) operatingSystem = "windows";
-  else if (userAgent.includes("Mac")) operatingSystem = "macos";
-  else if (userAgent.includes("Linux")) operatingSystem = "linux";
-  else if (userAgent.includes("Android")) operatingSystem = "android";
-  else if (userAgent.includes("iOS")) operatingSystem = "ios";
+  let operatingSystem = 'unknown';
+  if (userAgent.includes('Windows')) operatingSystem = 'windows';
+  else if (userAgent.includes('Mac')) operatingSystem = 'macos';
+  else if (userAgent.includes('Linux')) operatingSystem = 'linux';
+  else if (userAgent.includes('Android')) operatingSystem = 'android';
+  else if (userAgent.includes('iOS')) operatingSystem = 'ios';
 
   // URL parameters
   const urlParams = new URLSearchParams(window.location.search);
-  const utmSource = urlParams.get("utm_source");
-  const utmMedium = urlParams.get("utm_medium");
-  const utmCampaign = urlParams.get("utm_campaign");
-  const utmTerm = urlParams.get("utm_term");
-  const utmContent = urlParams.get("utm_content");
+  const utmSource = urlParams.get('utm_source');
+  const utmMedium = urlParams.get('utm_medium');
+  const utmCampaign = urlParams.get('utm_campaign');
+  const utmTerm = urlParams.get('utm_term');
+  const utmContent = urlParams.get('utm_content');
 
   // Time/date context
   const now = new Date();
@@ -437,10 +410,10 @@ export function createUserContextFromBrowser(): UserContext {
 
   // Season calculation
   const getSeason = (month: number) => {
-    if (month >= 3 && month <= 5) return "spring";
-    if (month >= 6 && month <= 8) return "summer";
-    if (month >= 9 && month <= 11) return "fall";
-    return "winter";
+    if (month >= 3 && month <= 5) return 'spring';
+    if (month >= 6 && month <= 8) return 'summer';
+    if (month >= 9 && month <= 11) return 'fall';
+    return 'winter';
   };
 
   // Referrer analysis
@@ -498,7 +471,7 @@ export function createUserContextFromBrowser(): UserContext {
     is_business_hours: isBusinessHours,
 
     // Additional context that could be populated by your app
-    visit_count: parseInt(localStorage.getItem("visit_count") || "1"),
-    page_views: parseInt(sessionStorage.getItem("page_views") || "1"),
+    visit_count: parseInt(localStorage.getItem('visit_count') || '1'),
+    page_views: parseInt(sessionStorage.getItem('page_views') || '1'),
   };
 }

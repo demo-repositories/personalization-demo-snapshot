@@ -1,0 +1,25 @@
+{
+  "bracketSpacing": true,
+  "ignorePatterns": [
+    "**/.agents/**",
+    "**/.cursor/**",
+    ".demo-template-normalization.json",
+    "**/*.md",
+    "**/node_modules/**",
+    "**/.next/**",
+    "**/next-env.d.ts",
+    "**/dist/**",
+    "**/out/**",
+    "**/.sanity/**",
+    "**/sanity.types.ts",
+    ".github/workflows/provision-copy-dataset.yml",
+    ".github/workflows/provision-functions-deploy.yml",
+    ".github/workflows/provision-studio-deploy.yml",
+    "pnpm-lock.yaml",
+    "apps/studio/schema.json",
+    "apps/web/src/lib/sanity/sanity.types.ts"
+  ],
+  "printWidth": 100,
+  "semi": true,
+  "singleQuote": true
+}

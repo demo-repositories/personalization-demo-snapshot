@@ -1,11 +1,11 @@
-import { client } from "@/lib/sanity/client";
+import { client } from '@/lib/sanity/client';
 import {
   queryBlogPageOGData,
   queryGenericPageOGData,
   queryHomePageOGData,
   querySlugPageOGData,
-} from "@/lib/sanity/query";
-import { handleErrors } from "@/utils";
+} from '@/lib/sanity/query';
+import { handleErrors } from '@/utils';
 
 export async function getHomePageOGData(id: string) {
   return await handleErrors(client.fetch(queryHomePageOGData, { id }));

@@ -1,20 +1,20 @@
 /* eslint-disable react/no-unknown-property */
 /* eslint-disable @next/next/no-img-element */
-import { ImageResponse } from "next/og";
-import type { ImageResponseOptions } from "next/server";
+import { ImageResponse } from 'next/og';
+import type { ImageResponseOptions } from 'next/server';
 
-import type { Maybe } from "@/types";
-import { getTitleCase } from "@/utils";
+import type { Maybe } from '@/types';
+import { getTitleCase } from '@/utils';
 
-import { getOgMetaData } from "./og-config";
+import { getOgMetaData } from './og-config';
 import {
   getBlogPageOGData,
   getGenericPageOGData,
   getHomePageOGData,
   getSlugPageOGData,
-} from "./og-data";
+} from './og-data';
 
-export const runtime = "edge";
+export const runtime = 'edge';
 
 const errorContent = (
   <div tw="flex flex-col w-full h-full items-center justify-center">
@@ -59,21 +59,19 @@ const dominantColorSeoImageRender = ({
 }: DominantColorSeoImageRenderProps) => {
   return (
     <div
-      tw={`bg-[${
-        dominantColor ?? "#12061F"
-      }] flex flex-row overflow-hidden relative w-full`}
-      style={{ fontFamily: "Inter" }}
+      tw={`bg-[${dominantColor ?? '#12061F'}] flex flex-row overflow-hidden relative w-full`}
+      style={{ fontFamily: 'Inter' }}
     >
       <svg
         width="100%"
         height="100%"
-        style={{ position: "absolute", top: 0, left: 0 }}
+        style={{ position: 'absolute', top: 0, left: 0 }}
         aria-hidden="true"
       >
         <defs>
           <linearGradient id="gradient" x1="0%" y1="100%" x2="100%" y2="0%">
-            <stop offset="0%" style={{ stopColor: "transparent" }} />
-            <stop offset="100%" style={{ stopColor: "white" }} />
+            <stop offset="0%" style={{ stopColor: 'transparent' }} />
+            <stop offset="100%" style={{ stopColor: 'white' }} />
           </linearGradient>
         </defs>
         <rect width="100%" height="100%" fill="url(#gradient)" opacity="0.2" />
@@ -83,22 +81,20 @@ const dominantColorSeoImageRender = ({
         <div tw="flex justify-between items-start w-full">
           {logo && <img src={logo} alt="Logo" height={48} />}
           <div tw="bg-white flex bg-opacity-20 text-white px-4 py-2 rounded-full text-sm font-medium">
-            {new Date(date ?? new Date()).toLocaleDateString("en-US", {
-              month: "long",
-              day: "numeric",
-              year: "numeric",
+            {new Date(date ?? new Date()).toLocaleDateString('en-US', {
+              month: 'long',
+              day: 'numeric',
+              year: 'numeric',
             })}
           </div>
         </div>
 
-        <h1 tw="text-5xl font-bold leading-tight max-w-[90%] text-white">
-          {title}
-        </h1>
+        <h1 tw="text-5xl font-bold leading-tight max-w-[90%] text-white">{title}</h1>
         {description && <p tw="text-lg text-white">{description}</p>}
         {_type && (
           <div
             tw={`bg-white text-[${
-              dominantColor ?? "#12061F"
+              dominantColor ?? '#12061F'
             }] flex px-5 py-2 rounded-full text-base font-semibold self-start`}
           >
             {getTitleCase(_type)}
@@ -117,7 +113,7 @@ const dominantColorSeoImageRender = ({
                 height={566}
                 alt="Content preview"
                 style={{
-                  objectFit: "cover",
+                  objectFit: 'cover',
                 }}
               />
             ) : logo ? (
@@ -126,12 +122,7 @@ const dominantColorSeoImageRender = ({
               </div>
             ) : (
               <div tw="flex items-center justify-center h-full w-full">
-                <img
-                  src={"https://picsum.photos/566/566"}
-                  alt="Logo"
-                  width={400}
-                  height={400}
-                />
+                <img src={'https://picsum.photos/566/566'} alt="Logo" width={400} height={400} />
               </div>
             )}
           </div>
@@ -141,19 +132,15 @@ const dominantColorSeoImageRender = ({
   );
 };
 
-async function getTtfFont(
-  family: string,
-  axes: string[],
-  value: number[],
-): Promise<ArrayBuffer> {
-  const familyParam = `${axes.join(",")}@${value.join(",")}`;
+async function getTtfFont(family: string, axes: string[], value: number[]): Promise<ArrayBuffer> {
+  const familyParam = `${axes.join(',')}@${value.join(',')}`;
 
   // Get css style sheet with user agent Mozilla/5.0 Firefox/1.0 to ensure non-variable TTF is returned
   const cssCall = await fetch(
     `https://fonts.googleapis.com/css2?family=${family}:${familyParam}&display=swap`,
     {
       headers: {
-        "User-Agent": "Mozilla/5.0 Firefox/1.0",
+        'User-Agent': 'Mozilla/5.0 Firefox/1.0',
       },
     },
   );
@@ -162,7 +149,7 @@ async function getTtfFont(
   const ttfUrl = css.match(/url\(([^)]+)\)/)?.[1];
 
   if (!ttfUrl) {
-    throw new Error("Failed to extract font URL from CSS");
+    throw new Error('Failed to extract font URL from CSS');
   }
 
   return await fetch(ttfUrl).then((res) => res.arrayBuffer());
@@ -176,30 +163,30 @@ const getOptions = async ({
   height: number;
 }): Promise<ImageResponseOptions> => {
   const [interRegular, interBold, interSemiBold] = await Promise.all([
-    getTtfFont("Inter", ["wght"], [400]),
-    getTtfFont("Inter", ["wght"], [700]),
-    getTtfFont("Inter", ["wght"], [600]),
+    getTtfFont('Inter', ['wght'], [400]),
+    getTtfFont('Inter', ['wght'], [700]),
+    getTtfFont('Inter', ['wght'], [600]),
   ]);
   return {
     width,
     height,
     fonts: [
       {
-        name: "Inter",
+        name: 'Inter',
         data: interRegular,
-        style: "normal",
+        style: 'normal',
         weight: 400,
       },
       {
-        name: "Inter",
+        name: 'Inter',
         data: interBold,
-        style: "normal",
+        style: 'normal',
         weight: 700,
       },
       {
-        name: "Inter",
+        name: 'Inter',
         data: interSemiBold,
-        style: "normal",
+        style: 'normal',
         weight: 600,
       },
     ],
@@ -245,7 +232,7 @@ const block = {
 
 export async function GET({ url }: Request): Promise<ImageResponse> {
   const { searchParams } = new URL(url);
-  const type = searchParams.get("type") as keyof typeof block;
+  const type = searchParams.get('type') as keyof typeof block;
   const { width, height } = getOgMetaData(searchParams);
   const para = Object.fromEntries(searchParams.entries());
   const options = await getOptions({ width, height });

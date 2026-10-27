@@ -107,7 +107,7 @@ The template includes a GitHub Actions workflow [`deploy-sanity.yml`](https://ra
 Alternatively, you can manually deploy from your Studio directory (`/studio`) using:
 
 ```shell
-npx sanity deploy
+pnpm --filter ./apps/studio exec sanity deploy
 ```
 
 **Note**: To use the live preview feature, your browser needs to enable third party cookies.
@@ -126,3 +126,7 @@ You have the freedom to deploy your Next.js app to your hosting provider of choi
 Now that you've deployed your Next.js application and Sanity Studio, you can optionally invite a collaborator to your Studio. Open up [Manage](https://www.sanity.io/manage), select your project and click "Invite project members"
 
 They will be able to access the deployed Studio, where you can collaborate together on creating content.
+
+## Deploy Studio changes
+
+Sign in with `pnpm exec sanity login`. Then run `pnpm deploy:studio`. Vercel deploys frontends automatically when you push to `main`.

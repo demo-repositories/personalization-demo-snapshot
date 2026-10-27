@@ -1,22 +1,20 @@
-"use client";
-import { useOptimistic } from "@sanity/visual-editing/react";
-import { createDataAttribute, type SanityDocument } from "next-sanity";
-import type { ComponentType } from "react";
+'use client';
+import { useOptimistic } from '@sanity/visual-editing/react';
+import { createDataAttribute, type SanityDocument } from 'next-sanity';
+import type { ComponentType } from 'react';
 
-import { dataset, projectId, studioUrl } from "@/lib/sanity/api";
-import type { QueryHomePageDataResult } from "@/lib/sanity/sanity.types";
-import type { PagebuilderType } from "@/types";
+import { dataset, projectId, studioUrl } from '@/lib/sanity/api';
+import type { QueryHomePageDataResult } from '@/lib/sanity/sanity.types';
+import type { PagebuilderType } from '@/types';
 
-import { CTABlock } from "./sections/cta";
-import { FaqAccordion } from "./sections/faq-accordion";
-import { FeatureCardsWithIcon } from "./sections/feature-cards-with-icon";
-import { HeroBlock } from "./sections/hero";
-import { ImageLinkCards } from "./sections/image-link-cards";
-import { SubscribeNewsletter } from "./sections/subscribe-newsletter";
+import { CTABlock } from './sections/cta';
+import { FaqAccordion } from './sections/faq-accordion';
+import { FeatureCardsWithIcon } from './sections/feature-cards-with-icon';
+import { HeroBlock } from './sections/hero';
+import { ImageLinkCards } from './sections/image-link-cards';
+import { SubscribeNewsletter } from './sections/subscribe-newsletter';
 
-type PageBlock = NonNullable<
-  NonNullable<QueryHomePageDataResult>["pageBuilder"]
->[number];
+type PageBlock = NonNullable<NonNullable<QueryHomePageDataResult>['pageBuilder']>[number];
 
 export type PageBuilderProps = {
   pageBuilder: PageBlock[];
@@ -41,11 +39,7 @@ const BLOCK_COMPONENTS = {
 
 type BlockType = keyof typeof BLOCK_COMPONENTS;
 
-export function PageBuilder({
-  pageBuilder: initialPageBuilder = [],
-  id,
-  type,
-}: PageBuilderProps) {
+export function PageBuilder({ pageBuilder: initialPageBuilder = [], id, type }: PageBuilderProps) {
   const pageBuilder = useOptimistic<PageBlock[], SanityDocument<PageData>>(
     initialPageBuilder,
     (currentPageBuilder, action) => {
@@ -66,7 +60,7 @@ export function PageBuilder({
         projectId: projectId,
         dataset: dataset,
         type: type,
-        path: "pageBuilder",
+        path: 'pageBuilder',
       }).toString()}
     >
       {pageBuilder.map((block) => {

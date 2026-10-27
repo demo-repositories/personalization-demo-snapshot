@@ -12,60 +12,96 @@
  * ---------------------------------------------------------------------------------
  */
 
-// Source: schema.json
-export type SanityImagePaletteSwatch = {
-  _type: "sanity.imagePaletteSwatch";
-  background?: string;
-  foreground?: string;
-  population?: number;
-  title?: string;
+export declare const internalGroqTypeReferenceTo: unique symbol;
+
+// Source: ../studio/schema.json
+export type SegmentReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "segment";
 };
 
-export type SanityImagePalette = {
-  _type: "sanity.imagePalette";
-  darkMuted?: SanityImagePaletteSwatch;
-  lightVibrant?: SanityImagePaletteSwatch;
-  darkVibrant?: SanityImagePaletteSwatch;
-  vibrant?: SanityImagePaletteSwatch;
-  dominant?: SanityImagePaletteSwatch;
-  lightMuted?: SanityImagePaletteSwatch;
-  muted?: SanityImagePaletteSwatch;
+export type Personalization = {
+  enabled?: boolean;
+  variants?: Array<{
+    segment: SegmentReference;
+    holdoutPercentage?: number;
+    content?: Content;
+    _type: "personalizedVariant";
+    _key: string;
+  }>;
 };
 
-export type SanityImageDimensions = {
-  _type: "sanity.imageDimensions";
-  height?: number;
-  width?: number;
-  aspectRatio?: number;
+export type CtaPersonalization = {
+  enabled?: boolean;
+  variants?: Array<{
+    segment: SegmentReference;
+    holdoutPercentage?: number;
+    content?: PersonalizedVariantContent;
+    _type: "personalizedVariant";
+    _key: string;
+  }>;
 };
 
-export type SanityFileAsset = {
-  _id: string;
-  _type: "sanity.fileAsset";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  originalFilename?: string;
-  label?: string;
+export type Link = {
   title?: string;
   description?: string;
-  altText?: string;
-  sha1hash?: string;
-  extension?: string;
-  mimeType?: string;
-  size?: number;
-  assetId?: string;
-  uploadId?: string;
-  path?: string;
-  url?: string;
-  source?: SanityAssetSourceData;
+  url?: CustomUrl;
 };
 
-export type Geopoint = {
-  _type: "geopoint";
-  lat?: number;
-  lng?: number;
-  alt?: number;
+export type SanityImageAssetReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
+};
+
+export type SeoImage = {
+  asset?: SanityImageAssetReference;
+  media?: unknown; // Unable to locate the referenced type "seoImage.media" in schema
+  hotspot?: SanityImageHotspot;
+  crop?: SanityImageCrop;
+  _type: "image";
+};
+
+export type Content = {
+  badge?: string;
+  title?: string;
+  richText?: RichText;
+  image?: ContentImage;
+  buttons?: Array<
+    {
+      _key: string;
+    } & Button
+  >;
+};
+
+export type ContentImage = {
+  asset?: SanityImageAssetReference;
+  media?: unknown; // Unable to locate the referenced type "content.image.media" in schema
+  hotspot?: SanityImageHotspot;
+  crop?: SanityImageCrop;
+  _type: "image";
+};
+
+export type PersonalizedVariantContent = {
+  eyebrow?: string;
+  title?: string;
+  richText?: RichText;
+  buttons?: Array<
+    {
+      _key: string;
+    } & Button
+  >;
+};
+
+export type ImageLinkCardImage = {
+  asset?: SanityImageAssetReference;
+  media?: unknown; // Unable to locate the referenced type "imageLinkCard.image.media" in schema
+  hotspot?: SanityImageHotspot;
+  crop?: SanityImageCrop;
+  _type: "image";
 };
 
 export type SubscribeNewsletter = {
@@ -113,40 +149,7 @@ export type ImageLinkCards = {
   _type: "imageLinkCards";
   eyebrow?: string;
   title: string;
-  richText?: Array<
-    | {
-        children?: Array<{
-          marks?: Array<string>;
-          text?: string;
-          _type: "span";
-          _key: string;
-        }>;
-        style?: "normal" | "h2" | "h3" | "h4" | "h5" | "h6" | "inline";
-        listItem?: "number" | "bullet";
-        markDefs?: Array<{
-          customLink?: CustomUrl;
-          _type: "customLink";
-          _key: string;
-        }>;
-        level?: number;
-        _type: "block";
-        _key: string;
-      }
-    | {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        media?: unknown;
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        caption?: string;
-        _type: "image";
-        _key: string;
-      }
-  >;
+  richText?: RichText;
   buttons?: Array<
     {
       _key: string;
@@ -155,22 +158,18 @@ export type ImageLinkCards = {
   cards?: Array<{
     title: string;
     description: string;
-    image?: {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      _type: "image";
-    };
+    image?: ImageLinkCardImage;
     url?: CustomUrl;
     _type: "imageLinkCard";
     _key: string;
   }>;
+};
+
+export type FaqReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "faq";
 };
 
 export type FaqAccordion = {
@@ -178,18 +177,12 @@ export type FaqAccordion = {
   eyebrow?: string;
   title: string;
   subtitle?: string;
-  link?: {
-    title?: string;
-    description?: string;
-    url?: CustomUrl;
-  };
-  faqs: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "faq";
-  }>;
+  link?: Link;
+  faqs: Array<
+    {
+      _key: string;
+    } & FaqReference
+  >;
 };
 
 export type FeatureCardsIcon = {
@@ -244,92 +237,22 @@ export type Cta = {
   _type: "cta";
   eyebrow?: string;
   title?: string;
-  richText?: Array<
-    | {
-        children?: Array<{
-          marks?: Array<string>;
-          text?: string;
-          _type: "span";
-          _key: string;
-        }>;
-        style?: "normal" | "h2" | "h3" | "h4" | "h5" | "h6" | "inline";
-        listItem?: "number" | "bullet";
-        markDefs?: Array<{
-          customLink?: CustomUrl;
-          _type: "customLink";
-          _key: string;
-        }>;
-        level?: number;
-        _type: "block";
-        _key: string;
-      }
-    | {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        media?: unknown;
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        caption?: string;
-        _type: "image";
-        _key: string;
-      }
-  >;
+  richText?: RichText;
   buttons?: Array<
     {
       _key: string;
     } & Button
   >;
+  personalization?: CtaPersonalization;
 };
 
 export type Hero = {
   _type: "hero";
   badge?: string;
   title?: string;
-  richText?: Array<
-    | {
-        children?: Array<{
-          marks?: Array<string>;
-          text?: string;
-          _type: "span";
-          _key: string;
-        }>;
-        style?: "normal" | "h2" | "h3" | "h4" | "h5" | "h6" | "inline";
-        listItem?: "number" | "bullet";
-        markDefs?: Array<{
-          customLink?: CustomUrl;
-          _type: "customLink";
-          _key: string;
-        }>;
-        level?: number;
-        _type: "block";
-        _key: string;
-      }
-    | {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
-        media?: unknown;
-        hotspot?: SanityImageHotspot;
-        crop?: SanityImageCrop;
-        caption?: string;
-        _type: "image";
-        _key: string;
-      }
-  >;
+  richText?: RichText;
   image?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -340,6 +263,68 @@ export type Hero = {
       _key: string;
     } & Button
   >;
+  personalization?: Personalization;
+};
+
+export type Segmentation = {
+  _type: "segmentation";
+  enabled?: boolean;
+  fallbackContent?: {
+    title?: string;
+    description?: string;
+    image?: {
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    };
+    ctaText?: string;
+    ctaUrl?: string;
+  };
+  segmentVariants?: Array<{
+    segment: SegmentReference;
+    content?: {
+      title?: string;
+      description?: string;
+      image?: {
+        asset?: SanityImageAssetReference;
+        media?: unknown;
+        hotspot?: SanityImageHotspot;
+        crop?: SanityImageCrop;
+        _type: "image";
+      };
+      ctaText?: string;
+      ctaUrl?: string;
+    };
+    _type: "segmentVariant";
+    _key: string;
+  }>;
+  testingMode?: {
+    enableTesting?: boolean;
+    testingSplit?: Array<{
+      segmentName?: string;
+      percentage?: number;
+      _key: string;
+    }>;
+    previewSegment?: string;
+  };
+};
+
+export type SanityImageCrop = {
+  _type: "sanity.imageCrop";
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
+};
+
+export type SanityImageHotspot = {
+  _type: "sanity.imageHotspot";
+  x: number;
+  y: number;
+  height: number;
+  width: number;
 };
 
 export type PageBuilder = Array<
@@ -390,12 +375,7 @@ export type RichText = Array<
       _key: string;
     }
   | {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
+      asset?: SanityImageAssetReference;
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
@@ -404,6 +384,36 @@ export type RichText = Array<
       _key: string;
     }
 >;
+
+export type BlogReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "blog";
+};
+
+export type BlogIndexReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "blogIndex";
+};
+
+export type PageReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "page";
+};
+
+export type CustomUrl = {
+  _type: "customUrl";
+  type: "internal" | "external";
+  openInNewTab?: boolean;
+  external?: string;
+  href?: string;
+  internal?: BlogReference | BlogIndexReference | PageReference;
+};
 
 export type Navbar = {
   _id: string;
@@ -471,12 +481,7 @@ export type Settings = {
   siteTitle: string;
   siteDescription: string;
   logo?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -506,20 +511,15 @@ export type BlogIndex = {
   pageBuilder?: PageBuilder;
   seoTitle?: string;
   seoDescription?: string;
-  seoImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
+  seoImage?: SeoImage;
   ogTitle?: string;
   ogDescription?: string;
+};
+
+export type Slug = {
+  _type: "slug";
+  current: string;
+  source?: string;
 };
 
 export type HomePage = {
@@ -534,18 +534,7 @@ export type HomePage = {
   pageBuilder?: PageBuilder;
   seoTitle?: string;
   seoDescription?: string;
-  seoImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
+  seoImage?: SeoImage;
   ogTitle?: string;
   ogDescription?: string;
 };
@@ -559,12 +548,7 @@ export type Author = {
   name: string;
   position?: string;
   image?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -593,12 +577,7 @@ export type Page = {
   description?: string;
   slug: Slug;
   image?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -607,21 +586,143 @@ export type Page = {
   pageBuilder?: PageBuilder;
   seoTitle?: string;
   seoDescription?: string;
-  seoImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
+  seoImage?: SeoImage;
   seoNoIndex?: boolean;
   ogTitle?: string;
   ogDescription?: string;
+};
+
+export type IconPicker = {
+  _type: "iconPicker";
+  provider?: string;
+  name?: string;
+  svg?: string;
+};
+
+export type Segment = {
+  _id: string;
+  _type: "segment";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  name: string;
+  slug: Slug;
+  description?: string;
+  priority: number;
+  status?: "active" | "draft" | "archived";
+  conditions?: {
+    operator?: "and" | "or";
+    rules?: Array<{
+      ruleType:
+        | "has_viewed_page"
+        | "has_performed_event"
+        | "has_trait"
+        | "is_located_at"
+        | "is_returning_visitor"
+        | "is_on_device"
+        | "visited_landing_page"
+        | "custom_attribute";
+      pageConditionKey?:
+        | "url"
+        | "path"
+        | "query_parameter"
+        | "referrer"
+        | "utm_campaign"
+        | "utm_source"
+        | "utm_medium"
+        | "utm_term"
+        | "utm_content";
+      deviceConditionKey?:
+        "device_type" | "screen_size" | "operating_system" | "browser";
+      locationConditionKey?:
+        "country" | "region" | "city" | "postal_code" | "continent";
+      eventConditionKey?: "event_name" | "event_property" | "event_count";
+      traitConditionKey?:
+        "user_attribute" | "custom_property" | "user_id" | "email_domain";
+      visitorConditionKey?:
+        "session_count" | "page_views" | "time_on_site" | "last_visit";
+      customConditionKey?:
+        "custom_property" | "user_attribute" | "session_data" | "local_storage";
+      pageOperator?:
+        | "equals"
+        | "does_not_equal"
+        | "contains"
+        | "does_not_contain"
+        | "starts_with"
+        | "ends_with"
+        | "matches"
+        | "exists"
+        | "does_not_exist";
+      deviceOperator?: "equals" | "does_not_equal" | "in" | "not_in";
+      locationOperator?:
+        "equals" | "does_not_equal" | "in" | "not_in" | "near" | "within";
+      eventOperator?:
+        | "equals"
+        | "does_not_equal"
+        | "contains"
+        | "greater_than"
+        | "less_than"
+        | "happened_within"
+        | "happened_before"
+        | "happened_after";
+      traitOperator?:
+        | "equals"
+        | "does_not_equal"
+        | "contains"
+        | "does_not_contain"
+        | "starts_with"
+        | "ends_with"
+        | "in"
+        | "not_in"
+        | "exists"
+        | "does_not_exist";
+      visitorOperator?:
+        | "equals"
+        | "greater_than"
+        | "less_than"
+        | "greater_than_or_equal"
+        | "less_than_or_equal"
+        | "happened_within";
+      customOperator?:
+        | "equals"
+        | "does_not_equal"
+        | "contains"
+        | "does_not_contain"
+        | "greater_than"
+        | "less_than"
+        | "in"
+        | "not_in"
+        | "exists"
+        | "does_not_exist";
+      value?: string;
+      values?: Array<string>;
+      deviceType?: "desktop" | "mobile" | "tablet";
+      locationType?:
+        "continent" | "country" | "region" | "city" | "postal_code";
+      timeAmount?: number;
+      timeUnit?: "minutes" | "hours" | "days" | "weeks" | "months" | "years";
+      coordinates?: {
+        latitude?: number;
+        longitude?: number;
+        radius?: number;
+      };
+      customKey?: string;
+      queryParameterKey?: string;
+      _type: "rule";
+      _key: string;
+    }>;
+  };
+  tags?: Array<string>;
+  notes?: string;
+  estimatedSize?:
+    "very-small" | "small" | "medium" | "large" | "very-large" | "unknown";
+};
+
+export type AuthorReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "author";
 };
 
 export type Blog = {
@@ -634,21 +735,14 @@ export type Blog = {
   title: string;
   description?: string;
   slug: Slug;
-  authors: Array<{
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    _key: string;
-    [internalGroqTypeReferenceTo]?: "author";
-  }>;
+  authors: Array<
+    {
+      _key: string;
+    } & AuthorReference
+  >;
   publishedAt?: string;
   image: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -657,70 +751,31 @@ export type Blog = {
   richText?: RichText;
   seoTitle?: string;
   seoDescription?: string;
-  seoImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
+  seoImage?: SeoImage;
   seoNoIndex?: boolean;
   seoHideFromLists?: boolean;
   ogTitle?: string;
   ogDescription?: string;
 };
 
-export type CustomUrl = {
-  _type: "customUrl";
-  type: "internal" | "external";
-  openInNewTab?: boolean;
-  external?: string;
-  href?: string;
-  internal?:
-    | {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "blog";
-      }
-    | {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "blogIndex";
-      }
-    | {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "page";
-      };
+export type SanityVideoMetadataPlayback = {
+  _type: "sanity.videoMetadata.playback";
+  policy?: string;
 };
 
-export type SanityImageCrop = {
-  _type: "sanity.imageCrop";
-  top?: number;
-  bottom?: number;
-  left?: number;
-  right?: number;
+export type SanityVideoMetadata = {
+  _type: "sanity.videoMetadata";
+  duration?: number;
+  framerate?: number;
+  aspectRatio?: number;
+  hasAudio?: boolean;
+  codec?: string;
+  bitrate?: number;
 };
 
-export type SanityImageHotspot = {
-  _type: "sanity.imageHotspot";
-  x?: number;
-  y?: number;
-  height?: number;
-  width?: number;
-};
-
-export type SanityImageAsset = {
+export type SanityVideoAsset = {
   _id: string;
-  _type: "sanity.imageAsset";
+  _type: "sanity.videoAsset";
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
@@ -729,6 +784,8 @@ export type SanityImageAsset = {
   title?: string;
   description?: string;
   altText?: string;
+  creditLine?: string;
+  metadata?: SanityVideoMetadata;
   sha1hash?: string;
   extension?: string;
   mimeType?: string;
@@ -737,26 +794,29 @@ export type SanityImageAsset = {
   uploadId?: string;
   path?: string;
   url?: string;
-  metadata?: SanityImageMetadata;
-  source?: SanityAssetSourceData;
 };
 
-export type SanityAssetSourceData = {
-  _type: "sanity.assetSourceData";
+export type SanityVideo = {
+  _type: "sanity.video";
+  asset?: unknown;
+  media?: unknown;
+};
+
+export type MediaFolderReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "media.folder";
+};
+
+export type MediaFolder = {
+  _id: string;
+  _type: "media.folder";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
   name?: string;
-  id?: string;
-  url?: string;
-};
-
-export type SanityImageMetadata = {
-  _type: "sanity.imageMetadata";
-  location?: Geopoint;
-  dimensions?: SanityImageDimensions;
-  palette?: SanityImagePalette;
-  lqip?: string;
-  blurHash?: string;
-  hasAlpha?: boolean;
-  isOpaque?: boolean;
+  parent?: MediaFolderReference;
 };
 
 export type MediaTag = {
@@ -766,19 +826,6 @@ export type MediaTag = {
   _updatedAt: string;
   _rev: string;
   name?: Slug;
-};
-
-export type Slug = {
-  _type: "slug";
-  current: string;
-  source?: string;
-};
-
-export type IconPicker = {
-  _type: "iconPicker";
-  provider?: string;
-  name?: string;
-  svg?: string;
 };
 
 export type SanityAssistInstructionTask = {
@@ -819,14 +866,16 @@ export type SanityAssistOutputField = {
   path?: string;
 };
 
+export type AssistInstructionContextReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "assist.instruction.context";
+};
+
 export type SanityAssistInstructionContext = {
   _type: "sanity.assist.instruction.context";
-  reference: {
-    _ref: string;
-    _type: "reference";
-    _weak?: boolean;
-    [internalGroqTypeReferenceTo]?: "assist.instruction.context";
-  };
+  reference: AssistInstructionContextReference;
 };
 
 export type AssistInstructionContext = {
@@ -916,63 +965,179 @@ export type SanityAssistSchemaTypeField = {
   >;
 };
 
+export type SanityImagePaletteSwatch = {
+  _type: "sanity.imagePaletteSwatch";
+  background?: string;
+  foreground?: string;
+  population?: number;
+  title?: string;
+};
+
+export type SanityImagePalette = {
+  _type: "sanity.imagePalette";
+  darkMuted?: SanityImagePaletteSwatch;
+  lightVibrant?: SanityImagePaletteSwatch;
+  darkVibrant?: SanityImagePaletteSwatch;
+  vibrant?: SanityImagePaletteSwatch;
+  dominant?: SanityImagePaletteSwatch;
+  lightMuted?: SanityImagePaletteSwatch;
+  muted?: SanityImagePaletteSwatch;
+};
+
+export type SanityImageDimensions = {
+  _type: "sanity.imageDimensions";
+  height: number;
+  width: number;
+  aspectRatio: number;
+};
+
+export type SanityImageMetadata = {
+  _type: "sanity.imageMetadata";
+  location?: Geopoint;
+  dimensions?: SanityImageDimensions;
+  palette?: SanityImagePalette;
+  lqip?: string;
+  blurHash?: string;
+  thumbHash?: string;
+  hasAlpha?: boolean;
+  isOpaque?: boolean;
+};
+
+export type SanityFileAsset = {
+  _id: string;
+  _type: "sanity.fileAsset";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  originalFilename?: string;
+  label?: string;
+  title?: string;
+  description?: string;
+  altText?: string;
+  sha1hash: string;
+  extension: string;
+  mimeType: string;
+  size: number;
+  assetId: string;
+  uploadId?: string;
+  path: string;
+  url: string;
+  source?: SanityAssetSourceData;
+};
+
+export type SanityAssetSourceData = {
+  _type: "sanity.assetSourceData";
+  name?: string;
+  id?: string;
+  url?: string;
+};
+
+export type SanityImageAsset = {
+  _id: string;
+  _type: "sanity.imageAsset";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  originalFilename?: string;
+  label?: string;
+  title?: string;
+  description?: string;
+  altText?: string;
+  sha1hash: string;
+  extension: string;
+  mimeType: string;
+  size: number;
+  assetId: string;
+  uploadId?: string;
+  path: string;
+  url: string;
+  metadata?: SanityImageMetadata;
+  source?: SanityAssetSourceData;
+};
+
+export type Geopoint = {
+  _type: "geopoint";
+  lat?: number;
+  lng?: number;
+  alt?: number;
+};
+
 export type AllSanitySchemaTypes =
-  | SanityImagePaletteSwatch
-  | SanityImagePalette
-  | SanityImageDimensions
-  | SanityFileAsset
-  | Geopoint
+  | SegmentReference
+  | Personalization
+  | CtaPersonalization
+  | Link
+  | SanityImageAssetReference
+  | SeoImage
+  | Content
+  | ContentImage
+  | PersonalizedVariantContent
+  | ImageLinkCardImage
   | SubscribeNewsletter
   | ImageLinkCards
+  | FaqReference
   | FaqAccordion
   | FeatureCardsIcon
   | Cta
   | Hero
+  | Segmentation
+  | SanityImageCrop
+  | SanityImageHotspot
   | PageBuilder
   | Button
   | RichText
+  | BlogReference
+  | BlogIndexReference
+  | PageReference
+  | CustomUrl
   | Navbar
   | Footer
   | Settings
   | BlogIndex
+  | Slug
   | HomePage
   | Author
   | Faq
   | Page
-  | Blog
-  | CustomUrl
-  | SanityImageCrop
-  | SanityImageHotspot
-  | SanityImageAsset
-  | SanityAssetSourceData
-  | SanityImageMetadata
-  | MediaTag
-  | Slug
   | IconPicker
+  | Segment
+  | AuthorReference
+  | Blog
+  | SanityVideoMetadataPlayback
+  | SanityVideoMetadata
+  | SanityVideoAsset
+  | SanityVideo
+  | MediaFolderReference
+  | MediaFolder
+  | MediaTag
   | SanityAssistInstructionTask
   | SanityAssistTaskStatus
   | SanityAssistSchemaTypeAnnotations
   | SanityAssistOutputType
   | SanityAssistOutputField
+  | AssistInstructionContextReference
   | SanityAssistInstructionContext
   | AssistInstructionContext
   | SanityAssistInstructionUserInput
   | SanityAssistInstructionPrompt
   | SanityAssistInstructionFieldRef
   | SanityAssistInstruction
-  | SanityAssistSchemaTypeField;
-export declare const internalGroqTypeReferenceTo: unique symbol;
-// Source: ../web/src/lib/sanity/query.ts
+  | SanityAssistSchemaTypeField
+  | SanityImagePaletteSwatch
+  | SanityImagePalette
+  | SanityImageDimensions
+  | SanityImageMetadata
+  | SanityFileAsset
+  | SanityAssetSourceData
+  | SanityImageAsset
+  | Geopoint;
+
+// Source: src/lib/sanity/query.ts
 // Variable: queryImageType
 // Query: *[_type == "page" && defined(image)][0]{      image{    ...,    ...asset->{      "alt": coalesce(altText, originalFilename, "no-alt"),      "blurData": metadata.lqip,      "dominantColor": metadata.palette.dominant.background    },  }  }.image
 export type QueryImageTypeResult =
   | {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
+      asset?: SanityImageAssetReference;
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
@@ -982,22 +1147,19 @@ export type QueryImageTypeResult =
       dominantColor: string | null;
     }
   | {
-      asset?: {
-        _ref: string;
-        _type: "reference";
-        _weak?: boolean;
-        [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-      };
+      asset?: SanityImageAssetReference;
       media?: unknown;
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
       _type: "image";
     }
   | null;
+
+// Source: src/lib/sanity/query.ts
 // Variable: queryHomePageData
-// Query: *[_type == "homePage" && _id == "homePage"][0]{    ...,    _id,    _type,    "slug": slug.current,    title,    description,      pageBuilder[]{    ...,    _type,      _type == "cta" => {    ...,      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },  },      _type == "hero" => {    ...,      image{    ...,    ...asset->{      "alt": coalesce(altText, originalFilename, "no-alt"),      "blurData": metadata.lqip,      "dominantColor": metadata.palette.dominant.background    },  },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  }  },      _type == "faqAccordion" => {    ...,      "faqs": array::compact(faqs[]->{    title,    _id,    _type,      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  }  }),    link{      ...,      "openInNewTab": url.openInNewTab,      "href": select(        url.type == "internal" => url.internal->slug.current,        url.type == "external" => url.external,        url.href      )    }  },      _type == "subscribeNewsletter" => {    ...,    "subTitle": subTitle[]{      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    "helperText": helperText[]{      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    }  },      _type == "imageLinkCards" => {    ...,      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },    "cards": array::compact(cards[]{      ...,      "openInNewTab": url.openInNewTab,      "href": select(        url.type == "internal" => url.internal->slug.current,        url.type == "external" => url.external,        url.href      ),        image{    ...,    ...asset->{      "alt": coalesce(altText, originalFilename, "no-alt"),      "blurData": metadata.lqip,      "dominantColor": metadata.palette.dominant.background    },  },    })  }  }  }
+// Query: *[_type == "homePage" && _id == "homePage"][0]{    ...,    _id,    _type,    "slug": slug.current,    title,    description,      pageBuilder[]{    ...,    _type,      _type == "cta" => {    ...,      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },    personalization{      enabled,      variants[]{        segment->{          _id,          name,          status,          priority,          conditions        },        holdoutPercentage,        content      }    }  },      _type == "hero" => {    ...,      image{    ...,    ...asset->{      "alt": coalesce(altText, originalFilename, "no-alt"),      "blurData": metadata.lqip,      "dominantColor": metadata.palette.dominant.background    },  },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  },    personalization{      enabled,      variants[]{        segment->{          _id,          name,          status,          priority,          conditions        },        holdoutPercentage,        content      }    }  },      _type == "faqAccordion" => {    ...,      "faqs": array::compact(faqs[]->{    title,    _id,    _type,      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  }  }),    link{      ...,      "openInNewTab": url.openInNewTab,      "href": select(        url.type == "internal" => url.internal->slug.current,        url.type == "external" => url.external,        url.href      )    },    personalization{      enabled,      variants[]{        segment->{          _id,          name,          status,          priority,          conditions        },        holdoutPercentage,        content      }    }  },      _type == "subscribeNewsletter" => {    ...,    "subTitle": subTitle[]{      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    "helperText": helperText[]{      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    }  },      _type == "imageLinkCards" => {    ...,      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },    "cards": array::compact(cards[]{      ...,      "openInNewTab": url.openInNewTab,      "href": select(        url.type == "internal" => url.internal->slug.current,        url.type == "external" => url.external,        url.href      ),        image{    ...,    ...asset->{      "alt": coalesce(altText, originalFilename, "no-alt"),      "blurData": metadata.lqip,      "dominantColor": metadata.palette.dominant.background    },  },    })  },      _type == "featureCardsIcon" => {    ...,      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  },    personalization{      enabled,      variants[]{        segment->{          _id,          name,          status,          priority,          conditions        },        holdoutPercentage,        content      }    }  }  }  }
 export type QueryHomePageDataResult = {
-  _id: string;
+  _id: "homePage";
   _type: "homePage";
   _createdAt: string;
   _updatedAt: string;
@@ -1040,12 +1202,7 @@ export type QueryHomePageDataResult = {
               _key: string;
             }
           | {
-              asset?: {
-                _ref: string;
-                _type: "reference";
-                _weak?: boolean;
-                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-              };
+              asset?: SanityImageAssetReference;
               media?: unknown;
               hotspot?: SanityImageHotspot;
               crop?: SanityImageCrop;
@@ -1063,6 +1220,141 @@ export type QueryHomePageDataResult = {
           openInNewTab: boolean | null;
           href: string | null;
         }> | null;
+        personalization: {
+          enabled: boolean | null;
+          variants: Array<{
+            segment: {
+              _id: string;
+              name: string;
+              status: "active" | "archived" | "draft" | null;
+              priority: number;
+              conditions: {
+                operator?: "and" | "or";
+                rules?: Array<{
+                  ruleType:
+                    | "custom_attribute"
+                    | "has_performed_event"
+                    | "has_trait"
+                    | "has_viewed_page"
+                    | "is_located_at"
+                    | "is_on_device"
+                    | "is_returning_visitor"
+                    | "visited_landing_page";
+                  pageConditionKey?:
+                    | "path"
+                    | "query_parameter"
+                    | "referrer"
+                    | "url"
+                    | "utm_campaign"
+                    | "utm_content"
+                    | "utm_medium"
+                    | "utm_source"
+                    | "utm_term";
+                  deviceConditionKey?:
+                    | "browser"
+                    | "device_type"
+                    | "operating_system"
+                    | "screen_size";
+                  locationConditionKey?:
+                    "city" | "continent" | "country" | "postal_code" | "region";
+                  eventConditionKey?:
+                    "event_count" | "event_name" | "event_property";
+                  traitConditionKey?:
+                    | "custom_property"
+                    | "email_domain"
+                    | "user_attribute"
+                    | "user_id";
+                  visitorConditionKey?:
+                    | "last_visit"
+                    | "page_views"
+                    | "session_count"
+                    | "time_on_site";
+                  customConditionKey?:
+                    | "custom_property"
+                    | "local_storage"
+                    | "session_data"
+                    | "user_attribute";
+                  pageOperator?:
+                    | "contains"
+                    | "does_not_contain"
+                    | "does_not_equal"
+                    | "does_not_exist"
+                    | "ends_with"
+                    | "equals"
+                    | "exists"
+                    | "matches"
+                    | "starts_with";
+                  deviceOperator?:
+                    "does_not_equal" | "equals" | "in" | "not_in";
+                  locationOperator?:
+                    | "does_not_equal"
+                    | "equals"
+                    | "in"
+                    | "near"
+                    | "not_in"
+                    | "within";
+                  eventOperator?:
+                    | "contains"
+                    | "does_not_equal"
+                    | "equals"
+                    | "greater_than"
+                    | "happened_after"
+                    | "happened_before"
+                    | "happened_within"
+                    | "less_than";
+                  traitOperator?:
+                    | "contains"
+                    | "does_not_contain"
+                    | "does_not_equal"
+                    | "does_not_exist"
+                    | "ends_with"
+                    | "equals"
+                    | "exists"
+                    | "in"
+                    | "not_in"
+                    | "starts_with";
+                  visitorOperator?:
+                    | "equals"
+                    | "greater_than_or_equal"
+                    | "greater_than"
+                    | "happened_within"
+                    | "less_than_or_equal"
+                    | "less_than";
+                  customOperator?:
+                    | "contains"
+                    | "does_not_contain"
+                    | "does_not_equal"
+                    | "does_not_exist"
+                    | "equals"
+                    | "exists"
+                    | "greater_than"
+                    | "in"
+                    | "less_than"
+                    | "not_in";
+                  value?: string;
+                  values?: Array<string>;
+                  deviceType?: "desktop" | "mobile" | "tablet";
+                  locationType?:
+                    "city" | "continent" | "country" | "postal_code" | "region";
+                  timeAmount?: number;
+                  timeUnit?:
+                    "days" | "hours" | "minutes" | "months" | "weeks" | "years";
+                  coordinates?: {
+                    latitude?: number;
+                    longitude?: number;
+                    radius?: number;
+                  };
+                  customKey?: string;
+                  queryParameterKey?: string;
+                  _type: "rule";
+                  _key: string;
+                }>;
+              } | null;
+            };
+            holdoutPercentage: number | null;
+            content: PersonalizedVariantContent | null;
+          }> | null;
+        } | null;
       }
     | {
         _key: string;
@@ -1110,12 +1402,7 @@ export type QueryHomePageDataResult = {
                 _key: string;
               }
             | {
-                asset?: {
-                  _ref: string;
-                  _type: "reference";
-                  _weak?: boolean;
-                  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-                };
+                asset?: SanityImageAssetReference;
                 media?: unknown;
                 hotspot?: SanityImageHotspot;
                 crop?: SanityImageCrop;
@@ -1126,13 +1413,14 @@ export type QueryHomePageDataResult = {
               }
           > | null;
         }>;
+        personalization: null;
       }
     | {
         _key: string;
         _type: "featureCardsIcon";
         eyebrow?: string;
         title?: string;
-        richText?: Array<{
+        richText: Array<{
           children?: Array<{
             marks?: Array<string>;
             text?: string;
@@ -1141,15 +1429,24 @@ export type QueryHomePageDataResult = {
           }>;
           style?: "h2" | "h3" | "h4" | "h5" | "h6" | "inline" | "normal";
           listItem?: "bullet" | "number";
-          markDefs?: Array<{
-            customLink?: CustomUrl;
-            _type: "customLink";
-            _key: string;
-          }>;
+          markDefs: Array<
+            | {
+                customLink?: CustomUrl;
+                _type: "customLink";
+                _key: string;
+                openInNewTab: boolean | null;
+                href: string | "#" | null;
+              }
+            | {
+                customLink?: CustomUrl;
+                _type: "customLink";
+                _key: string;
+              }
+          > | null;
           level?: number;
           _type: "block";
           _key: string;
-        }>;
+        }> | null;
         cards?: Array<{
           icon?: IconPicker;
           title?: string;
@@ -1174,6 +1471,7 @@ export type QueryHomePageDataResult = {
           _type: "featureCardIcon";
           _key: string;
         }>;
+        personalization: null;
       }
     | {
         _key: string;
@@ -1209,12 +1507,7 @@ export type QueryHomePageDataResult = {
               _key: string;
             }
           | {
-              asset?: {
-                _ref: string;
-                _type: "reference";
-                _weak?: boolean;
-                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-              };
+              asset?: SanityImageAssetReference;
               media?: unknown;
               hotspot?: SanityImageHotspot;
               crop?: SanityImageCrop;
@@ -1226,12 +1519,7 @@ export type QueryHomePageDataResult = {
         > | null;
         image:
           | {
-              asset?: {
-                _ref: string;
-                _type: "reference";
-                _weak?: boolean;
-                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-              };
+              asset?: SanityImageAssetReference;
               media?: unknown;
               hotspot?: SanityImageHotspot;
               crop?: SanityImageCrop;
@@ -1241,12 +1529,7 @@ export type QueryHomePageDataResult = {
               dominantColor: string | null;
             }
           | {
-              asset?: {
-                _ref: string;
-                _type: "reference";
-                _weak?: boolean;
-                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-              };
+              asset?: SanityImageAssetReference;
               media?: unknown;
               hotspot?: SanityImageHotspot;
               crop?: SanityImageCrop;
@@ -1261,6 +1544,141 @@ export type QueryHomePageDataResult = {
           openInNewTab: boolean | null;
           href: string | null;
         }> | null;
+        personalization: {
+          enabled: boolean | null;
+          variants: Array<{
+            segment: {
+              _id: string;
+              name: string;
+              status: "active" | "archived" | "draft" | null;
+              priority: number;
+              conditions: {
+                operator?: "and" | "or";
+                rules?: Array<{
+                  ruleType:
+                    | "custom_attribute"
+                    | "has_performed_event"
+                    | "has_trait"
+                    | "has_viewed_page"
+                    | "is_located_at"
+                    | "is_on_device"
+                    | "is_returning_visitor"
+                    | "visited_landing_page";
+                  pageConditionKey?:
+                    | "path"
+                    | "query_parameter"
+                    | "referrer"
+                    | "url"
+                    | "utm_campaign"
+                    | "utm_content"
+                    | "utm_medium"
+                    | "utm_source"
+                    | "utm_term";
+                  deviceConditionKey?:
+                    | "browser"
+                    | "device_type"
+                    | "operating_system"
+                    | "screen_size";
+                  locationConditionKey?:
+                    "city" | "continent" | "country" | "postal_code" | "region";
+                  eventConditionKey?:
+                    "event_count" | "event_name" | "event_property";
+                  traitConditionKey?:
+                    | "custom_property"
+                    | "email_domain"
+                    | "user_attribute"
+                    | "user_id";
+                  visitorConditionKey?:
+                    | "last_visit"
+                    | "page_views"
+                    | "session_count"
+                    | "time_on_site";
+                  customConditionKey?:
+                    | "custom_property"
+                    | "local_storage"
+                    | "session_data"
+                    | "user_attribute";
+                  pageOperator?:
+                    | "contains"
+                    | "does_not_contain"
+                    | "does_not_equal"
+                    | "does_not_exist"
+                    | "ends_with"
+                    | "equals"
+                    | "exists"
+                    | "matches"
+                    | "starts_with";
+                  deviceOperator?:
+                    "does_not_equal" | "equals" | "in" | "not_in";
+                  locationOperator?:
+                    | "does_not_equal"
+                    | "equals"
+                    | "in"
+                    | "near"
+                    | "not_in"
+                    | "within";
+                  eventOperator?:
+                    | "contains"
+                    | "does_not_equal"
+                    | "equals"
+                    | "greater_than"
+                    | "happened_after"
+                    | "happened_before"
+                    | "happened_within"
+                    | "less_than";
+                  traitOperator?:
+                    | "contains"
+                    | "does_not_contain"
+                    | "does_not_equal"
+                    | "does_not_exist"
+                    | "ends_with"
+                    | "equals"
+                    | "exists"
+                    | "in"
+                    | "not_in"
+                    | "starts_with";
+                  visitorOperator?:
+                    | "equals"
+                    | "greater_than_or_equal"
+                    | "greater_than"
+                    | "happened_within"
+                    | "less_than_or_equal"
+                    | "less_than";
+                  customOperator?:
+                    | "contains"
+                    | "does_not_contain"
+                    | "does_not_equal"
+                    | "does_not_exist"
+                    | "equals"
+                    | "exists"
+                    | "greater_than"
+                    | "in"
+                    | "less_than"
+                    | "not_in";
+                  value?: string;
+                  values?: Array<string>;
+                  deviceType?: "desktop" | "mobile" | "tablet";
+                  locationType?:
+                    "city" | "continent" | "country" | "postal_code" | "region";
+                  timeAmount?: number;
+                  timeUnit?:
+                    "days" | "hours" | "minutes" | "months" | "weeks" | "years";
+                  coordinates?: {
+                    latitude?: number;
+                    longitude?: number;
+                    radius?: number;
+                  };
+                  customKey?: string;
+                  queryParameterKey?: string;
+                  _type: "rule";
+                  _key: string;
+                }>;
+              } | null;
+            };
+            holdoutPercentage: number | null;
+            content: Content | null;
+          }> | null;
+        } | null;
       }
     | {
         _key: string;
@@ -1296,12 +1714,7 @@ export type QueryHomePageDataResult = {
               _key: string;
             }
           | {
-              asset?: {
-                _ref: string;
-                _type: "reference";
-                _weak?: boolean;
-                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-              };
+              asset?: SanityImageAssetReference;
               media?: unknown;
               hotspot?: SanityImageHotspot;
               crop?: SanityImageCrop;
@@ -1324,13 +1737,8 @@ export type QueryHomePageDataResult = {
           description: string;
           image:
             | {
-                asset?: {
-                  _ref: string;
-                  _type: "reference";
-                  _weak?: boolean;
-                  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-                };
-                media?: unknown;
+                asset?: SanityImageAssetReference;
+                media?: unknown; // Unable to locate the referenced type "imageLinkCard.image.media" in schema
                 hotspot?: SanityImageHotspot;
                 crop?: SanityImageCrop;
                 _type: "image";
@@ -1339,13 +1747,8 @@ export type QueryHomePageDataResult = {
                 dominantColor: string | null;
               }
             | {
-                asset?: {
-                  _ref: string;
-                  _type: "reference";
-                  _weak?: boolean;
-                  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-                };
-                media?: unknown;
+                asset?: SanityImageAssetReference;
+                media?: unknown; // Unable to locate the referenced type "imageLinkCard.image.media" in schema
                 hotspot?: SanityImageHotspot;
                 crop?: SanityImageCrop;
                 _type: "image";
@@ -1420,23 +1823,14 @@ export type QueryHomePageDataResult = {
   > | null;
   seoTitle?: string;
   seoDescription?: string;
-  seoImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
+  seoImage?: SeoImage;
   ogTitle?: string;
   ogDescription?: string;
 } | null;
+
+// Source: src/lib/sanity/query.ts
 // Variable: querySlugPageData
-// Query: *[_type == "page" && slug.current == $slug][0]{    ...,    "slug": slug.current,      pageBuilder[]{    ...,    _type,      _type == "cta" => {    ...,      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },  },      _type == "hero" => {    ...,      image{    ...,    ...asset->{      "alt": coalesce(altText, originalFilename, "no-alt"),      "blurData": metadata.lqip,      "dominantColor": metadata.palette.dominant.background    },  },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  }  },      _type == "faqAccordion" => {    ...,      "faqs": array::compact(faqs[]->{    title,    _id,    _type,      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  }  }),    link{      ...,      "openInNewTab": url.openInNewTab,      "href": select(        url.type == "internal" => url.internal->slug.current,        url.type == "external" => url.external,        url.href      )    }  },      _type == "subscribeNewsletter" => {    ...,    "subTitle": subTitle[]{      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    "helperText": helperText[]{      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    }  },      _type == "imageLinkCards" => {    ...,      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },    "cards": array::compact(cards[]{      ...,      "openInNewTab": url.openInNewTab,      "href": select(        url.type == "internal" => url.internal->slug.current,        url.type == "external" => url.external,        url.href      ),        image{    ...,    ...asset->{      "alt": coalesce(altText, originalFilename, "no-alt"),      "blurData": metadata.lqip,      "dominantColor": metadata.palette.dominant.background    },  },    })  }  }  }
+// Query: *[_type == "page" && slug.current == $slug][0]{    ...,    "slug": slug.current,      pageBuilder[]{    ...,    _type,      _type == "cta" => {    ...,      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },    personalization{      enabled,      variants[]{        segment->{          _id,          name,          status,          priority,          conditions        },        holdoutPercentage,        content      }    }  },      _type == "hero" => {    ...,      image{    ...,    ...asset->{      "alt": coalesce(altText, originalFilename, "no-alt"),      "blurData": metadata.lqip,      "dominantColor": metadata.palette.dominant.background    },  },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  },    personalization{      enabled,      variants[]{        segment->{          _id,          name,          status,          priority,          conditions        },        holdoutPercentage,        content      }    }  },      _type == "faqAccordion" => {    ...,      "faqs": array::compact(faqs[]->{    title,    _id,    _type,      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  }  }),    link{      ...,      "openInNewTab": url.openInNewTab,      "href": select(        url.type == "internal" => url.internal->slug.current,        url.type == "external" => url.external,        url.href      )    },    personalization{      enabled,      variants[]{        segment->{          _id,          name,          status,          priority,          conditions        },        holdoutPercentage,        content      }    }  },      _type == "subscribeNewsletter" => {    ...,    "subTitle": subTitle[]{      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    "helperText": helperText[]{      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    }  },      _type == "imageLinkCards" => {    ...,      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },    "cards": array::compact(cards[]{      ...,      "openInNewTab": url.openInNewTab,      "href": select(        url.type == "internal" => url.internal->slug.current,        url.type == "external" => url.external,        url.href      ),        image{    ...,    ...asset->{      "alt": coalesce(altText, originalFilename, "no-alt"),      "blurData": metadata.lqip,      "dominantColor": metadata.palette.dominant.background    },  },    })  },      _type == "featureCardsIcon" => {    ...,      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  },    personalization{      enabled,      variants[]{        segment->{          _id,          name,          status,          priority,          conditions        },        holdoutPercentage,        content      }    }  }  }  }
 export type QuerySlugPageDataResult = {
   _id: string;
   _type: "page";
@@ -1447,12 +1841,7 @@ export type QuerySlugPageDataResult = {
   description?: string;
   slug: string;
   image?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
+    asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
@@ -1493,12 +1882,7 @@ export type QuerySlugPageDataResult = {
               _key: string;
             }
           | {
-              asset?: {
-                _ref: string;
-                _type: "reference";
-                _weak?: boolean;
-                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-              };
+              asset?: SanityImageAssetReference;
               media?: unknown;
               hotspot?: SanityImageHotspot;
               crop?: SanityImageCrop;
@@ -1516,6 +1900,141 @@ export type QuerySlugPageDataResult = {
           openInNewTab: boolean | null;
           href: string | null;
         }> | null;
+        personalization: {
+          enabled: boolean | null;
+          variants: Array<{
+            segment: {
+              _id: string;
+              name: string;
+              status: "active" | "archived" | "draft" | null;
+              priority: number;
+              conditions: {
+                operator?: "and" | "or";
+                rules?: Array<{
+                  ruleType:
+                    | "custom_attribute"
+                    | "has_performed_event"
+                    | "has_trait"
+                    | "has_viewed_page"
+                    | "is_located_at"
+                    | "is_on_device"
+                    | "is_returning_visitor"
+                    | "visited_landing_page";
+                  pageConditionKey?:
+                    | "path"
+                    | "query_parameter"
+                    | "referrer"
+                    | "url"
+                    | "utm_campaign"
+                    | "utm_content"
+                    | "utm_medium"
+                    | "utm_source"
+                    | "utm_term";
+                  deviceConditionKey?:
+                    | "browser"
+                    | "device_type"
+                    | "operating_system"
+                    | "screen_size";
+                  locationConditionKey?:
+                    "city" | "continent" | "country" | "postal_code" | "region";
+                  eventConditionKey?:
+                    "event_count" | "event_name" | "event_property";
+                  traitConditionKey?:
+                    | "custom_property"
+                    | "email_domain"
+                    | "user_attribute"
+                    | "user_id";
+                  visitorConditionKey?:
+                    | "last_visit"
+                    | "page_views"
+                    | "session_count"
+                    | "time_on_site";
+                  customConditionKey?:
+                    | "custom_property"
+                    | "local_storage"
+                    | "session_data"
+                    | "user_attribute";
+                  pageOperator?:
+                    | "contains"
+                    | "does_not_contain"
+                    | "does_not_equal"
+                    | "does_not_exist"
+                    | "ends_with"
+                    | "equals"
+                    | "exists"
+                    | "matches"
+                    | "starts_with";
+                  deviceOperator?:
+                    "does_not_equal" | "equals" | "in" | "not_in";
+                  locationOperator?:
+                    | "does_not_equal"
+                    | "equals"
+                    | "in"
+                    | "near"
+                    | "not_in"
+                    | "within";
+                  eventOperator?:
+                    | "contains"
+                    | "does_not_equal"
+                    | "equals"
+                    | "greater_than"
+                    | "happened_after"
+                    | "happened_before"
+                    | "happened_within"
+                    | "less_than";
+                  traitOperator?:
+                    | "contains"
+                    | "does_not_contain"
+                    | "does_not_equal"
+                    | "does_not_exist"
+                    | "ends_with"
+                    | "equals"
+                    | "exists"
+                    | "in"
+                    | "not_in"
+                    | "starts_with";
+                  visitorOperator?:
+                    | "equals"
+                    | "greater_than_or_equal"
+                    | "greater_than"
+                    | "happened_within"
+                    | "less_than_or_equal"
+                    | "less_than";
+                  customOperator?:
+                    | "contains"
+                    | "does_not_contain"
+                    | "does_not_equal"
+                    | "does_not_exist"
+                    | "equals"
+                    | "exists"
+                    | "greater_than"
+                    | "in"
+                    | "less_than"
+                    | "not_in";
+                  value?: string;
+                  values?: Array<string>;
+                  deviceType?: "desktop" | "mobile" | "tablet";
+                  locationType?:
+                    "city" | "continent" | "country" | "postal_code" | "region";
+                  timeAmount?: number;
+                  timeUnit?:
+                    "days" | "hours" | "minutes" | "months" | "weeks" | "years";
+                  coordinates?: {
+                    latitude?: number;
+                    longitude?: number;
+                    radius?: number;
+                  };
+                  customKey?: string;
+                  queryParameterKey?: string;
+                  _type: "rule";
+                  _key: string;
+                }>;
+              } | null;
+            };
+            holdoutPercentage: number | null;
+            content: PersonalizedVariantContent | null;
+          }> | null;
+        } | null;
       }
     | {
         _key: string;
@@ -1563,12 +2082,7 @@ export type QuerySlugPageDataResult = {
                 _key: string;
               }
             | {
-                asset?: {
-                  _ref: string;
-                  _type: "reference";
-                  _weak?: boolean;
-                  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-                };
+                asset?: SanityImageAssetReference;
                 media?: unknown;
                 hotspot?: SanityImageHotspot;
                 crop?: SanityImageCrop;
@@ -1579,13 +2093,14 @@ export type QuerySlugPageDataResult = {
               }
           > | null;
         }>;
+        personalization: null;
       }
     | {
         _key: string;
         _type: "featureCardsIcon";
         eyebrow?: string;
         title?: string;
-        richText?: Array<{
+        richText: Array<{
           children?: Array<{
             marks?: Array<string>;
             text?: string;
@@ -1594,15 +2109,24 @@ export type QuerySlugPageDataResult = {
           }>;
           style?: "h2" | "h3" | "h4" | "h5" | "h6" | "inline" | "normal";
           listItem?: "bullet" | "number";
-          markDefs?: Array<{
-            customLink?: CustomUrl;
-            _type: "customLink";
-            _key: string;
-          }>;
+          markDefs: Array<
+            | {
+                customLink?: CustomUrl;
+                _type: "customLink";
+                _key: string;
+                openInNewTab: boolean | null;
+                href: string | "#" | null;
+              }
+            | {
+                customLink?: CustomUrl;
+                _type: "customLink";
+                _key: string;
+              }
+          > | null;
           level?: number;
           _type: "block";
           _key: string;
-        }>;
+        }> | null;
         cards?: Array<{
           icon?: IconPicker;
           title?: string;
@@ -1627,6 +2151,7 @@ export type QuerySlugPageDataResult = {
           _type: "featureCardIcon";
           _key: string;
         }>;
+        personalization: null;
       }
     | {
         _key: string;
@@ -1662,12 +2187,7 @@ export type QuerySlugPageDataResult = {
               _key: string;
             }
           | {
-              asset?: {
-                _ref: string;
-                _type: "reference";
-                _weak?: boolean;
-                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-              };
+              asset?: SanityImageAssetReference;
               media?: unknown;
               hotspot?: SanityImageHotspot;
               crop?: SanityImageCrop;
@@ -1679,12 +2199,7 @@ export type QuerySlugPageDataResult = {
         > | null;
         image:
           | {
-              asset?: {
-                _ref: string;
-                _type: "reference";
-                _weak?: boolean;
-                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-              };
+              asset?: SanityImageAssetReference;
               media?: unknown;
               hotspot?: SanityImageHotspot;
               crop?: SanityImageCrop;
@@ -1694,12 +2209,7 @@ export type QuerySlugPageDataResult = {
               dominantColor: string | null;
             }
           | {
-              asset?: {
-                _ref: string;
-                _type: "reference";
-                _weak?: boolean;
-                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-              };
+              asset?: SanityImageAssetReference;
               media?: unknown;
               hotspot?: SanityImageHotspot;
               crop?: SanityImageCrop;
@@ -1714,6 +2224,141 @@ export type QuerySlugPageDataResult = {
           openInNewTab: boolean | null;
           href: string | null;
         }> | null;
+        personalization: {
+          enabled: boolean | null;
+          variants: Array<{
+            segment: {
+              _id: string;
+              name: string;
+              status: "active" | "archived" | "draft" | null;
+              priority: number;
+              conditions: {
+                operator?: "and" | "or";
+                rules?: Array<{
+                  ruleType:
+                    | "custom_attribute"
+                    | "has_performed_event"
+                    | "has_trait"
+                    | "has_viewed_page"
+                    | "is_located_at"
+                    | "is_on_device"
+                    | "is_returning_visitor"
+                    | "visited_landing_page";
+                  pageConditionKey?:
+                    | "path"
+                    | "query_parameter"
+                    | "referrer"
+                    | "url"
+                    | "utm_campaign"
+                    | "utm_content"
+                    | "utm_medium"
+                    | "utm_source"
+                    | "utm_term";
+                  deviceConditionKey?:
+                    | "browser"
+                    | "device_type"
+                    | "operating_system"
+                    | "screen_size";
+                  locationConditionKey?:
+                    "city" | "continent" | "country" | "postal_code" | "region";
+                  eventConditionKey?:
+                    "event_count" | "event_name" | "event_property";
+                  traitConditionKey?:
+                    | "custom_property"
+                    | "email_domain"
+                    | "user_attribute"
+                    | "user_id";
+                  visitorConditionKey?:
+                    | "last_visit"
+                    | "page_views"
+                    | "session_count"
+                    | "time_on_site";
+                  customConditionKey?:
+                    | "custom_property"
+                    | "local_storage"
+                    | "session_data"
+                    | "user_attribute";
+                  pageOperator?:
+                    | "contains"
+                    | "does_not_contain"
+                    | "does_not_equal"
+                    | "does_not_exist"
+                    | "ends_with"
+                    | "equals"
+                    | "exists"
+                    | "matches"
+                    | "starts_with";
+                  deviceOperator?:
+                    "does_not_equal" | "equals" | "in" | "not_in";
+                  locationOperator?:
+                    | "does_not_equal"
+                    | "equals"
+                    | "in"
+                    | "near"
+                    | "not_in"
+                    | "within";
+                  eventOperator?:
+                    | "contains"
+                    | "does_not_equal"
+                    | "equals"
+                    | "greater_than"
+                    | "happened_after"
+                    | "happened_before"
+                    | "happened_within"
+                    | "less_than";
+                  traitOperator?:
+                    | "contains"
+                    | "does_not_contain"
+                    | "does_not_equal"
+                    | "does_not_exist"
+                    | "ends_with"
+                    | "equals"
+                    | "exists"
+                    | "in"
+                    | "not_in"
+                    | "starts_with";
+                  visitorOperator?:
+                    | "equals"
+                    | "greater_than_or_equal"
+                    | "greater_than"
+                    | "happened_within"
+                    | "less_than_or_equal"
+                    | "less_than";
+                  customOperator?:
+                    | "contains"
+                    | "does_not_contain"
+                    | "does_not_equal"
+                    | "does_not_exist"
+                    | "equals"
+                    | "exists"
+                    | "greater_than"
+                    | "in"
+                    | "less_than"
+                    | "not_in";
+                  value?: string;
+                  values?: Array<string>;
+                  deviceType?: "desktop" | "mobile" | "tablet";
+                  locationType?:
+                    "city" | "continent" | "country" | "postal_code" | "region";
+                  timeAmount?: number;
+                  timeUnit?:
+                    "days" | "hours" | "minutes" | "months" | "weeks" | "years";
+                  coordinates?: {
+                    latitude?: number;
+                    longitude?: number;
+                    radius?: number;
+                  };
+                  customKey?: string;
+                  queryParameterKey?: string;
+                  _type: "rule";
+                  _key: string;
+                }>;
+              } | null;
+            };
+            holdoutPercentage: number | null;
+            content: Content | null;
+          }> | null;
+        } | null;
       }
     | {
         _key: string;
@@ -1749,12 +2394,7 @@ export type QuerySlugPageDataResult = {
               _key: string;
             }
           | {
-              asset?: {
-                _ref: string;
-                _type: "reference";
-                _weak?: boolean;
-                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-              };
+              asset?: SanityImageAssetReference;
               media?: unknown;
               hotspot?: SanityImageHotspot;
               crop?: SanityImageCrop;
@@ -1777,13 +2417,8 @@ export type QuerySlugPageDataResult = {
           description: string;
           image:
             | {
-                asset?: {
-                  _ref: string;
-                  _type: "reference";
-                  _weak?: boolean;
-                  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-                };
-                media?: unknown;
+                asset?: SanityImageAssetReference;
+                media?: unknown; // Unable to locate the referenced type "imageLinkCard.image.media" in schema
                 hotspot?: SanityImageHotspot;
                 crop?: SanityImageCrop;
                 _type: "image";
@@ -1792,13 +2427,8 @@ export type QuerySlugPageDataResult = {
                 dominantColor: string | null;
               }
             | {
-                asset?: {
-                  _ref: string;
-                  _type: "reference";
-                  _weak?: boolean;
-                  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-                };
-                media?: unknown;
+                asset?: SanityImageAssetReference;
+                media?: unknown; // Unable to locate the referenced type "imageLinkCard.image.media" in schema
                 hotspot?: SanityImageHotspot;
                 crop?: SanityImageCrop;
                 _type: "image";
@@ -1873,27 +2503,20 @@ export type QuerySlugPageDataResult = {
   > | null;
   seoTitle?: string;
   seoDescription?: string;
-  seoImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
+  seoImage?: SeoImage;
   seoNoIndex?: boolean;
   ogTitle?: string;
   ogDescription?: string;
 } | null;
+
+// Source: src/lib/sanity/query.ts
 // Variable: querySlugPagePaths
 // Query: *[_type == "page" && defined(slug.current)].slug.current
 export type QuerySlugPagePathsResult = Array<string>;
+
+// Source: src/lib/sanity/query.ts
 // Variable: queryBlogIndexPageData
-// Query: *[_type == "blogIndex"][0]{    ...,    _id,    _type,    title,    description,    "displayFeaturedBlogs" : displayFeaturedBlogs == "yes",    "featuredBlogsCount" : featuredBlogsCount,      pageBuilder[]{    ...,    _type,      _type == "cta" => {    ...,      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },  },      _type == "hero" => {    ...,      image{    ...,    ...asset->{      "alt": coalesce(altText, originalFilename, "no-alt"),      "blurData": metadata.lqip,      "dominantColor": metadata.palette.dominant.background    },  },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  }  },      _type == "faqAccordion" => {    ...,      "faqs": array::compact(faqs[]->{    title,    _id,    _type,      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  }  }),    link{      ...,      "openInNewTab": url.openInNewTab,      "href": select(        url.type == "internal" => url.internal->slug.current,        url.type == "external" => url.external,        url.href      )    }  },      _type == "subscribeNewsletter" => {    ...,    "subTitle": subTitle[]{      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    "helperText": helperText[]{      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    }  },      _type == "imageLinkCards" => {    ...,      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },    "cards": array::compact(cards[]{      ...,      "openInNewTab": url.openInNewTab,      "href": select(        url.type == "internal" => url.internal->slug.current,        url.type == "external" => url.external,        url.href      ),        image{    ...,    ...asset->{      "alt": coalesce(altText, originalFilename, "no-alt"),      "blurData": metadata.lqip,      "dominantColor": metadata.palette.dominant.background    },  },    })  }  },    "slug": slug.current,    "blogs": *[_type == "blog" && (seoHideFromLists != true)] | order(orderRank asc){        _type,  _id,  title,  description,  "slug":slug.current,  richText,  orderRank,    image{    ...,    ...asset->{      "alt": coalesce(altText, originalFilename, "no-alt"),      "blurData": metadata.lqip,      "dominantColor": metadata.palette.dominant.background    },  },  publishedAt,    authors[0]->{    _id,    name,    position,      image{    ...,    ...asset->{      "alt": coalesce(altText, originalFilename, "no-alt"),      "blurData": metadata.lqip,      "dominantColor": metadata.palette.dominant.background    },  }  }    }  }
+// Query: *[_type == "blogIndex"][0]{    ...,    _id,    _type,    title,    description,    "displayFeaturedBlogs" : displayFeaturedBlogs == "yes",    "featuredBlogsCount" : featuredBlogsCount,      pageBuilder[]{    ...,    _type,      _type == "cta" => {    ...,      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },    personalization{      enabled,      variants[]{        segment->{          _id,          name,          status,          priority,          conditions        },        holdoutPercentage,        content      }    }  },      _type == "hero" => {    ...,      image{    ...,    ...asset->{      "alt": coalesce(altText, originalFilename, "no-alt"),      "blurData": metadata.lqip,      "dominantColor": metadata.palette.dominant.background    },  },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  },    personalization{      enabled,      variants[]{        segment->{          _id,          name,          status,          priority,          conditions        },        holdoutPercentage,        content      }    }  },      _type == "faqAccordion" => {    ...,      "faqs": array::compact(faqs[]->{    title,    _id,    _type,      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  }  }),    link{      ...,      "openInNewTab": url.openInNewTab,      "href": select(        url.type == "internal" => url.internal->slug.current,        url.type == "external" => url.external,        url.href      )    },    personalization{      enabled,      variants[]{        segment->{          _id,          name,          status,          priority,          conditions        },        holdoutPercentage,        content      }    }  },      _type == "subscribeNewsletter" => {    ...,    "subTitle": subTitle[]{      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    "helperText": helperText[]{      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    }  },      _type == "imageLinkCards" => {    ...,      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },    "cards": array::compact(cards[]{      ...,      "openInNewTab": url.openInNewTab,      "href": select(        url.type == "internal" => url.internal->slug.current,        url.type == "external" => url.external,        url.href      ),        image{    ...,    ...asset->{      "alt": coalesce(altText, originalFilename, "no-alt"),      "blurData": metadata.lqip,      "dominantColor": metadata.palette.dominant.background    },  },    })  },      _type == "featureCardsIcon" => {    ...,      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  },    personalization{      enabled,      variants[]{        segment->{          _id,          name,          status,          priority,          conditions        },        holdoutPercentage,        content      }    }  }  },    "slug": slug.current,    "blogs": *[_type == "blog" && (seoHideFromLists != true)] | order(orderRank asc){        _type,  _id,  title,  description,  "slug":slug.current,  richText,  orderRank,    image{    ...,    ...asset->{      "alt": coalesce(altText, originalFilename, "no-alt"),      "blurData": metadata.lqip,      "dominantColor": metadata.palette.dominant.background    },  },  publishedAt,    authors[0]->{    _id,    name,    position,      image{    ...,    ...asset->{      "alt": coalesce(altText, originalFilename, "no-alt"),      "blurData": metadata.lqip,      "dominantColor": metadata.palette.dominant.background    },  }  }    }  }
 export type QueryBlogIndexPageDataResult = {
   _id: string;
   _type: "blogIndex";
@@ -1940,12 +2563,7 @@ export type QueryBlogIndexPageDataResult = {
               _key: string;
             }
           | {
-              asset?: {
-                _ref: string;
-                _type: "reference";
-                _weak?: boolean;
-                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-              };
+              asset?: SanityImageAssetReference;
               media?: unknown;
               hotspot?: SanityImageHotspot;
               crop?: SanityImageCrop;
@@ -1963,6 +2581,141 @@ export type QueryBlogIndexPageDataResult = {
           openInNewTab: boolean | null;
           href: string | null;
         }> | null;
+        personalization: {
+          enabled: boolean | null;
+          variants: Array<{
+            segment: {
+              _id: string;
+              name: string;
+              status: "active" | "archived" | "draft" | null;
+              priority: number;
+              conditions: {
+                operator?: "and" | "or";
+                rules?: Array<{
+                  ruleType:
+                    | "custom_attribute"
+                    | "has_performed_event"
+                    | "has_trait"
+                    | "has_viewed_page"
+                    | "is_located_at"
+                    | "is_on_device"
+                    | "is_returning_visitor"
+                    | "visited_landing_page";
+                  pageConditionKey?:
+                    | "path"
+                    | "query_parameter"
+                    | "referrer"
+                    | "url"
+                    | "utm_campaign"
+                    | "utm_content"
+                    | "utm_medium"
+                    | "utm_source"
+                    | "utm_term";
+                  deviceConditionKey?:
+                    | "browser"
+                    | "device_type"
+                    | "operating_system"
+                    | "screen_size";
+                  locationConditionKey?:
+                    "city" | "continent" | "country" | "postal_code" | "region";
+                  eventConditionKey?:
+                    "event_count" | "event_name" | "event_property";
+                  traitConditionKey?:
+                    | "custom_property"
+                    | "email_domain"
+                    | "user_attribute"
+                    | "user_id";
+                  visitorConditionKey?:
+                    | "last_visit"
+                    | "page_views"
+                    | "session_count"
+                    | "time_on_site";
+                  customConditionKey?:
+                    | "custom_property"
+                    | "local_storage"
+                    | "session_data"
+                    | "user_attribute";
+                  pageOperator?:
+                    | "contains"
+                    | "does_not_contain"
+                    | "does_not_equal"
+                    | "does_not_exist"
+                    | "ends_with"
+                    | "equals"
+                    | "exists"
+                    | "matches"
+                    | "starts_with";
+                  deviceOperator?:
+                    "does_not_equal" | "equals" | "in" | "not_in";
+                  locationOperator?:
+                    | "does_not_equal"
+                    | "equals"
+                    | "in"
+                    | "near"
+                    | "not_in"
+                    | "within";
+                  eventOperator?:
+                    | "contains"
+                    | "does_not_equal"
+                    | "equals"
+                    | "greater_than"
+                    | "happened_after"
+                    | "happened_before"
+                    | "happened_within"
+                    | "less_than";
+                  traitOperator?:
+                    | "contains"
+                    | "does_not_contain"
+                    | "does_not_equal"
+                    | "does_not_exist"
+                    | "ends_with"
+                    | "equals"
+                    | "exists"
+                    | "in"
+                    | "not_in"
+                    | "starts_with";
+                  visitorOperator?:
+                    | "equals"
+                    | "greater_than_or_equal"
+                    | "greater_than"
+                    | "happened_within"
+                    | "less_than_or_equal"
+                    | "less_than";
+                  customOperator?:
+                    | "contains"
+                    | "does_not_contain"
+                    | "does_not_equal"
+                    | "does_not_exist"
+                    | "equals"
+                    | "exists"
+                    | "greater_than"
+                    | "in"
+                    | "less_than"
+                    | "not_in";
+                  value?: string;
+                  values?: Array<string>;
+                  deviceType?: "desktop" | "mobile" | "tablet";
+                  locationType?:
+                    "city" | "continent" | "country" | "postal_code" | "region";
+                  timeAmount?: number;
+                  timeUnit?:
+                    "days" | "hours" | "minutes" | "months" | "weeks" | "years";
+                  coordinates?: {
+                    latitude?: number;
+                    longitude?: number;
+                    radius?: number;
+                  };
+                  customKey?: string;
+                  queryParameterKey?: string;
+                  _type: "rule";
+                  _key: string;
+                }>;
+              } | null;
+            };
+            holdoutPercentage: number | null;
+            content: PersonalizedVariantContent | null;
+          }> | null;
+        } | null;
       }
     | {
         _key: string;
@@ -2010,12 +2763,7 @@ export type QueryBlogIndexPageDataResult = {
                 _key: string;
               }
             | {
-                asset?: {
-                  _ref: string;
-                  _type: "reference";
-                  _weak?: boolean;
-                  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-                };
+                asset?: SanityImageAssetReference;
                 media?: unknown;
                 hotspot?: SanityImageHotspot;
                 crop?: SanityImageCrop;
@@ -2026,13 +2774,14 @@ export type QueryBlogIndexPageDataResult = {
               }
           > | null;
         }>;
+        personalization: null;
       }
     | {
         _key: string;
         _type: "featureCardsIcon";
         eyebrow?: string;
         title?: string;
-        richText?: Array<{
+        richText: Array<{
           children?: Array<{
             marks?: Array<string>;
             text?: string;
@@ -2041,15 +2790,24 @@ export type QueryBlogIndexPageDataResult = {
           }>;
           style?: "h2" | "h3" | "h4" | "h5" | "h6" | "inline" | "normal";
           listItem?: "bullet" | "number";
-          markDefs?: Array<{
-            customLink?: CustomUrl;
-            _type: "customLink";
-            _key: string;
-          }>;
+          markDefs: Array<
+            | {
+                customLink?: CustomUrl;
+                _type: "customLink";
+                _key: string;
+                openInNewTab: boolean | null;
+                href: string | "#" | null;
+              }
+            | {
+                customLink?: CustomUrl;
+                _type: "customLink";
+                _key: string;
+              }
+          > | null;
           level?: number;
           _type: "block";
           _key: string;
-        }>;
+        }> | null;
         cards?: Array<{
           icon?: IconPicker;
           title?: string;
@@ -2074,6 +2832,7 @@ export type QueryBlogIndexPageDataResult = {
           _type: "featureCardIcon";
           _key: string;
         }>;
+        personalization: null;
       }
     | {
         _key: string;
@@ -2109,12 +2868,7 @@ export type QueryBlogIndexPageDataResult = {
               _key: string;
             }
           | {
-              asset?: {
-                _ref: string;
-                _type: "reference";
-                _weak?: boolean;
-                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-              };
+              asset?: SanityImageAssetReference;
               media?: unknown;
               hotspot?: SanityImageHotspot;
               crop?: SanityImageCrop;
@@ -2126,12 +2880,7 @@ export type QueryBlogIndexPageDataResult = {
         > | null;
         image:
           | {
-              asset?: {
-                _ref: string;
-                _type: "reference";
-                _weak?: boolean;
-                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-              };
+              asset?: SanityImageAssetReference;
               media?: unknown;
               hotspot?: SanityImageHotspot;
               crop?: SanityImageCrop;
@@ -2141,12 +2890,7 @@ export type QueryBlogIndexPageDataResult = {
               dominantColor: string | null;
             }
           | {
-              asset?: {
-                _ref: string;
-                _type: "reference";
-                _weak?: boolean;
-                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-              };
+              asset?: SanityImageAssetReference;
               media?: unknown;
               hotspot?: SanityImageHotspot;
               crop?: SanityImageCrop;
@@ -2161,6 +2905,141 @@ export type QueryBlogIndexPageDataResult = {
           openInNewTab: boolean | null;
           href: string | null;
         }> | null;
+        personalization: {
+          enabled: boolean | null;
+          variants: Array<{
+            segment: {
+              _id: string;
+              name: string;
+              status: "active" | "archived" | "draft" | null;
+              priority: number;
+              conditions: {
+                operator?: "and" | "or";
+                rules?: Array<{
+                  ruleType:
+                    | "custom_attribute"
+                    | "has_performed_event"
+                    | "has_trait"
+                    | "has_viewed_page"
+                    | "is_located_at"
+                    | "is_on_device"
+                    | "is_returning_visitor"
+                    | "visited_landing_page";
+                  pageConditionKey?:
+                    | "path"
+                    | "query_parameter"
+                    | "referrer"
+                    | "url"
+                    | "utm_campaign"
+                    | "utm_content"
+                    | "utm_medium"
+                    | "utm_source"
+                    | "utm_term";
+                  deviceConditionKey?:
+                    | "browser"
+                    | "device_type"
+                    | "operating_system"
+                    | "screen_size";
+                  locationConditionKey?:
+                    "city" | "continent" | "country" | "postal_code" | "region";
+                  eventConditionKey?:
+                    "event_count" | "event_name" | "event_property";
+                  traitConditionKey?:
+                    | "custom_property"
+                    | "email_domain"
+                    | "user_attribute"
+                    | "user_id";
+                  visitorConditionKey?:
+                    | "last_visit"
+                    | "page_views"
+                    | "session_count"
+                    | "time_on_site";
+                  customConditionKey?:
+                    | "custom_property"
+                    | "local_storage"
+                    | "session_data"
+                    | "user_attribute";
+                  pageOperator?:
+                    | "contains"
+                    | "does_not_contain"
+                    | "does_not_equal"
+                    | "does_not_exist"
+                    | "ends_with"
+                    | "equals"
+                    | "exists"
+                    | "matches"
+                    | "starts_with";
+                  deviceOperator?:
+                    "does_not_equal" | "equals" | "in" | "not_in";
+                  locationOperator?:
+                    | "does_not_equal"
+                    | "equals"
+                    | "in"
+                    | "near"
+                    | "not_in"
+                    | "within";
+                  eventOperator?:
+                    | "contains"
+                    | "does_not_equal"
+                    | "equals"
+                    | "greater_than"
+                    | "happened_after"
+                    | "happened_before"
+                    | "happened_within"
+                    | "less_than";
+                  traitOperator?:
+                    | "contains"
+                    | "does_not_contain"
+                    | "does_not_equal"
+                    | "does_not_exist"
+                    | "ends_with"
+                    | "equals"
+                    | "exists"
+                    | "in"
+                    | "not_in"
+                    | "starts_with";
+                  visitorOperator?:
+                    | "equals"
+                    | "greater_than_or_equal"
+                    | "greater_than"
+                    | "happened_within"
+                    | "less_than_or_equal"
+                    | "less_than";
+                  customOperator?:
+                    | "contains"
+                    | "does_not_contain"
+                    | "does_not_equal"
+                    | "does_not_exist"
+                    | "equals"
+                    | "exists"
+                    | "greater_than"
+                    | "in"
+                    | "less_than"
+                    | "not_in";
+                  value?: string;
+                  values?: Array<string>;
+                  deviceType?: "desktop" | "mobile" | "tablet";
+                  locationType?:
+                    "city" | "continent" | "country" | "postal_code" | "region";
+                  timeAmount?: number;
+                  timeUnit?:
+                    "days" | "hours" | "minutes" | "months" | "weeks" | "years";
+                  coordinates?: {
+                    latitude?: number;
+                    longitude?: number;
+                    radius?: number;
+                  };
+                  customKey?: string;
+                  queryParameterKey?: string;
+                  _type: "rule";
+                  _key: string;
+                }>;
+              } | null;
+            };
+            holdoutPercentage: number | null;
+            content: Content | null;
+          }> | null;
+        } | null;
       }
     | {
         _key: string;
@@ -2196,12 +3075,7 @@ export type QueryBlogIndexPageDataResult = {
               _key: string;
             }
           | {
-              asset?: {
-                _ref: string;
-                _type: "reference";
-                _weak?: boolean;
-                [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-              };
+              asset?: SanityImageAssetReference;
               media?: unknown;
               hotspot?: SanityImageHotspot;
               crop?: SanityImageCrop;
@@ -2224,13 +3098,8 @@ export type QueryBlogIndexPageDataResult = {
           description: string;
           image:
             | {
-                asset?: {
-                  _ref: string;
-                  _type: "reference";
-                  _weak?: boolean;
-                  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-                };
-                media?: unknown;
+                asset?: SanityImageAssetReference;
+                media?: unknown; // Unable to locate the referenced type "imageLinkCard.image.media" in schema
                 hotspot?: SanityImageHotspot;
                 crop?: SanityImageCrop;
                 _type: "image";
@@ -2239,13 +3108,8 @@ export type QueryBlogIndexPageDataResult = {
                 dominantColor: string | null;
               }
             | {
-                asset?: {
-                  _ref: string;
-                  _type: "reference";
-                  _weak?: boolean;
-                  [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-                };
-                media?: unknown;
+                asset?: SanityImageAssetReference;
+                media?: unknown; // Unable to locate the referenced type "imageLinkCard.image.media" in schema
                 hotspot?: SanityImageHotspot;
                 crop?: SanityImageCrop;
                 _type: "image";
@@ -2320,18 +3184,7 @@ export type QueryBlogIndexPageDataResult = {
   > | null;
   seoTitle?: string;
   seoDescription?: string;
-  seoImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
+  seoImage?: SeoImage;
   ogTitle?: string;
   ogDescription?: string;
   blogs: Array<{
@@ -2344,12 +3197,7 @@ export type QueryBlogIndexPageDataResult = {
     orderRank: string | null;
     image:
       | {
-          asset?: {
-            _ref: string;
-            _type: "reference";
-            _weak?: boolean;
-            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-          };
+          asset?: SanityImageAssetReference;
           media?: unknown;
           hotspot?: SanityImageHotspot;
           crop?: SanityImageCrop;
@@ -2359,12 +3207,7 @@ export type QueryBlogIndexPageDataResult = {
           dominantColor: string | null;
         }
       | {
-          asset?: {
-            _ref: string;
-            _type: "reference";
-            _weak?: boolean;
-            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-          };
+          asset?: SanityImageAssetReference;
           media?: unknown;
           hotspot?: SanityImageHotspot;
           crop?: SanityImageCrop;
@@ -2377,12 +3220,7 @@ export type QueryBlogIndexPageDataResult = {
       position: string | null;
       image:
         | {
-            asset?: {
-              _ref: string;
-              _type: "reference";
-              _weak?: boolean;
-              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-            };
+            asset?: SanityImageAssetReference;
             media?: unknown;
             hotspot?: SanityImageHotspot;
             crop?: SanityImageCrop;
@@ -2392,12 +3230,7 @@ export type QueryBlogIndexPageDataResult = {
             dominantColor: string | null;
           }
         | {
-            asset?: {
-              _ref: string;
-              _type: "reference";
-              _weak?: boolean;
-              [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-            };
+            asset?: SanityImageAssetReference;
             media?: unknown;
             hotspot?: SanityImageHotspot;
             crop?: SanityImageCrop;
@@ -2407,8 +3240,10 @@ export type QueryBlogIndexPageDataResult = {
     } | null;
   }>;
 } | null;
+
+// Source: src/lib/sanity/query.ts
 // Variable: queryBlogSlugPageData
-// Query: *[_type == "blog" && slug.current == $slug][0]{    ...,    "slug": slug.current,      authors[0]->{    _id,    name,    position,      image{    ...,    ...asset->{      "alt": coalesce(altText, originalFilename, "no-alt"),      "blurData": metadata.lqip,      "dominantColor": metadata.palette.dominant.background    },  }  },      image{    ...,    ...asset->{      "alt": coalesce(altText, originalFilename, "no-alt"),      "blurData": metadata.lqip,      "dominantColor": metadata.palette.dominant.background    },  },      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  },      pageBuilder[]{    ...,    _type,      _type == "cta" => {    ...,      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },  },      _type == "hero" => {    ...,      image{    ...,    ...asset->{      "alt": coalesce(altText, originalFilename, "no-alt"),      "blurData": metadata.lqip,      "dominantColor": metadata.palette.dominant.background    },  },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  }  },      _type == "faqAccordion" => {    ...,      "faqs": array::compact(faqs[]->{    title,    _id,    _type,      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  }  }),    link{      ...,      "openInNewTab": url.openInNewTab,      "href": select(        url.type == "internal" => url.internal->slug.current,        url.type == "external" => url.external,        url.href      )    }  },      _type == "subscribeNewsletter" => {    ...,    "subTitle": subTitle[]{      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    "helperText": helperText[]{      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    }  },      _type == "imageLinkCards" => {    ...,      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },    "cards": array::compact(cards[]{      ...,      "openInNewTab": url.openInNewTab,      "href": select(        url.type == "internal" => url.internal->slug.current,        url.type == "external" => url.external,        url.href      ),        image{    ...,    ...asset->{      "alt": coalesce(altText, originalFilename, "no-alt"),      "blurData": metadata.lqip,      "dominantColor": metadata.palette.dominant.background    },  },    })  }  }  }
+// Query: *[_type == "blog" && slug.current == $slug][0]{    ...,    "slug": slug.current,      authors[0]->{    _id,    name,    position,      image{    ...,    ...asset->{      "alt": coalesce(altText, originalFilename, "no-alt"),      "blurData": metadata.lqip,      "dominantColor": metadata.palette.dominant.background    },  }  },      image{    ...,    ...asset->{      "alt": coalesce(altText, originalFilename, "no-alt"),      "blurData": metadata.lqip,      "dominantColor": metadata.palette.dominant.background    },  },      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  },      pageBuilder[]{    ...,    _type,      _type == "cta" => {    ...,      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },    personalization{      enabled,      variants[]{        segment->{          _id,          name,          status,          priority,          conditions        },        holdoutPercentage,        content      }    }  },      _type == "hero" => {    ...,      image{    ...,    ...asset->{      "alt": coalesce(altText, originalFilename, "no-alt"),      "blurData": metadata.lqip,      "dominantColor": metadata.palette.dominant.background    },  },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  },    personalization{      enabled,      variants[]{        segment->{          _id,          name,          status,          priority,          conditions        },        holdoutPercentage,        content      }    }  },      _type == "faqAccordion" => {    ...,      "faqs": array::compact(faqs[]->{    title,    _id,    _type,      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  }  }),    link{      ...,      "openInNewTab": url.openInNewTab,      "href": select(        url.type == "internal" => url.internal->slug.current,        url.type == "external" => url.external,        url.href      )    },    personalization{      enabled,      variants[]{        segment->{          _id,          name,          status,          priority,          conditions        },        holdoutPercentage,        content      }    }  },      _type == "subscribeNewsletter" => {    ...,    "subTitle": subTitle[]{      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    },    "helperText": helperText[]{      ...,        markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }    }  },      _type == "imageLinkCards" => {    ...,      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },    "cards": array::compact(cards[]{      ...,      "openInNewTab": url.openInNewTab,      "href": select(        url.type == "internal" => url.internal->slug.current,        url.type == "external" => url.external,        url.href      ),        image{    ...,    ...asset->{      "alt": coalesce(altText, originalFilename, "no-alt"),      "blurData": metadata.lqip,      "dominantColor": metadata.palette.dominant.background    },  },    })  },      _type == "featureCardsIcon" => {    ...,      richText[]{    ...,      markDefs[]{    ...,      ...customLink{    openInNewTab,    "href": select(      type == "internal" => internal->slug.current,      type == "external" => external,      "#"    ),  }  }  },    personalization{      enabled,      variants[]{        segment->{          _id,          name,          status,          priority,          conditions        },        holdoutPercentage,        content      }    }  }  }  }
 export type QueryBlogSlugPageDataResult = {
   _id: string;
   _type: "blog";
@@ -2425,12 +3260,7 @@ export type QueryBlogSlugPageDataResult = {
     position: string | null;
     image:
       | {
-          asset?: {
-            _ref: string;
-            _type: "reference";
-            _weak?: boolean;
-            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-          };
+          asset?: SanityImageAssetReference;
           media?: unknown;
           hotspot?: SanityImageHotspot;
           crop?: SanityImageCrop;
@@ -2440,12 +3270,7 @@ export type QueryBlogSlugPageDataResult = {
           dominantColor: string | null;
         }
       | {
-          asset?: {
-            _ref: string;
-            _type: "reference";
-            _weak?: boolean;
-            [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-          };
+          asset?: SanityImageAssetReference;
           media?: unknown;
           hotspot?: SanityImageHotspot;
           crop?: SanityImageCrop;
@@ -2456,12 +3281,7 @@ export type QueryBlogSlugPageDataResult = {
   publishedAt?: string;
   image:
     | {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
+        asset?: SanityImageAssetReference;
         media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
@@ -2471,12 +3291,7 @@ export type QueryBlogSlugPageDataResult = {
         dominantColor: string | null;
       }
     | {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
+        asset?: SanityImageAssetReference;
         media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
@@ -2511,12 +3326,7 @@ export type QueryBlogSlugPageDataResult = {
         _key: string;
       }
     | {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
+        asset?: SanityImageAssetReference;
         media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
@@ -2528,27 +3338,20 @@ export type QueryBlogSlugPageDataResult = {
   > | null;
   seoTitle?: string;
   seoDescription?: string;
-  seoImage?: {
-    asset?: {
-      _ref: string;
-      _type: "reference";
-      _weak?: boolean;
-      [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-    };
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
+  seoImage?: SeoImage;
   seoNoIndex?: boolean;
   seoHideFromLists?: boolean;
   ogTitle?: string;
   ogDescription?: string;
   pageBuilder: null;
 } | null;
+
+// Source: src/lib/sanity/query.ts
 // Variable: queryBlogPaths
 // Query: *[_type == "blog" && defined(slug.current)].slug.current
 export type QueryBlogPathsResult = Array<string>;
+
+// Source: src/lib/sanity/query.ts
 // Variable: queryHomePageOGData
 // Query: *[_type == "homePage" && _id == $id][0]{      _id,  _type,  "title": select(    defined(ogTitle) => ogTitle,    defined(seoTitle) => seoTitle,    title  ),  "description": select(    defined(ogDescription) => ogDescription,    defined(seoDescription) => seoDescription,    description  ),  "image": image.asset->url + "?w=566&h=566&dpr=2&fit=max",  "dominantColor": image.asset->metadata.palette.dominant.background,  "seoImage": seoImage.asset->url + "?w=1200&h=630&dpr=2&fit=max",   "logo": *[_type == "settings"][0].logo.asset->url + "?w=80&h=40&dpr=3&fit=max&q=100",  "date": coalesce(date, _createdAt)  }
 export type QueryHomePageOGDataResult = {
@@ -2562,12 +3365,14 @@ export type QueryHomePageOGDataResult = {
   logo: string | null;
   date: string;
 } | null;
+
+// Source: src/lib/sanity/query.ts
 // Variable: querySlugPageOGData
 // Query: *[_type == "page" && _id == $id][0]{      _id,  _type,  "title": select(    defined(ogTitle) => ogTitle,    defined(seoTitle) => seoTitle,    title  ),  "description": select(    defined(ogDescription) => ogDescription,    defined(seoDescription) => seoDescription,    description  ),  "image": image.asset->url + "?w=566&h=566&dpr=2&fit=max",  "dominantColor": image.asset->metadata.palette.dominant.background,  "seoImage": seoImage.asset->url + "?w=1200&h=630&dpr=2&fit=max",   "logo": *[_type == "settings"][0].logo.asset->url + "?w=80&h=40&dpr=3&fit=max&q=100",  "date": coalesce(date, _createdAt)  }
 export type QuerySlugPageOGDataResult = {
   _id: string;
   _type: "page";
-  title: string | null;
+  title: string;
   description: string | null;
   image: string | null;
   dominantColor: string | null;
@@ -2575,12 +3380,14 @@ export type QuerySlugPageOGDataResult = {
   logo: string | null;
   date: string;
 } | null;
+
+// Source: src/lib/sanity/query.ts
 // Variable: queryBlogPageOGData
 // Query: *[_type == "blog" && _id == $id][0]{      _id,  _type,  "title": select(    defined(ogTitle) => ogTitle,    defined(seoTitle) => seoTitle,    title  ),  "description": select(    defined(ogDescription) => ogDescription,    defined(seoDescription) => seoDescription,    description  ),  "image": image.asset->url + "?w=566&h=566&dpr=2&fit=max",  "dominantColor": image.asset->metadata.palette.dominant.background,  "seoImage": seoImage.asset->url + "?w=1200&h=630&dpr=2&fit=max",   "logo": *[_type == "settings"][0].logo.asset->url + "?w=80&h=40&dpr=3&fit=max&q=100",  "date": coalesce(date, _createdAt)  }
 export type QueryBlogPageOGDataResult = {
   _id: string;
   _type: "blog";
-  title: string | null;
+  title: string;
   description: string | null;
   image: string | null;
   dominantColor: string | null;
@@ -2588,13 +3395,15 @@ export type QueryBlogPageOGDataResult = {
   logo: string | null;
   date: string;
 } | null;
+
+// Source: src/lib/sanity/query.ts
 // Variable: queryGenericPageOGData
 // Query: *[ defined(slug.current) && _id == $id][0]{      _id,  _type,  "title": select(    defined(ogTitle) => ogTitle,    defined(seoTitle) => seoTitle,    title  ),  "description": select(    defined(ogDescription) => ogDescription,    defined(seoDescription) => seoDescription,    description  ),  "image": image.asset->url + "?w=566&h=566&dpr=2&fit=max",  "dominantColor": image.asset->metadata.palette.dominant.background,  "seoImage": seoImage.asset->url + "?w=1200&h=630&dpr=2&fit=max",   "logo": *[_type == "settings"][0].logo.asset->url + "?w=80&h=40&dpr=3&fit=max&q=100",  "date": coalesce(date, _createdAt)  }
 export type QueryGenericPageOGDataResult =
   | {
       _id: string;
       _type: "blog";
-      title: string | null;
+      title: string;
       description: string | null;
       image: string | null;
       dominantColor: string | null;
@@ -2627,7 +3436,7 @@ export type QueryGenericPageOGDataResult =
   | {
       _id: string;
       _type: "page";
-      title: string | null;
+      title: string;
       description: string | null;
       image: string | null;
       dominantColor: string | null;
@@ -2635,11 +3444,24 @@ export type QueryGenericPageOGDataResult =
       logo: string | null;
       date: string;
     }
+  | {
+      _id: string;
+      _type: "segment";
+      title: null;
+      description: string | null;
+      image: null;
+      dominantColor: null;
+      seoImage: null;
+      logo: string | null;
+      date: string;
+    }
   | null;
+
+// Source: src/lib/sanity/query.ts
 // Variable: queryFooterData
 // Query: *[_type == "footer" && _id == "footer"][0]{    _id,    subtitle,    columns[]{      _key,      title,      links[]{        _key,        name,        "openInNewTab": url.openInNewTab,        "href": select(          url.type == "internal" => url.internal->slug.current,          url.type == "external" => url.external,          url.href        ),      }    }  }
 export type QueryFooterDataResult = {
-  _id: string;
+  _id: "footer";
   subtitle: string | null;
   columns: Array<{
     _key: string;
@@ -2652,10 +3474,12 @@ export type QueryFooterDataResult = {
     }> | null;
   }> | null;
 } | null;
+
+// Source: src/lib/sanity/query.ts
 // Variable: queryNavbarData
 // Query: *[_type == "navbar" && _id == "navbar"][0]{    _id,    columns[]{      _key,      _type == "navbarColumn" => {        "type": "column",        title,        links[]{          _key,          name,          icon,          description,          "openInNewTab": url.openInNewTab,          "href": select(            url.type == "internal" => url.internal->slug.current,            url.type == "external" => url.external,            url.href          )        }      },      _type == "navbarLink" => {        "type": "link",        name,        description,        "openInNewTab": url.openInNewTab,        "href": select(          url.type == "internal" => url.internal->slug.current,          url.type == "external" => url.external,          url.href        )      }    },      buttons[]{    text,    variant,    _key,    _type,    "openInNewTab": url.openInNewTab,    "href": select(      url.type == "internal" => url.internal->slug.current,      url.type == "external" => url.external,      url.href    ),  },  }
 export type QueryNavbarDataResult = {
-  _id: string;
+  _id: "navbar";
   columns: Array<
     | {
         _key: string;
@@ -2688,6 +3512,8 @@ export type QueryNavbarDataResult = {
     href: string | null;
   }> | null;
 } | null;
+
+// Source: src/lib/sanity/query.ts
 // Variable: querySitemapData
 // Query: {  "slugPages": *[_type == "page" && defined(slug.current)]{    "slug": slug.current,    "lastModified": _updatedAt  },  "blogPages": *[_type == "blog" && defined(slug.current)]{    "slug": slug.current,    "lastModified": _updatedAt  }}
 export type QuerySitemapDataResult = {
@@ -2700,6 +3526,8 @@ export type QuerySitemapDataResult = {
     lastModified: string;
   }>;
 };
+
+// Source: src/lib/sanity/query.ts
 // Variable: queryGlobalSeoSettings
 // Query: *[_type == "settings"][0]{    _id,    _type,    siteTitle,    logo{      ...,      ...asset->{        "alt": coalesce(altText, originalFilename, "no-alt"),        "blurData": metadata.lqip,        "dominantColor": metadata.palette.dominant.background      }    },    siteDescription,    socialLinks{      linkedin,      facebook,      twitter,      instagram,      youtube    }  }
 export type QueryGlobalSeoSettingsResult = {
@@ -2708,12 +3536,7 @@ export type QueryGlobalSeoSettingsResult = {
   siteTitle: string;
   logo:
     | {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
+        asset?: SanityImageAssetReference;
         media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
@@ -2723,12 +3546,7 @@ export type QueryGlobalSeoSettingsResult = {
         dominantColor: string | null;
       }
     | {
-        asset?: {
-          _ref: string;
-          _type: "reference";
-          _weak?: boolean;
-          [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
-        };
+        asset?: SanityImageAssetReference;
         media?: unknown;
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
@@ -2744,6 +3562,8 @@ export type QueryGlobalSeoSettingsResult = {
     youtube: string | null;
   } | null;
 } | null;
+
+// Source: src/lib/sanity/query.ts
 // Variable: querySettingsData
 // Query: *[_type == "settings"][0]{    _id,    _type,    siteTitle,    siteDescription,    "logo": logo.asset->url + "?w=80&h=40&dpr=3&fit=max",    "socialLinks": socialLinks,    "contactEmail": contactEmail,  }
 export type QuerySettingsDataResult = {
@@ -2762,16 +3582,27 @@ export type QuerySettingsDataResult = {
   contactEmail: string | null;
 } | null;
 
+// Source: src/lib/sanity/query.ts
+// Variable: queryPagePersonalizationSegments
+// Query: *[_type in ["homePage", "page"] && (    _type == "homePage" && _id == "homePage" ||    _type == "page" && slug.current == $slug  )][0].pageBuilder[personalization.enabled == true]{    "segments": personalization.variants[].segment->{      _id,      name,      title,      description,      status,      priority    }  }.segments[] | {    _id,    name,    title,    description,    status,    priority  } | order(priority desc, name asc)
+export type QueryPagePersonalizationSegmentsResult = Array<{
+  _id: string;
+  name: string;
+  title: null;
+  description: string | null;
+  status: "active" | "archived" | "draft" | null;
+  priority: number;
+} | null> | null;
+
 // Query TypeMap
-import "@sanity/client";
-declare module "@sanity/client" {
+declare global {
   interface SanityQueries {
     '\n  *[_type == "page" && defined(image)][0]{\n    \n  image{\n    ...,\n    ...asset->{\n      "alt": coalesce(altText, originalFilename, "no-alt"),\n      "blurData": metadata.lqip,\n      "dominantColor": metadata.palette.dominant.background\n    },\n  }\n\n  }.image\n': QueryImageTypeResult;
-    '*[_type == "homePage" && _id == "homePage"][0]{\n    ...,\n    _id,\n    _type,\n    "slug": slug.current,\n    title,\n    description,\n    \n  pageBuilder[]{\n    ...,\n    _type,\n    \n  _type == "cta" => {\n    ...,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n,\n    \n  buttons[]{\n    text,\n    variant,\n    _key,\n    _type,\n    "openInNewTab": url.openInNewTab,\n    "href": select(\n      url.type == "internal" => url.internal->slug.current,\n      url.type == "external" => url.external,\n      url.href\n    ),\n  }\n,\n  }\n,\n    \n  _type == "hero" => {\n    ...,\n    \n  image{\n    ...,\n    ...asset->{\n      "alt": coalesce(altText, originalFilename, "no-alt"),\n      "blurData": metadata.lqip,\n      "dominantColor": metadata.palette.dominant.background\n    },\n  }\n,\n    \n  buttons[]{\n    text,\n    variant,\n    _key,\n    _type,\n    "openInNewTab": url.openInNewTab,\n    "href": select(\n      url.type == "internal" => url.internal->slug.current,\n      url.type == "external" => url.external,\n      url.href\n    ),\n  }\n,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n\n  }\n,\n    \n  _type == "faqAccordion" => {\n    ...,\n    \n  "faqs": array::compact(faqs[]->{\n    title,\n    _id,\n    _type,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n\n  })\n,\n    link{\n      ...,\n      "openInNewTab": url.openInNewTab,\n      "href": select(\n        url.type == "internal" => url.internal->slug.current,\n        url.type == "external" => url.external,\n        url.href\n      )\n    }\n  }\n,\n    \n  _type == "subscribeNewsletter" => {\n    ...,\n    "subTitle": subTitle[]{\n      ...,\n      \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n    },\n    "helperText": helperText[]{\n      ...,\n      \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n    }\n  }\n,\n    \n  _type == "imageLinkCards" => {\n    ...,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n,\n    \n  buttons[]{\n    text,\n    variant,\n    _key,\n    _type,\n    "openInNewTab": url.openInNewTab,\n    "href": select(\n      url.type == "internal" => url.internal->slug.current,\n      url.type == "external" => url.external,\n      url.href\n    ),\n  }\n,\n    "cards": array::compact(cards[]{\n      ...,\n      "openInNewTab": url.openInNewTab,\n      "href": select(\n        url.type == "internal" => url.internal->slug.current,\n        url.type == "external" => url.external,\n        url.href\n      ),\n      \n  image{\n    ...,\n    ...asset->{\n      "alt": coalesce(altText, originalFilename, "no-alt"),\n      "blurData": metadata.lqip,\n      "dominantColor": metadata.palette.dominant.background\n    },\n  }\n,\n    })\n  }\n\n  }\n\n  }': QueryHomePageDataResult;
-    '\n  *[_type == "page" && slug.current == $slug][0]{\n    ...,\n    "slug": slug.current,\n    \n  pageBuilder[]{\n    ...,\n    _type,\n    \n  _type == "cta" => {\n    ...,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n,\n    \n  buttons[]{\n    text,\n    variant,\n    _key,\n    _type,\n    "openInNewTab": url.openInNewTab,\n    "href": select(\n      url.type == "internal" => url.internal->slug.current,\n      url.type == "external" => url.external,\n      url.href\n    ),\n  }\n,\n  }\n,\n    \n  _type == "hero" => {\n    ...,\n    \n  image{\n    ...,\n    ...asset->{\n      "alt": coalesce(altText, originalFilename, "no-alt"),\n      "blurData": metadata.lqip,\n      "dominantColor": metadata.palette.dominant.background\n    },\n  }\n,\n    \n  buttons[]{\n    text,\n    variant,\n    _key,\n    _type,\n    "openInNewTab": url.openInNewTab,\n    "href": select(\n      url.type == "internal" => url.internal->slug.current,\n      url.type == "external" => url.external,\n      url.href\n    ),\n  }\n,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n\n  }\n,\n    \n  _type == "faqAccordion" => {\n    ...,\n    \n  "faqs": array::compact(faqs[]->{\n    title,\n    _id,\n    _type,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n\n  })\n,\n    link{\n      ...,\n      "openInNewTab": url.openInNewTab,\n      "href": select(\n        url.type == "internal" => url.internal->slug.current,\n        url.type == "external" => url.external,\n        url.href\n      )\n    }\n  }\n,\n    \n  _type == "subscribeNewsletter" => {\n    ...,\n    "subTitle": subTitle[]{\n      ...,\n      \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n    },\n    "helperText": helperText[]{\n      ...,\n      \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n    }\n  }\n,\n    \n  _type == "imageLinkCards" => {\n    ...,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n,\n    \n  buttons[]{\n    text,\n    variant,\n    _key,\n    _type,\n    "openInNewTab": url.openInNewTab,\n    "href": select(\n      url.type == "internal" => url.internal->slug.current,\n      url.type == "external" => url.external,\n      url.href\n    ),\n  }\n,\n    "cards": array::compact(cards[]{\n      ...,\n      "openInNewTab": url.openInNewTab,\n      "href": select(\n        url.type == "internal" => url.internal->slug.current,\n        url.type == "external" => url.external,\n        url.href\n      ),\n      \n  image{\n    ...,\n    ...asset->{\n      "alt": coalesce(altText, originalFilename, "no-alt"),\n      "blurData": metadata.lqip,\n      "dominantColor": metadata.palette.dominant.background\n    },\n  }\n,\n    })\n  }\n\n  }\n\n  }\n  ': QuerySlugPageDataResult;
+    '*[_type == "homePage" && _id == "homePage"][0]{\n    ...,\n    _id,\n    _type,\n    "slug": slug.current,\n    title,\n    description,\n    \n  pageBuilder[]{\n    ...,\n    _type,\n    \n  _type == "cta" => {\n    ...,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n,\n    \n  buttons[]{\n    text,\n    variant,\n    _key,\n    _type,\n    "openInNewTab": url.openInNewTab,\n    "href": select(\n      url.type == "internal" => url.internal->slug.current,\n      url.type == "external" => url.external,\n      url.href\n    ),\n  }\n,\n    personalization{\n      enabled,\n      variants[]{\n        segment->{\n          _id,\n          name,\n          status,\n          priority,\n          conditions\n        },\n        holdoutPercentage,\n        content\n      }\n    }\n  }\n,\n    \n  _type == "hero" => {\n    ...,\n    \n  image{\n    ...,\n    ...asset->{\n      "alt": coalesce(altText, originalFilename, "no-alt"),\n      "blurData": metadata.lqip,\n      "dominantColor": metadata.palette.dominant.background\n    },\n  }\n,\n    \n  buttons[]{\n    text,\n    variant,\n    _key,\n    _type,\n    "openInNewTab": url.openInNewTab,\n    "href": select(\n      url.type == "internal" => url.internal->slug.current,\n      url.type == "external" => url.external,\n      url.href\n    ),\n  }\n,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n,\n    personalization{\n      enabled,\n      variants[]{\n        segment->{\n          _id,\n          name,\n          status,\n          priority,\n          conditions\n        },\n        holdoutPercentage,\n        content\n      }\n    }\n  }\n,\n    \n  _type == "faqAccordion" => {\n    ...,\n    \n  "faqs": array::compact(faqs[]->{\n    title,\n    _id,\n    _type,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n\n  })\n,\n    link{\n      ...,\n      "openInNewTab": url.openInNewTab,\n      "href": select(\n        url.type == "internal" => url.internal->slug.current,\n        url.type == "external" => url.external,\n        url.href\n      )\n    },\n    personalization{\n      enabled,\n      variants[]{\n        segment->{\n          _id,\n          name,\n          status,\n          priority,\n          conditions\n        },\n        holdoutPercentage,\n        content\n      }\n    }\n  }\n,\n    \n  _type == "subscribeNewsletter" => {\n    ...,\n    "subTitle": subTitle[]{\n      ...,\n      \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n    },\n    "helperText": helperText[]{\n      ...,\n      \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n    }\n  }\n,\n    \n  _type == "imageLinkCards" => {\n    ...,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n,\n    \n  buttons[]{\n    text,\n    variant,\n    _key,\n    _type,\n    "openInNewTab": url.openInNewTab,\n    "href": select(\n      url.type == "internal" => url.internal->slug.current,\n      url.type == "external" => url.external,\n      url.href\n    ),\n  }\n,\n    "cards": array::compact(cards[]{\n      ...,\n      "openInNewTab": url.openInNewTab,\n      "href": select(\n        url.type == "internal" => url.internal->slug.current,\n        url.type == "external" => url.external,\n        url.href\n      ),\n      \n  image{\n    ...,\n    ...asset->{\n      "alt": coalesce(altText, originalFilename, "no-alt"),\n      "blurData": metadata.lqip,\n      "dominantColor": metadata.palette.dominant.background\n    },\n  }\n,\n    })\n  }\n,\n    \n  _type == "featureCardsIcon" => {\n    ...,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n,\n    personalization{\n      enabled,\n      variants[]{\n        segment->{\n          _id,\n          name,\n          status,\n          priority,\n          conditions\n        },\n        holdoutPercentage,\n        content\n      }\n    }\n  }\n\n  }\n\n  }': QueryHomePageDataResult;
+    '\n  *[_type == "page" && slug.current == $slug][0]{\n    ...,\n    "slug": slug.current,\n    \n  pageBuilder[]{\n    ...,\n    _type,\n    \n  _type == "cta" => {\n    ...,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n,\n    \n  buttons[]{\n    text,\n    variant,\n    _key,\n    _type,\n    "openInNewTab": url.openInNewTab,\n    "href": select(\n      url.type == "internal" => url.internal->slug.current,\n      url.type == "external" => url.external,\n      url.href\n    ),\n  }\n,\n    personalization{\n      enabled,\n      variants[]{\n        segment->{\n          _id,\n          name,\n          status,\n          priority,\n          conditions\n        },\n        holdoutPercentage,\n        content\n      }\n    }\n  }\n,\n    \n  _type == "hero" => {\n    ...,\n    \n  image{\n    ...,\n    ...asset->{\n      "alt": coalesce(altText, originalFilename, "no-alt"),\n      "blurData": metadata.lqip,\n      "dominantColor": metadata.palette.dominant.background\n    },\n  }\n,\n    \n  buttons[]{\n    text,\n    variant,\n    _key,\n    _type,\n    "openInNewTab": url.openInNewTab,\n    "href": select(\n      url.type == "internal" => url.internal->slug.current,\n      url.type == "external" => url.external,\n      url.href\n    ),\n  }\n,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n,\n    personalization{\n      enabled,\n      variants[]{\n        segment->{\n          _id,\n          name,\n          status,\n          priority,\n          conditions\n        },\n        holdoutPercentage,\n        content\n      }\n    }\n  }\n,\n    \n  _type == "faqAccordion" => {\n    ...,\n    \n  "faqs": array::compact(faqs[]->{\n    title,\n    _id,\n    _type,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n\n  })\n,\n    link{\n      ...,\n      "openInNewTab": url.openInNewTab,\n      "href": select(\n        url.type == "internal" => url.internal->slug.current,\n        url.type == "external" => url.external,\n        url.href\n      )\n    },\n    personalization{\n      enabled,\n      variants[]{\n        segment->{\n          _id,\n          name,\n          status,\n          priority,\n          conditions\n        },\n        holdoutPercentage,\n        content\n      }\n    }\n  }\n,\n    \n  _type == "subscribeNewsletter" => {\n    ...,\n    "subTitle": subTitle[]{\n      ...,\n      \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n    },\n    "helperText": helperText[]{\n      ...,\n      \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n    }\n  }\n,\n    \n  _type == "imageLinkCards" => {\n    ...,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n,\n    \n  buttons[]{\n    text,\n    variant,\n    _key,\n    _type,\n    "openInNewTab": url.openInNewTab,\n    "href": select(\n      url.type == "internal" => url.internal->slug.current,\n      url.type == "external" => url.external,\n      url.href\n    ),\n  }\n,\n    "cards": array::compact(cards[]{\n      ...,\n      "openInNewTab": url.openInNewTab,\n      "href": select(\n        url.type == "internal" => url.internal->slug.current,\n        url.type == "external" => url.external,\n        url.href\n      ),\n      \n  image{\n    ...,\n    ...asset->{\n      "alt": coalesce(altText, originalFilename, "no-alt"),\n      "blurData": metadata.lqip,\n      "dominantColor": metadata.palette.dominant.background\n    },\n  }\n,\n    })\n  }\n,\n    \n  _type == "featureCardsIcon" => {\n    ...,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n,\n    personalization{\n      enabled,\n      variants[]{\n        segment->{\n          _id,\n          name,\n          status,\n          priority,\n          conditions\n        },\n        holdoutPercentage,\n        content\n      }\n    }\n  }\n\n  }\n\n  }\n  ': QuerySlugPageDataResult;
     '\n  *[_type == "page" && defined(slug.current)].slug.current\n': QuerySlugPagePathsResult;
-    '\n  *[_type == "blogIndex"][0]{\n    ...,\n    _id,\n    _type,\n    title,\n    description,\n    "displayFeaturedBlogs" : displayFeaturedBlogs == "yes",\n    "featuredBlogsCount" : featuredBlogsCount,\n    \n  pageBuilder[]{\n    ...,\n    _type,\n    \n  _type == "cta" => {\n    ...,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n,\n    \n  buttons[]{\n    text,\n    variant,\n    _key,\n    _type,\n    "openInNewTab": url.openInNewTab,\n    "href": select(\n      url.type == "internal" => url.internal->slug.current,\n      url.type == "external" => url.external,\n      url.href\n    ),\n  }\n,\n  }\n,\n    \n  _type == "hero" => {\n    ...,\n    \n  image{\n    ...,\n    ...asset->{\n      "alt": coalesce(altText, originalFilename, "no-alt"),\n      "blurData": metadata.lqip,\n      "dominantColor": metadata.palette.dominant.background\n    },\n  }\n,\n    \n  buttons[]{\n    text,\n    variant,\n    _key,\n    _type,\n    "openInNewTab": url.openInNewTab,\n    "href": select(\n      url.type == "internal" => url.internal->slug.current,\n      url.type == "external" => url.external,\n      url.href\n    ),\n  }\n,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n\n  }\n,\n    \n  _type == "faqAccordion" => {\n    ...,\n    \n  "faqs": array::compact(faqs[]->{\n    title,\n    _id,\n    _type,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n\n  })\n,\n    link{\n      ...,\n      "openInNewTab": url.openInNewTab,\n      "href": select(\n        url.type == "internal" => url.internal->slug.current,\n        url.type == "external" => url.external,\n        url.href\n      )\n    }\n  }\n,\n    \n  _type == "subscribeNewsletter" => {\n    ...,\n    "subTitle": subTitle[]{\n      ...,\n      \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n    },\n    "helperText": helperText[]{\n      ...,\n      \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n    }\n  }\n,\n    \n  _type == "imageLinkCards" => {\n    ...,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n,\n    \n  buttons[]{\n    text,\n    variant,\n    _key,\n    _type,\n    "openInNewTab": url.openInNewTab,\n    "href": select(\n      url.type == "internal" => url.internal->slug.current,\n      url.type == "external" => url.external,\n      url.href\n    ),\n  }\n,\n    "cards": array::compact(cards[]{\n      ...,\n      "openInNewTab": url.openInNewTab,\n      "href": select(\n        url.type == "internal" => url.internal->slug.current,\n        url.type == "external" => url.external,\n        url.href\n      ),\n      \n  image{\n    ...,\n    ...asset->{\n      "alt": coalesce(altText, originalFilename, "no-alt"),\n      "blurData": metadata.lqip,\n      "dominantColor": metadata.palette.dominant.background\n    },\n  }\n,\n    })\n  }\n\n  }\n,\n    "slug": slug.current,\n    "blogs": *[_type == "blog" && (seoHideFromLists != true)] | order(orderRank asc){\n      \n  _type,\n  _id,\n  title,\n  description,\n  "slug":slug.current,\n  richText,\n  orderRank,\n  \n  image{\n    ...,\n    ...asset->{\n      "alt": coalesce(altText, originalFilename, "no-alt"),\n      "blurData": metadata.lqip,\n      "dominantColor": metadata.palette.dominant.background\n    },\n  }\n,\n  publishedAt,\n  \n  authors[0]->{\n    _id,\n    name,\n    position,\n    \n  image{\n    ...,\n    ...asset->{\n      "alt": coalesce(altText, originalFilename, "no-alt"),\n      "blurData": metadata.lqip,\n      "dominantColor": metadata.palette.dominant.background\n    },\n  }\n\n  }\n\n\n    }\n  }\n': QueryBlogIndexPageDataResult;
-    '\n  *[_type == "blog" && slug.current == $slug][0]{\n    ...,\n    "slug": slug.current,\n    \n  authors[0]->{\n    _id,\n    name,\n    position,\n    \n  image{\n    ...,\n    ...asset->{\n      "alt": coalesce(altText, originalFilename, "no-alt"),\n      "blurData": metadata.lqip,\n      "dominantColor": metadata.palette.dominant.background\n    },\n  }\n\n  }\n,\n    \n  image{\n    ...,\n    ...asset->{\n      "alt": coalesce(altText, originalFilename, "no-alt"),\n      "blurData": metadata.lqip,\n      "dominantColor": metadata.palette.dominant.background\n    },\n  }\n,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n,\n    \n  pageBuilder[]{\n    ...,\n    _type,\n    \n  _type == "cta" => {\n    ...,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n,\n    \n  buttons[]{\n    text,\n    variant,\n    _key,\n    _type,\n    "openInNewTab": url.openInNewTab,\n    "href": select(\n      url.type == "internal" => url.internal->slug.current,\n      url.type == "external" => url.external,\n      url.href\n    ),\n  }\n,\n  }\n,\n    \n  _type == "hero" => {\n    ...,\n    \n  image{\n    ...,\n    ...asset->{\n      "alt": coalesce(altText, originalFilename, "no-alt"),\n      "blurData": metadata.lqip,\n      "dominantColor": metadata.palette.dominant.background\n    },\n  }\n,\n    \n  buttons[]{\n    text,\n    variant,\n    _key,\n    _type,\n    "openInNewTab": url.openInNewTab,\n    "href": select(\n      url.type == "internal" => url.internal->slug.current,\n      url.type == "external" => url.external,\n      url.href\n    ),\n  }\n,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n\n  }\n,\n    \n  _type == "faqAccordion" => {\n    ...,\n    \n  "faqs": array::compact(faqs[]->{\n    title,\n    _id,\n    _type,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n\n  })\n,\n    link{\n      ...,\n      "openInNewTab": url.openInNewTab,\n      "href": select(\n        url.type == "internal" => url.internal->slug.current,\n        url.type == "external" => url.external,\n        url.href\n      )\n    }\n  }\n,\n    \n  _type == "subscribeNewsletter" => {\n    ...,\n    "subTitle": subTitle[]{\n      ...,\n      \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n    },\n    "helperText": helperText[]{\n      ...,\n      \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n    }\n  }\n,\n    \n  _type == "imageLinkCards" => {\n    ...,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n,\n    \n  buttons[]{\n    text,\n    variant,\n    _key,\n    _type,\n    "openInNewTab": url.openInNewTab,\n    "href": select(\n      url.type == "internal" => url.internal->slug.current,\n      url.type == "external" => url.external,\n      url.href\n    ),\n  }\n,\n    "cards": array::compact(cards[]{\n      ...,\n      "openInNewTab": url.openInNewTab,\n      "href": select(\n        url.type == "internal" => url.internal->slug.current,\n        url.type == "external" => url.external,\n        url.href\n      ),\n      \n  image{\n    ...,\n    ...asset->{\n      "alt": coalesce(altText, originalFilename, "no-alt"),\n      "blurData": metadata.lqip,\n      "dominantColor": metadata.palette.dominant.background\n    },\n  }\n,\n    })\n  }\n\n  }\n\n  }\n': QueryBlogSlugPageDataResult;
+    '\n  *[_type == "blogIndex"][0]{\n    ...,\n    _id,\n    _type,\n    title,\n    description,\n    "displayFeaturedBlogs" : displayFeaturedBlogs == "yes",\n    "featuredBlogsCount" : featuredBlogsCount,\n    \n  pageBuilder[]{\n    ...,\n    _type,\n    \n  _type == "cta" => {\n    ...,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n,\n    \n  buttons[]{\n    text,\n    variant,\n    _key,\n    _type,\n    "openInNewTab": url.openInNewTab,\n    "href": select(\n      url.type == "internal" => url.internal->slug.current,\n      url.type == "external" => url.external,\n      url.href\n    ),\n  }\n,\n    personalization{\n      enabled,\n      variants[]{\n        segment->{\n          _id,\n          name,\n          status,\n          priority,\n          conditions\n        },\n        holdoutPercentage,\n        content\n      }\n    }\n  }\n,\n    \n  _type == "hero" => {\n    ...,\n    \n  image{\n    ...,\n    ...asset->{\n      "alt": coalesce(altText, originalFilename, "no-alt"),\n      "blurData": metadata.lqip,\n      "dominantColor": metadata.palette.dominant.background\n    },\n  }\n,\n    \n  buttons[]{\n    text,\n    variant,\n    _key,\n    _type,\n    "openInNewTab": url.openInNewTab,\n    "href": select(\n      url.type == "internal" => url.internal->slug.current,\n      url.type == "external" => url.external,\n      url.href\n    ),\n  }\n,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n,\n    personalization{\n      enabled,\n      variants[]{\n        segment->{\n          _id,\n          name,\n          status,\n          priority,\n          conditions\n        },\n        holdoutPercentage,\n        content\n      }\n    }\n  }\n,\n    \n  _type == "faqAccordion" => {\n    ...,\n    \n  "faqs": array::compact(faqs[]->{\n    title,\n    _id,\n    _type,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n\n  })\n,\n    link{\n      ...,\n      "openInNewTab": url.openInNewTab,\n      "href": select(\n        url.type == "internal" => url.internal->slug.current,\n        url.type == "external" => url.external,\n        url.href\n      )\n    },\n    personalization{\n      enabled,\n      variants[]{\n        segment->{\n          _id,\n          name,\n          status,\n          priority,\n          conditions\n        },\n        holdoutPercentage,\n        content\n      }\n    }\n  }\n,\n    \n  _type == "subscribeNewsletter" => {\n    ...,\n    "subTitle": subTitle[]{\n      ...,\n      \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n    },\n    "helperText": helperText[]{\n      ...,\n      \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n    }\n  }\n,\n    \n  _type == "imageLinkCards" => {\n    ...,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n,\n    \n  buttons[]{\n    text,\n    variant,\n    _key,\n    _type,\n    "openInNewTab": url.openInNewTab,\n    "href": select(\n      url.type == "internal" => url.internal->slug.current,\n      url.type == "external" => url.external,\n      url.href\n    ),\n  }\n,\n    "cards": array::compact(cards[]{\n      ...,\n      "openInNewTab": url.openInNewTab,\n      "href": select(\n        url.type == "internal" => url.internal->slug.current,\n        url.type == "external" => url.external,\n        url.href\n      ),\n      \n  image{\n    ...,\n    ...asset->{\n      "alt": coalesce(altText, originalFilename, "no-alt"),\n      "blurData": metadata.lqip,\n      "dominantColor": metadata.palette.dominant.background\n    },\n  }\n,\n    })\n  }\n,\n    \n  _type == "featureCardsIcon" => {\n    ...,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n,\n    personalization{\n      enabled,\n      variants[]{\n        segment->{\n          _id,\n          name,\n          status,\n          priority,\n          conditions\n        },\n        holdoutPercentage,\n        content\n      }\n    }\n  }\n\n  }\n,\n    "slug": slug.current,\n    "blogs": *[_type == "blog" && (seoHideFromLists != true)] | order(orderRank asc){\n      \n  _type,\n  _id,\n  title,\n  description,\n  "slug":slug.current,\n  richText,\n  orderRank,\n  \n  image{\n    ...,\n    ...asset->{\n      "alt": coalesce(altText, originalFilename, "no-alt"),\n      "blurData": metadata.lqip,\n      "dominantColor": metadata.palette.dominant.background\n    },\n  }\n,\n  publishedAt,\n  \n  authors[0]->{\n    _id,\n    name,\n    position,\n    \n  image{\n    ...,\n    ...asset->{\n      "alt": coalesce(altText, originalFilename, "no-alt"),\n      "blurData": metadata.lqip,\n      "dominantColor": metadata.palette.dominant.background\n    },\n  }\n\n  }\n\n\n    }\n  }\n': QueryBlogIndexPageDataResult;
+    '\n  *[_type == "blog" && slug.current == $slug][0]{\n    ...,\n    "slug": slug.current,\n    \n  authors[0]->{\n    _id,\n    name,\n    position,\n    \n  image{\n    ...,\n    ...asset->{\n      "alt": coalesce(altText, originalFilename, "no-alt"),\n      "blurData": metadata.lqip,\n      "dominantColor": metadata.palette.dominant.background\n    },\n  }\n\n  }\n,\n    \n  image{\n    ...,\n    ...asset->{\n      "alt": coalesce(altText, originalFilename, "no-alt"),\n      "blurData": metadata.lqip,\n      "dominantColor": metadata.palette.dominant.background\n    },\n  }\n,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n,\n    \n  pageBuilder[]{\n    ...,\n    _type,\n    \n  _type == "cta" => {\n    ...,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n,\n    \n  buttons[]{\n    text,\n    variant,\n    _key,\n    _type,\n    "openInNewTab": url.openInNewTab,\n    "href": select(\n      url.type == "internal" => url.internal->slug.current,\n      url.type == "external" => url.external,\n      url.href\n    ),\n  }\n,\n    personalization{\n      enabled,\n      variants[]{\n        segment->{\n          _id,\n          name,\n          status,\n          priority,\n          conditions\n        },\n        holdoutPercentage,\n        content\n      }\n    }\n  }\n,\n    \n  _type == "hero" => {\n    ...,\n    \n  image{\n    ...,\n    ...asset->{\n      "alt": coalesce(altText, originalFilename, "no-alt"),\n      "blurData": metadata.lqip,\n      "dominantColor": metadata.palette.dominant.background\n    },\n  }\n,\n    \n  buttons[]{\n    text,\n    variant,\n    _key,\n    _type,\n    "openInNewTab": url.openInNewTab,\n    "href": select(\n      url.type == "internal" => url.internal->slug.current,\n      url.type == "external" => url.external,\n      url.href\n    ),\n  }\n,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n,\n    personalization{\n      enabled,\n      variants[]{\n        segment->{\n          _id,\n          name,\n          status,\n          priority,\n          conditions\n        },\n        holdoutPercentage,\n        content\n      }\n    }\n  }\n,\n    \n  _type == "faqAccordion" => {\n    ...,\n    \n  "faqs": array::compact(faqs[]->{\n    title,\n    _id,\n    _type,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n\n  })\n,\n    link{\n      ...,\n      "openInNewTab": url.openInNewTab,\n      "href": select(\n        url.type == "internal" => url.internal->slug.current,\n        url.type == "external" => url.external,\n        url.href\n      )\n    },\n    personalization{\n      enabled,\n      variants[]{\n        segment->{\n          _id,\n          name,\n          status,\n          priority,\n          conditions\n        },\n        holdoutPercentage,\n        content\n      }\n    }\n  }\n,\n    \n  _type == "subscribeNewsletter" => {\n    ...,\n    "subTitle": subTitle[]{\n      ...,\n      \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n    },\n    "helperText": helperText[]{\n      ...,\n      \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n    }\n  }\n,\n    \n  _type == "imageLinkCards" => {\n    ...,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n,\n    \n  buttons[]{\n    text,\n    variant,\n    _key,\n    _type,\n    "openInNewTab": url.openInNewTab,\n    "href": select(\n      url.type == "internal" => url.internal->slug.current,\n      url.type == "external" => url.external,\n      url.href\n    ),\n  }\n,\n    "cards": array::compact(cards[]{\n      ...,\n      "openInNewTab": url.openInNewTab,\n      "href": select(\n        url.type == "internal" => url.internal->slug.current,\n        url.type == "external" => url.external,\n        url.href\n      ),\n      \n  image{\n    ...,\n    ...asset->{\n      "alt": coalesce(altText, originalFilename, "no-alt"),\n      "blurData": metadata.lqip,\n      "dominantColor": metadata.palette.dominant.background\n    },\n  }\n,\n    })\n  }\n,\n    \n  _type == "featureCardsIcon" => {\n    ...,\n    \n  richText[]{\n    ...,\n    \n  markDefs[]{\n    ...,\n    \n  ...customLink{\n    openInNewTab,\n    "href": select(\n      type == "internal" => internal->slug.current,\n      type == "external" => external,\n      "#"\n    ),\n  }\n\n  }\n\n  }\n,\n    personalization{\n      enabled,\n      variants[]{\n        segment->{\n          _id,\n          name,\n          status,\n          priority,\n          conditions\n        },\n        holdoutPercentage,\n        content\n      }\n    }\n  }\n\n  }\n\n  }\n': QueryBlogSlugPageDataResult;
     '\n  *[_type == "blog" && defined(slug.current)].slug.current\n': QueryBlogPathsResult;
     '\n  *[_type == "homePage" && _id == $id][0]{\n    \n  _id,\n  _type,\n  "title": select(\n    defined(ogTitle) => ogTitle,\n    defined(seoTitle) => seoTitle,\n    title\n  ),\n  "description": select(\n    defined(ogDescription) => ogDescription,\n    defined(seoDescription) => seoDescription,\n    description\n  ),\n  "image": image.asset->url + "?w=566&h=566&dpr=2&fit=max",\n  "dominantColor": image.asset->metadata.palette.dominant.background,\n  "seoImage": seoImage.asset->url + "?w=1200&h=630&dpr=2&fit=max", \n  "logo": *[_type == "settings"][0].logo.asset->url + "?w=80&h=40&dpr=3&fit=max&q=100",\n  "date": coalesce(date, _createdAt)\n\n  }\n  ': QueryHomePageOGDataResult;
     '\n  *[_type == "page" && _id == $id][0]{\n    \n  _id,\n  _type,\n  "title": select(\n    defined(ogTitle) => ogTitle,\n    defined(seoTitle) => seoTitle,\n    title\n  ),\n  "description": select(\n    defined(ogDescription) => ogDescription,\n    defined(seoDescription) => seoDescription,\n    description\n  ),\n  "image": image.asset->url + "?w=566&h=566&dpr=2&fit=max",\n  "dominantColor": image.asset->metadata.palette.dominant.background,\n  "seoImage": seoImage.asset->url + "?w=1200&h=630&dpr=2&fit=max", \n  "logo": *[_type == "settings"][0].logo.asset->url + "?w=80&h=40&dpr=3&fit=max&q=100",\n  "date": coalesce(date, _createdAt)\n\n  }\n': QuerySlugPageOGDataResult;
@@ -2782,5 +3613,10 @@ declare module "@sanity/client" {
     '{\n  "slugPages": *[_type == "page" && defined(slug.current)]{\n    "slug": slug.current,\n    "lastModified": _updatedAt\n  },\n  "blogPages": *[_type == "blog" && defined(slug.current)]{\n    "slug": slug.current,\n    "lastModified": _updatedAt\n  }\n}': QuerySitemapDataResult;
     '\n  *[_type == "settings"][0]{\n    _id,\n    _type,\n    siteTitle,\n    logo{\n      ...,\n      ...asset->{\n        "alt": coalesce(altText, originalFilename, "no-alt"),\n        "blurData": metadata.lqip,\n        "dominantColor": metadata.palette.dominant.background\n      }\n    },\n    siteDescription,\n    socialLinks{\n      linkedin,\n      facebook,\n      twitter,\n      instagram,\n      youtube\n    }\n  }\n': QueryGlobalSeoSettingsResult;
     '\n  *[_type == "settings"][0]{\n    _id,\n    _type,\n    siteTitle,\n    siteDescription,\n    "logo": logo.asset->url + "?w=80&h=40&dpr=3&fit=max",\n    "socialLinks": socialLinks,\n    "contactEmail": contactEmail,\n  }\n': QuerySettingsDataResult;
+    '\n  *[_type in ["homePage", "page"] && (\n    _type == "homePage" && _id == "homePage" ||\n    _type == "page" && slug.current == $slug\n  )][0].pageBuilder[personalization.enabled == true]{\n    "segments": personalization.variants[].segment->{\n      _id,\n      name,\n      title,\n      description,\n      status,\n      priority\n    }\n  }.segments[] | {\n    _id,\n    name,\n    title,\n    description,\n    status,\n    priority\n  } | order(priority desc, name asc)\n': QueryPagePersonalizationSegmentsResult;
   }
+}
+// Lets @sanity/client releases that predate the global registry read it too
+declare module "@sanity/client" {
+  interface SanityQueries extends globalThis.SanityQueries {}
 }

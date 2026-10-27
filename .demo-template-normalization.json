@@ -1,0 +1,486 @@
+{
+  "actionIds": [
+    "action:1649a99536a7c6a48d68",
+    "action:42c2e3c10f857483726f",
+    "action:f291ef7798df999d261f",
+    "action:333a5270b6653839c067",
+    "action:a80f7835509fd7b3d02a",
+    "action:de4a9a5889db8d645396",
+    "action:46d277c07c4881128615",
+    "action:6b2b0305a442cdd6b87c",
+    "action:e0619dd0f866d4a86537",
+    "action:c77c95e2c9d41bc2a88e",
+    "action:6b6c3fa58b6054d60503",
+    "action:85d5370383377f54cc04",
+    "action:122a50902ef4e38f7713",
+    "action:b149890a340f236b615a",
+    "action:42092856002f695d57b3",
+    "action:9ba11c11d5875e59f9b5",
+    "action:186cc3b40c2079af47b5",
+    "action:8e6011ebc4b456f3cfec",
+    "action:a35d57abf96a0a079555",
+    "action:0bfa05372f044e83bd47",
+    "action:14a0baccfe974c77bbda",
+    "action:d5be7b10e04a9fe7f5a0",
+    "action:9a3b4c1d1c119ec90ec0",
+    "action:c5491a2659dc0bbef2b6",
+    "action:654e65f9e465f0d829ca",
+    "action:d3b27cb449281483ecc5",
+    "action:cc378a398b72ff7c5464",
+    "action:7327c314afc73c15781b",
+    "action:ba0c8519cc4ddd4a355b",
+    "action:3e18915b3594d73ce6f6",
+    "action:83aedc3a49e693ffa666",
+    "action:524c1e37bef5f447fd49",
+    "action:70537075d9f6face4705",
+    "action:7412a8ddb89b228abdc7",
+    "action:c60015c6713ea35d11fb",
+    "action:7bab1d5e136a4d361507",
+    "action:3787264778de4565c738",
+    "action:ac2c4f589a889cb50d97",
+    "action:d996e0426b39c8ef9eb2",
+    "action:d09086138cd2f06cbad4",
+    "action:08ca076922c1887f9aad",
+    "action:7634a1f7888a049ff09e"
+  ],
+  "attestationId": "attestation:3112bd84f4f2d0b20ee0",
+  "baselineDigest": "e4e95757b59094a80d229aa57290cd5ae2f659da22f3d9d763cf0bfbaa5126b6",
+  "baselineVersion": "2026.10.16.15",
+  "binding": {
+    "defaultBranch": "main",
+    "defaultHeadSha": "70eb60625ae7108863cbfd1621d9f5df5d59a259",
+    "normalizationHeadSha": "92d5fdbca55ab03d3a4dc71fdfec3761f78b7771",
+    "repository": "demo-repositories/personalization-demo-snapshot"
+  },
+  "canonicalSurfaces": {
+    "sdkApps": [],
+    "studio": "apps/studio",
+    "web": "apps/web"
+  },
+  "datasets": [
+    {
+      "alias": "primary",
+      "capabilities": [],
+      "envKeys": [
+        "SANITY_DATASET",
+        "SANITY_STUDIO_DATASET",
+        "NEXT_PUBLIC_SANITY_DATASET"
+      ],
+      "isPrimary": true,
+      "sourceDataset": "production",
+      "targetDataset": "production"
+    }
+  ],
+  "environmentBySurface": [
+    {
+      "keys": [
+        "GA4_API_SECRET",
+        "GA4_MEASUREMENT_ID",
+        "HOST_NAME",
+        "SANITY_STUDIO_DATASET",
+        "SANITY_STUDIO_PRESENTATION_URL",
+        "SANITY_STUDIO_PROJECT_ID",
+        "SANITY_STUDIO_TITLE",
+        "SEGMENT_WRITE_KEY"
+      ],
+      "kind": "studio",
+      "surfaceId": "surface:30164135fbc27d9df23b",
+      "targetDirectory": "apps/studio"
+    },
+    {
+      "keys": [
+        "NEXT_PUBLIC_SANITY_API_VERSION",
+        "NEXT_PUBLIC_SANITY_DATASET",
+        "NEXT_PUBLIC_SANITY_PROJECT_ID",
+        "NEXT_PUBLIC_SANITY_STUDIO_URL",
+        "NEXT_PUBLIC_VERCEL_ENV",
+        "SANITY_API_READ_TOKEN",
+        "SANITY_API_WRITE_TOKEN",
+        "VERCEL_ENV",
+        "VERCEL_PROJECT_PRODUCTION_URL",
+        "VERCEL_URL"
+      ],
+      "kind": "web",
+      "surfaceId": "surface:a08742c7230409ec012a",
+      "targetDirectory": "apps/web"
+    }
+  ],
+  "environmentKeys": [
+    {
+      "denied": false,
+      "key": "GA4_API_SECRET",
+      "provenance": [
+        {
+          "line": 235,
+          "path": "apps/studio/utils/analytics-integration.ts",
+          "source": "process-env-reference"
+        }
+      ],
+      "surfaces": [
+        "surface:30164135fbc27d9df23b"
+      ]
+    },
+    {
+      "denied": false,
+      "key": "GA4_MEASUREMENT_ID",
+      "provenance": [
+        {
+          "line": 234,
+          "path": "apps/studio/utils/analytics-integration.ts",
+          "source": "process-env-reference"
+        }
+      ],
+      "surfaces": [
+        "surface:30164135fbc27d9df23b"
+      ]
+    },
+    {
+      "denied": false,
+      "key": "HOST_NAME",
+      "provenance": [
+        {
+          "line": 5,
+          "path": "apps/studio/sanity.cli.ts",
+          "source": "process-env-reference"
+        }
+      ],
+      "surfaces": [
+        "surface:30164135fbc27d9df23b"
+      ]
+    },
+    {
+      "denied": false,
+      "key": "NEXT_PUBLIC_SANITY_API_VERSION",
+      "provenance": [
+        {
+          "line": 3,
+          "path": "apps/web/.env.example",
+          "source": "existing-example"
+        },
+        {
+          "line": 21,
+          "path": "apps/web/src/lib/sanity/api.ts",
+          "source": "process-env-reference"
+        }
+      ],
+      "surfaces": [
+        "surface:a08742c7230409ec012a"
+      ]
+    },
+    {
+      "denied": false,
+      "key": "NEXT_PUBLIC_SANITY_DATASET",
+      "provenance": [
+        {
+          "line": 2,
+          "path": "apps/web/.env.example",
+          "source": "existing-example"
+        },
+        {
+          "line": 9,
+          "path": "apps/web/src/lib/sanity/api.ts",
+          "source": "process-env-reference"
+        }
+      ],
+      "surfaces": [
+        "surface:a08742c7230409ec012a"
+      ]
+    },
+    {
+      "denied": false,
+      "key": "NEXT_PUBLIC_SANITY_PROJECT_ID",
+      "provenance": [
+        {
+          "line": 1,
+          "path": "apps/web/.env.example",
+          "source": "existing-example"
+        },
+        {
+          "line": 20,
+          "path": "apps/web/next.config.ts",
+          "source": "process-env-reference"
+        },
+        {
+          "line": 12,
+          "path": "apps/web/src/lib/sanity/api.ts",
+          "source": "process-env-reference"
+        }
+      ],
+      "surfaces": [
+        "surface:a08742c7230409ec012a"
+      ]
+    },
+    {
+      "denied": false,
+      "key": "NEXT_PUBLIC_SANITY_STUDIO_URL",
+      "provenance": [
+        {
+          "line": 4,
+          "path": "apps/web/.env.example",
+          "source": "existing-example"
+        },
+        {
+          "line": 27,
+          "path": "apps/web/src/lib/sanity/api.ts",
+          "source": "process-env-reference"
+        }
+      ],
+      "surfaces": [
+        "surface:a08742c7230409ec012a"
+      ]
+    },
+    {
+      "denied": false,
+      "key": "NEXT_PUBLIC_VERCEL_ENV",
+      "provenance": [
+        {
+          "line": 16,
+          "path": "apps/web/src/lib/sanity/client.ts",
+          "source": "process-env-reference"
+        }
+      ],
+      "surfaces": [
+        "surface:a08742c7230409ec012a"
+      ]
+    },
+    {
+      "denied": false,
+      "key": "SANITY_API_READ_TOKEN",
+      "provenance": [
+        {
+          "line": 5,
+          "path": "apps/web/.env.example",
+          "source": "existing-example"
+        },
+        {
+          "line": 19,
+          "path": "apps/web/src/lib/sanity/client.ts",
+          "source": "process-env-reference"
+        },
+        {
+          "line": 3,
+          "path": "apps/web/src/lib/sanity/token.ts",
+          "source": "process-env-reference"
+        }
+      ],
+      "surfaces": [
+        "surface:a08742c7230409ec012a"
+      ]
+    },
+    {
+      "denied": false,
+      "key": "SANITY_API_WRITE_TOKEN",
+      "provenance": [
+        {
+          "line": 6,
+          "path": "apps/web/.env.example",
+          "source": "existing-example"
+        }
+      ],
+      "surfaces": [
+        "surface:a08742c7230409ec012a"
+      ]
+    },
+    {
+      "denied": false,
+      "key": "SANITY_STUDIO_DATASET",
+      "provenance": [
+        {
+          "line": 1,
+          "path": "apps/studio/.env.example",
+          "source": "existing-example"
+        },
+        {
+          "line": 4,
+          "path": "apps/studio/sanity.cli.ts",
+          "source": "process-env-reference"
+        },
+        {
+          "line": 20,
+          "path": "apps/studio/sanity.config.ts",
+          "source": "process-env-reference"
+        }
+      ],
+      "surfaces": [
+        "surface:30164135fbc27d9df23b"
+      ]
+    },
+    {
+      "denied": false,
+      "key": "SANITY_STUDIO_PRESENTATION_URL",
+      "provenance": [
+        {
+          "line": 4,
+          "path": "apps/studio/.env.example",
+          "source": "existing-example"
+        },
+        {
+          "line": 34,
+          "path": "apps/studio/components/slug-field-component.tsx",
+          "source": "process-env-reference"
+        },
+        {
+          "line": 22,
+          "path": "apps/studio/sanity.config.ts",
+          "source": "process-env-reference"
+        }
+      ],
+      "surfaces": [
+        "surface:30164135fbc27d9df23b"
+      ]
+    },
+    {
+      "denied": false,
+      "key": "SANITY_STUDIO_PROJECT_ID",
+      "provenance": [
+        {
+          "line": 2,
+          "path": "apps/studio/.env.example",
+          "source": "existing-example"
+        },
+        {
+          "line": 3,
+          "path": "apps/studio/sanity.cli.ts",
+          "source": "process-env-reference"
+        },
+        {
+          "line": 19,
+          "path": "apps/studio/sanity.config.ts",
+          "source": "process-env-reference"
+        }
+      ],
+      "surfaces": [
+        "surface:30164135fbc27d9df23b"
+      ]
+    },
+    {
+      "denied": false,
+      "key": "SANITY_STUDIO_TITLE",
+      "provenance": [
+        {
+          "line": 3,
+          "path": "apps/studio/.env.example",
+          "source": "existing-example"
+        },
+        {
+          "line": 21,
+          "path": "apps/studio/sanity.config.ts",
+          "source": "process-env-reference"
+        }
+      ],
+      "surfaces": [
+        "surface:30164135fbc27d9df23b"
+      ]
+    },
+    {
+      "denied": false,
+      "key": "SEGMENT_WRITE_KEY",
+      "provenance": [
+        {
+          "line": 231,
+          "path": "apps/studio/utils/analytics-integration.ts",
+          "source": "process-env-reference"
+        }
+      ],
+      "surfaces": [
+        "surface:30164135fbc27d9df23b"
+      ]
+    },
+    {
+      "denied": false,
+      "key": "VERCEL_ENV",
+      "provenance": [
+        {
+          "line": 3,
+          "path": "apps/web/src/config.ts",
+          "source": "process-env-reference"
+        },
+        {
+          "line": 5,
+          "path": "apps/web/src/config.ts",
+          "source": "process-env-reference"
+        }
+      ],
+      "surfaces": [
+        "surface:a08742c7230409ec012a"
+      ]
+    },
+    {
+      "denied": false,
+      "key": "VERCEL_PROJECT_PRODUCTION_URL",
+      "provenance": [
+        {
+          "line": 4,
+          "path": "apps/web/src/config.ts",
+          "source": "process-env-reference"
+        }
+      ],
+      "surfaces": [
+        "surface:a08742c7230409ec012a"
+      ]
+    },
+    {
+      "denied": false,
+      "key": "VERCEL_URL",
+      "provenance": [
+        {
+          "line": 6,
+          "path": "apps/web/src/config.ts",
+          "source": "process-env-reference"
+        }
+      ],
+      "surfaces": [
+        "surface:a08742c7230409ec012a"
+      ]
+    }
+  ],
+  "kind": "baseline-attestation",
+  "planId": "plan:0c1ab065e0082a1fc669",
+  "reportId": "report:2f4891ae34c9f99ddac3",
+  "resultingRepositoryHash": "e5e889239017fe1fdf4299d731cad3e31df3f0d39ecab2ff2102707fb82f4994",
+  "schemaVersion": 2,
+  "sourceInventoryId": "inventory:210aa16d3438db447d52",
+  "sourceRepositoryHash": "84e6d14d516e7c8303e276a515eda8a3eb47e9d0512836e3440caaf5b0ffe976",
+  "surfaces": {
+    "env": {},
+    "projects": [
+      {
+        "alias": "primary",
+        "datasets": [
+          "production"
+        ],
+        "primary": true
+      }
+    ],
+    "schemaVersion": 1,
+    "surfaces": [
+      {
+        "audience": "seller",
+        "directory": "apps/studio",
+        "key": "studio",
+        "kind": "studio",
+        "mediaLibrary": true,
+        "primary": true,
+        "projectAlias": "primary",
+        "title": "studio",
+        "workspaces": [
+          {
+            "basePath": "/",
+            "dataset": "production",
+            "name": "default"
+          }
+        ]
+      },
+      {
+        "audience": "seller",
+        "directory": "apps/web",
+        "key": "web",
+        "kind": "frontend",
+        "primary": true,
+        "projectAlias": "primary",
+        "title": "web"
+      }
+    ],
+    "workflows": []
+  }
+}

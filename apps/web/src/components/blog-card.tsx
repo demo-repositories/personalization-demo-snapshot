@@ -1,15 +1,13 @@
-import Link from "next/link";
+import Link from 'next/link';
 
-import type { QueryBlogIndexPageDataResult } from "@/lib/sanity/sanity.types";
+import type { QueryBlogIndexPageDataResult } from '@/lib/sanity/sanity.types';
 
-import { SanityImage } from "./sanity-image";
+import { SanityImage } from './sanity-image';
 
-type Blog = NonNullable<
-  NonNullable<QueryBlogIndexPageDataResult>["blogs"]
->[number];
+type Blog = NonNullable<NonNullable<QueryBlogIndexPageDataResult>['blogs']>[number];
 
 interface BlogImageProps {
-  image: Blog["image"];
+  image: Blog['image'];
   title?: string | null;
 }
 
@@ -21,14 +19,14 @@ function BlogImage({ image, title }: BlogImageProps) {
       asset={image}
       width={800}
       height={400}
-      alt={title ?? "Blog post image"}
+      alt={title ?? 'Blog post image'}
       className="aspect-[16/9] w-full rounded-2xl bg-gray-100 object-cover sm:aspect-[2/1] lg:aspect-[3/2]"
     />
   );
 }
 
 interface AuthorImageProps {
-  author: Blog["authors"];
+  author: Blog['authors'];
 }
 
 function AuthorImage({ author }: AuthorImageProps) {
@@ -39,14 +37,14 @@ function AuthorImage({ author }: AuthorImageProps) {
       asset={author.image}
       width={40}
       height={40}
-      alt={author.name ?? "Author image"}
+      alt={author.name ?? 'Author image'}
       className="size-8 flex-none rounded-full bg-gray-50"
     />
   );
 }
 
 interface BlogAuthorProps {
-  author: Blog["authors"];
+  author: Blog['authors'];
 }
 
 export function BlogAuthor({ author }: BlogAuthorProps) {
@@ -67,14 +65,14 @@ interface BlogCardProps {
 function BlogMeta({ publishedAt }: { publishedAt: string | null }) {
   return (
     <div className="flex items-center gap-x-4 text-xs my-4">
-      <time dateTime={publishedAt ?? ""} className="text-muted-foreground">
+      <time dateTime={publishedAt ?? ''} className="text-muted-foreground">
         {publishedAt
-          ? new Date(publishedAt).toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
+          ? new Date(publishedAt).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric',
             })
-          : ""}
+          : ''}
       </time>
     </div>
   );
@@ -91,27 +89,25 @@ function BlogContent({
   description: string | null;
   isFeatured?: boolean;
 }) {
-  const HeadingTag = isFeatured ? "h2" : "h3";
+  const HeadingTag = isFeatured ? 'h2' : 'h3';
   const headingClasses = isFeatured
-    ? "mt-3 text-3xl font-semibold leading-tight"
-    : "mt-3 text-lg font-semibold leading-6";
+    ? 'mt-3 text-3xl font-semibold leading-tight'
+    : 'mt-3 text-lg font-semibold leading-6';
 
   return (
     <div className="group relative">
       <HeadingTag className={headingClasses}>
-        <Link href={slug ?? "#"}>
+        <Link href={slug ?? '#'}>
           <span className="absolute inset-0" />
           {title}
         </Link>
       </HeadingTag>
-      <p className="mt-5 text-sm leading-6 text-muted-foreground">
-        {description}
-      </p>
+      <p className="mt-5 text-sm leading-6 text-muted-foreground">{description}</p>
     </div>
   );
 }
 
-function AuthorSection({ authors }: { authors: Blog["authors"] }) {
+function AuthorSection({ authors }: { authors: Blog['authors'] }) {
   if (!authors) return null;
 
   return (
@@ -136,12 +132,7 @@ export function FeaturedBlogCard({ blog }: BlogCardProps) {
       <BlogImage image={image} title={title} />
       <div className="space-y-6">
         <BlogMeta publishedAt={publishedAt} />
-        <BlogContent
-          title={title}
-          slug={slug}
-          description={description}
-          isFeatured
-        />
+        <BlogContent title={title} slug={slug} description={description} isFeatured />
         <AuthorSection authors={authors} />
       </div>
     </article>
@@ -190,9 +181,7 @@ export function BlogHeader({
     <div className="mx-auto max-w-7xl px-6 lg:px-8">
       <div className="mx-auto max-w-2xl text-center">
         <h1 className="text-3xl font-bold sm:text-4xl">{title}</h1>
-        <p className="mt-4 text-lg leading-8 text-muted-foreground">
-          {description}
-        </p>
+        <p className="mt-4 text-lg leading-8 text-muted-foreground">{description}</p>
       </div>
     </div>
   );

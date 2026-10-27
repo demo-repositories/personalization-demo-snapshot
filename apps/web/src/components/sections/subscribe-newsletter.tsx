@@ -1,13 +1,13 @@
-"use client";
-import { Button } from "@workspace/ui/components/button";
-import { ChevronRight, LoaderCircle } from "lucide-react";
-import Form from "next/form";
-import { useFormStatus } from "react-dom";
+'use client';
+import { Button } from '@workspace/ui/components/button';
+import { ChevronRight, LoaderCircle } from 'lucide-react';
+import Form from 'next/form';
+import { useFormStatus } from 'react-dom';
 
-import { newsletterSubmission } from "@/action/newsletter-submission";
-import type { PagebuilderType } from "@/types";
+import { newsletterSubmission } from '@/action/newsletter-submission';
+import type { PagebuilderType } from '@/types';
 
-import { RichText } from "../richtext";
+import { RichText } from '../richtext';
 
 // const InteractiveGridPattern = dynamic(
 //   () =>
@@ -19,7 +19,7 @@ import { RichText } from "../richtext";
 //   },
 // );
 
-type SubscribeNewsletterProps = PagebuilderType<"subscribeNewsletter">;
+type SubscribeNewsletterProps = PagebuilderType<'subscribeNewsletter'>;
 export default function SubscribeNewsletterButton() {
   const { pending } = useFormStatus();
   return (
@@ -28,7 +28,7 @@ export default function SubscribeNewsletterButton() {
       type="submit"
       disabled={pending}
       className="size-8 aspect-square bg-zinc-200 hover:bg-zinc-300 dark:bg-zinc-800 dark:hover:bg-zinc-700"
-      aria-label={pending ? "Subscribing..." : "Subscribe to newsletter"}
+      aria-label={pending ? 'Subscribing...' : 'Subscribe to newsletter'}
     >
       <span className="flex items-center justify-center gap-2">
         {pending ? (
@@ -51,11 +51,7 @@ export default function SubscribeNewsletterButton() {
   );
 }
 
-export function SubscribeNewsletter({
-  title,
-  subTitle,
-  helperText,
-}: SubscribeNewsletterProps) {
+export function SubscribeNewsletter({ title, subTitle, helperText }: SubscribeNewsletterProps) {
   return (
     <section id="subscribe" className="px-4 py-8 sm:py-12 md:py-16">
       <div className="relative container mx-auto px-4 md:px-8 py-8 sm:py-16 md:py-24 lg:py-32 bg-gray-50 dark:bg-zinc-900 rounded-3xl overflow-hidden">

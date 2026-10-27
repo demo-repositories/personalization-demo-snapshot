@@ -1,21 +1,10 @@
-import {
-  CopyIcon,
-  EditIcon,
-  FolderIcon,
-  WarningOutlineIcon,
-} from "@sanity/icons";
-import {
-  Badge,
-  Box,
-  Button,
-  Card,
-  Flex,
-  Stack,
-  Text,
-  TextInput,
-} from "@sanity/ui";
-import type { FocusEvent, FormEvent, MouseEvent } from "react";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { CopyIcon } from '@sanity/icons/Copy';
+import { EditIcon } from '@sanity/icons/Edit';
+import { FolderIcon } from '@sanity/icons/Folder';
+import { WarningOutlineIcon } from '@sanity/icons/WarningOutline';
+import { Badge, Box, Button, Card, Flex, Stack, Text, TextInput } from '@sanity/ui';
+import type { FocusEvent, FormEvent, MouseEvent } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import {
   getPublishedId,
   type ObjectFieldProps,
@@ -25,11 +14,11 @@ import {
   unset,
   useFormValue,
   useValidationStatus,
-} from "sanity";
-import slugify from "slugify";
-import { styled } from "styled-components";
+} from 'sanity';
+import slugify from 'slugify';
+import { styled } from 'styled-components';
 
-import { getDocumentPath, stringToPathname } from "../utils/helper";
+import { getDocumentPath, stringToPathname } from '../utils/helper';
 
 const presentationOriginUrl = process.env.SANITY_STUDIO_PRESENTATION_URL;
 
@@ -79,9 +68,7 @@ export function PathnameFieldComponent(props: ObjectFieldProps<SlugValue>) {
   const slugValidationError = useMemo(
     () =>
       validation.validation.find(
-        (v) =>
-          (v?.path.includes("current") || v?.path.includes("slug")) &&
-          v.message,
+        (v) => (v?.path.includes('current') || v?.path.includes('slug')) && v.message,
       ),
     [validation.validation],
   );
@@ -91,10 +78,7 @@ export function PathnameFieldComponent(props: ObjectFieldProps<SlugValue>) {
     description,
   } = props;
 
-  const segments = useMemo(
-    () => value?.current?.split("/").filter(Boolean) || [],
-    [value],
-  );
+  const segments = useMemo(() => value?.current?.split('/').filter(Boolean) || [], [value]);
   const [folderLocked, setFolderLocked] = useState(segments.length > 1);
 
   const fullPathInputRef = useRef<HTMLInputElement>(null);
@@ -102,14 +86,12 @@ export function PathnameFieldComponent(props: ObjectFieldProps<SlugValue>) {
 
   const handleChange = useCallback(
     (value?: string) => {
-      const finalValue = value
-        ? stringToPathname(value, { allowTrailingSlash: true })
-        : undefined;
+      const finalValue = value ? stringToPathname(value, { allowTrailingSlash: true }) : undefined;
       onChange(
-        typeof value === "string"
+        typeof value === 'string'
           ? set({
               current: finalValue,
-              _type: "slug",
+              _type: 'slug',
             })
           : unset(),
       );
@@ -132,7 +114,7 @@ export function PathnameFieldComponent(props: ObjectFieldProps<SlugValue>) {
           remove: /[^a-zA-Z0-9 ]/g,
         });
       }
-      handleChange(newSegments.join("/"));
+      handleChange(newSegments.join('/'));
     }
   }, [document?.title, handleChange, segments]);
 
@@ -143,7 +125,7 @@ export function PathnameFieldComponent(props: ObjectFieldProps<SlugValue>) {
         lower: true,
         remove: /[^a-zA-Z0-9 ]/g,
       });
-      handleChange(newSegments.join("/"));
+      handleChange(newSegments.join('/'));
     },
     [segments, handleChange],
   );
@@ -178,7 +160,7 @@ export function PathnameFieldComponent(props: ObjectFieldProps<SlugValue>) {
   const pathInput = useMemo(() => {
     if (folderLocked && segments.length > 1) {
       return (
-        <Stack space={2} width="100%" style={{ flex: 1 }}>
+        <Stack gap={2} width="100%" style={{ flex: 1 }}>
           <Flex gap={2} wrap="wrap">
             {segments.slice(0, -1).map((segment) => (
               <Flex key={segment} gap={1} align="center">
@@ -199,10 +181,8 @@ export function PathnameFieldComponent(props: ObjectFieldProps<SlugValue>) {
               <Box flex={1} width="100%">
                 <TextInput
                   width="100%"
-                  value={segments[segments.length - 1] || ""}
-                  onChange={(e) =>
-                    updateSegment(segments.length - 1, e.currentTarget.value)
-                  }
+                  value={segments[segments.length - 1] || ''}
+                  onChange={(e) => updateSegment(segments.length - 1, e.currentTarget.value)}
                   ref={pathSegmentInputRef}
                   onBlur={handleBlur}
                   disabled={readOnly}
@@ -227,15 +207,15 @@ export function PathnameFieldComponent(props: ObjectFieldProps<SlugValue>) {
     }
 
     return (
-      <Stack space={2} style={{ flex: 1, width: "100%" }}>
+      <Stack gap={2} style={{ flex: 1, width: '100%' }}>
         <Box width="100%">
           <TextInput
-            value={value?.current || ""}
+            value={value?.current || ''}
             onChange={updateFullPath}
             ref={fullPathInputRef}
             onBlur={handleBlur}
             disabled={readOnly}
-            style={{ width: "100%" }}
+            style={{ width: '100%' }}
           />
         </Box>
       </Stack>
@@ -252,34 +232,32 @@ export function PathnameFieldComponent(props: ObjectFieldProps<SlugValue>) {
   ]);
 
   return (
-    <Stack space={3}>
-      <Stack space={2} flex={1}>
+    <Stack gap={3}>
+      <Stack gap={2} flex={1}>
         <Text size={1} weight="semibold">
           {title}
         </Text>
         {description && <Text size={1}>{description}</Text>}
       </Stack>
 
-      {typeof value?.current === "string" && (
+      {typeof value?.current === 'string' && (
         <Flex direction="column" gap={2}>
           <Flex align="center">
             <p
               style={{
-                textOverflow: "ellipsis",
+                textOverflow: 'ellipsis',
                 margin: 0,
-                overflow: "hidden",
-                whiteSpace: "nowrap",
-                color: "var(--card-muted-fg-color)",
+                overflow: 'hidden',
+                whiteSpace: 'nowrap',
+                color: 'var(--card-muted-fg-color)',
               }}
             >
-              {`${presentationOriginUrl ?? ""}${localizedPathname}`}
+              {`${presentationOriginUrl ?? ''}${localizedPathname}`}
             </p>
             <CopyButton
               icon={CopyIcon}
               onClick={() =>
-                navigator.clipboard.writeText(
-                  `${presentationOriginUrl ?? ""}${localizedPathname}`,
-                )
+                navigator.clipboard.writeText(`${presentationOriginUrl ?? ''}${localizedPathname}`)
               }
               title="Copy link"
               mode="bleed"
@@ -313,7 +291,7 @@ export function PathnameFieldComponent(props: ObjectFieldProps<SlugValue>) {
           tone="critical"
           padding={4}
           style={{
-            borderRadius: "var(--card-radius)",
+            borderRadius: 'var(--card-radius)',
           }}
         >
           <Flex gap={4} align="center">

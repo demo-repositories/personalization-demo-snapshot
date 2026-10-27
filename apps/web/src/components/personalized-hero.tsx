@@ -3,13 +3,13 @@
  * Demonstrates how to use component-level personalization
  */
 
-import React from "react";
-import { 
-  useHeroPersonalization, 
-  ComponentPersonalization, 
-  HeroContent 
-} from "@/lib/component-personalization";
-import { useSegmentPreview } from "@/hooks/use-segment-preview";
+import React from 'react';
+import {
+  useHeroPersonalization,
+  ComponentPersonalization,
+  HeroContent,
+} from '@/lib/component-personalization';
+import { useSegmentPreview } from '@/hooks/use-segment-preview';
 
 interface PersonalizedHeroProps {
   // Standard hero content (used when personalization is disabled)
@@ -18,10 +18,10 @@ interface PersonalizedHeroProps {
   richText?: any;
   image?: any;
   buttons?: any[];
-  
+
   // Personalization data
   personalization?: ComponentPersonalization<HeroContent>;
-  
+
   // Preview mode for Sanity Studio
   previewSegment?: string;
 }
@@ -45,11 +45,11 @@ export function PersonalizedHero({
   };
 
   const { isPreviewMode, previewSegmentId } = useSegmentPreview();
-  
+
   const { content, isPersonalized, matchedSegment } = useHeroPersonalization(
     personalization || null,
     fallbackContent,
-    previewSegment
+    previewSegment,
   );
 
   // Use personalized content if available, otherwise use fallback
@@ -74,26 +74,16 @@ export function PersonalizedHero({
           </div>
         </div>
       )}
-      
+
       {/* Debug info - remove in production */}
-      {process.env.NODE_ENV === "development" && isPersonalized && (
-        <div className="bg-blue-100 p-2 text-xs">
-          📊 Personalized for: {matchedSegment?.name}
-        </div>
+      {process.env.NODE_ENV === 'development' && isPersonalized && (
+        <div className="bg-blue-100 p-2 text-xs">📊 Personalized for: {matchedSegment?.name}</div>
       )}
-      
-      {finalContent.badge && (
-        <div className="hero-badge">
-          {finalContent.badge}
-        </div>
-      )}
-      
-      {finalContent.title && (
-        <h1 className="hero-title">
-          {finalContent.title}
-        </h1>
-      )}
-      
+
+      {finalContent.badge && <div className="hero-badge">{finalContent.badge}</div>}
+
+      {finalContent.title && <h1 className="hero-title">{finalContent.title}</h1>}
+
       {finalContent.richText && (
         <div className="hero-content">
           {/* Render your rich text here */}
@@ -101,18 +91,18 @@ export function PersonalizedHero({
           <div dangerouslySetInnerHTML={{ __html: finalContent.richText }} />
         </div>
       )}
-      
+
       {finalContent.image && (
         <div className="hero-image">
           {/* Render your image here */}
           {/* This would typically use a SanityImage component */}
-          <img 
-            src={finalContent.image.asset?.url} 
+          <img
+            src={finalContent.image.asset?.url}
             alt={finalContent.image.alt || finalContent.title}
           />
         </div>
       )}
-      
+
       {finalContent.buttons && finalContent.buttons.length > 0 && (
         <div className="hero-buttons">
           {finalContent.buttons.map((button, index) => (
@@ -120,8 +110,8 @@ export function PersonalizedHero({
               key={index}
               href={button.url}
               className="hero-button"
-              target={button.external ? "_blank" : undefined}
-              rel={button.external ? "noopener noreferrer" : undefined}
+              target={button.external ? '_blank' : undefined}
+              rel={button.external ? 'noopener noreferrer' : undefined}
             >
               {button.text}
             </a>
@@ -176,4 +166,4 @@ export default function HomePage({ hero }) {
     />
   );
 }
-*/ 
+*/

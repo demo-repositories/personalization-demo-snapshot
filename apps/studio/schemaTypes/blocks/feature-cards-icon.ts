@@ -1,32 +1,32 @@
-import { LayoutGrid } from "lucide-react";
-import { defineField } from "sanity";
-import { defineType } from "sanity";
-import { preview } from "sanity-plugin-icon-picker";
+import { LayoutGrid } from 'lucide-react';
+import { defineField } from 'sanity';
+import { defineType } from 'sanity';
+import { preview } from 'sanity-plugin-icon-picker';
 
-import { iconField } from "../common";
-import { customRichText } from "../definitions/rich-text";
-import { GROUPS } from "../../utils/constant";
+import { iconField } from '../common';
+import { customRichText } from '../definitions/rich-text';
+import { GROUPS } from '../../utils/constant';
 
 const featureCardIcon = defineField({
-  name: "featureCardIcon",
-  type: "object",
+  name: 'featureCardIcon',
+  type: 'object',
   fields: [
     iconField,
     defineField({
-      name: "title",
-      type: "string",
-      description: "The heading text for this feature card",
+      name: 'title',
+      type: 'string',
+      description: 'The heading text for this feature card',
     }),
-    customRichText(["block"]),
+    customRichText(['block']),
   ],
   preview: {
     select: {
-      title: "title",
-      icon: "icon",
+      title: 'title',
+      icon: 'icon',
     },
     prepare: ({ title, icon }) => {
       return {
-        title: `${title ?? "Untitled"}`,
+        title: `${title ?? 'Untitled'}`,
         media: icon ? preview(icon) : null,
       };
     },
@@ -34,38 +34,37 @@ const featureCardIcon = defineField({
 });
 
 export const featureCardsIcon = defineType({
-  name: "featureCardsIcon",
-  type: "object",
+  name: 'featureCardsIcon',
+  type: 'object',
   icon: LayoutGrid,
   groups: GROUPS,
-  description:
-    "A grid of feature cards, each with an icon, title and description",
+  description: 'A grid of feature cards, each with an icon, title and description',
   fields: [
     defineField({
-      name: "eyebrow",
-      type: "string",
-      description: "Optional text that appears above the main title",
+      name: 'eyebrow',
+      type: 'string',
+      description: 'Optional text that appears above the main title',
     }),
     defineField({
-      name: "title",
-      type: "string",
-      description: "The main heading for this feature section",
+      name: 'title',
+      type: 'string',
+      description: 'The main heading for this feature section',
     }),
-    customRichText(["block"]),
+    customRichText(['block']),
     defineField({
-      name: "cards",
-      type: "array",
-      description: "The individual feature cards to display in the grid",
+      name: 'cards',
+      type: 'array',
+      description: 'The individual feature cards to display in the grid',
       of: [featureCardIcon],
     }),
   ],
   preview: {
     select: {
-      title: "title",
+      title: 'title',
     },
     prepare: ({ title }) => ({
       title,
-      subtitle: "Feature Cards with Icon",
+      subtitle: 'Feature Cards with Icon',
     }),
   },
 });

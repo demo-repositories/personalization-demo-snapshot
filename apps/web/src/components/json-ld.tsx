@@ -10,16 +10,16 @@ import type {
   WebPage,
   WebSite,
   WithContext,
-} from "schema-dts";
+} from 'schema-dts';
 
-import { getBaseUrl } from "@/config";
-import { client, urlFor } from "@/lib/sanity/client";
-import { querySettingsData } from "@/lib/sanity/query";
+import { getBaseUrl } from '@/config';
+import { client, urlFor } from '@/lib/sanity/client';
+import { querySettingsData } from '@/lib/sanity/query';
 import type {
   QueryBlogSlugPageDataResult,
   QuerySettingsDataResult,
-} from "@/lib/sanity/sanity.types";
-import { handleErrors } from "@/utils";
+} from '@/lib/sanity/sanity.types';
+import { handleErrors } from '@/utils';
 
 interface RichTextChild {
   _type: string;
@@ -43,21 +43,19 @@ interface FlexibleFaq {
 }
 
 // Utility function to safely extract plain text from rich text blocks
-function extractPlainTextFromRichText(
-  richText: RichTextBlock[] | null | undefined,
-): string {
-  if (!Array.isArray(richText)) return "";
+function extractPlainTextFromRichText(richText: RichTextBlock[] | null | undefined): string {
+  if (!Array.isArray(richText)) return '';
 
   return richText
-    .filter((block) => block._type === "block" && Array.isArray(block.children))
+    .filter((block) => block._type === 'block' && Array.isArray(block.children))
     .map(
       (block) =>
         block.children
-          ?.filter((child) => child._type === "span" && Boolean(child.text))
+          ?.filter((child) => child._type === 'span' && Boolean(child.text))
           .map((child) => child.text)
-          .join("") ?? "",
+          .join('') ?? '',
     )
-    .join(" ")
+    .join(' ')
     .trim();
 }
 
@@ -83,18 +81,16 @@ export function FaqJsonLd({ faqs }: FaqJsonLdProps) {
   if (!validFaqs.length) return null;
 
   const faqJsonLd: WithContext<FAQPage> = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: validFaqs.map(
-      (faq): Question => ({
-        "@type": "Question",
-        name: faq.title,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: extractPlainTextFromRichText(faq.richText),
-        } as Answer,
-      }),
-    ),
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: validFaqs.map((faq): Question => ({
+      '@type': 'Question',
+      name: faq.title,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: extractPlainTextFromRichText(faq.richText),
+      } as Answer,
+    })),
   };
 
   return <JsonLdScript data={faqJsonLd} id="faq-json-ld" />;
@@ -107,7 +103,7 @@ function buildSafeImageUrl(image?: { asset?: { _ref: string } }) {
   return urlFor({ ...image, _id: image.asset?._ref })
     .size(1920, 1080)
     .dpr(2)
-    .auto("format")
+    .auto('format')
     .quality(80)
     .url();
 }
@@ -125,20 +121,20 @@ export function ArticleJsonLd({ article, settings }: ArticleJsonLdProps) {
   const imageUrl = buildSafeImageUrl(article.image);
 
   const articleJsonLd: WithContext<Article> = {
-    "@context": "https://schema.org",
-    "@type": "Article",
+    '@context': 'https://schema.org',
+    '@type': 'Article',
     headline: article.title,
     description: article.description || undefined,
     image: imageUrl ? [imageUrl] : undefined,
     author: article.authors
       ? [
           {
-            "@type": "Person",
+            '@type': 'Person',
             name: article.authors.name,
             url: `${baseUrl}`,
             image: article.authors.image
               ? ({
-                  "@type": "ImageObject",
+                  '@type': 'ImageObject',
                   url: buildSafeImageUrl(article.authors.image),
                 } as ImageObject)
               : undefined,
@@ -146,11 +142,11 @@ export function ArticleJsonLd({ article, settings }: ArticleJsonLdProps) {
         ]
       : [],
     publisher: {
-      "@type": "Organization",
-      name: settings?.siteTitle || "Website",
+      '@type': 'Organization',
+      name: settings?.siteTitle || 'Website',
       logo: settings?.logo
         ? ({
-            "@type": "ImageObject",
+            '@type': 'ImageObject',
             url: settings.logo,
           } as ImageObject)
         : undefined,
@@ -158,19 +154,15 @@ export function ArticleJsonLd({ article, settings }: ArticleJsonLdProps) {
     datePublished: new Date(
       article.publishedAt || article._createdAt || new Date().toISOString(),
     ).toISOString(),
-    dateModified: new Date(
-      article._updatedAt || new Date().toISOString(),
-    ).toISOString(),
+    dateModified: new Date(article._updatedAt || new Date().toISOString()).toISOString(),
     url: articleUrl,
     mainEntityOfPage: {
-      "@type": "WebPage",
-      "@id": articleUrl,
+      '@type': 'WebPage',
+      '@id': articleUrl,
     } as WebPage,
   };
 
-  return (
-    <JsonLdScript data={articleJsonLd} id={`article-json-ld-${article.slug}`} />
-  );
+  return <JsonLdScript data={articleJsonLd} id={`article-json-ld-${article.slug}`} />;
 }
 
 // Organization JSON-LD Component
@@ -188,22 +180,22 @@ export function OrganizationJsonLd({ settings }: OrganizationJsonLdProps) {
     : undefined;
 
   const organizationJsonLd: WithContext<Organization> = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
     name: settings.siteTitle,
     description: settings.siteDescription || undefined,
     url: baseUrl,
     logo: settings.logo
       ? ({
-          "@type": "ImageObject",
+          '@type': 'ImageObject',
           url: settings.logo,
         } as ImageObject)
       : undefined,
     contactPoint: settings.contactEmail
       ? ({
-          "@type": "ContactPoint",
+          '@type': 'ContactPoint',
           email: settings.contactEmail,
-          contactType: "customer service",
+          contactType: 'customer service',
         } as ContactPoint)
       : undefined,
     sameAs: socialLinks?.length ? socialLinks : undefined,
@@ -223,13 +215,13 @@ export function WebSiteJsonLd({ settings }: WebSiteJsonLdProps) {
   const baseUrl = getBaseUrl();
 
   const websiteJsonLd: WithContext<WebSite> = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
     name: settings.siteTitle,
     description: settings.siteDescription || undefined,
     url: baseUrl,
     publisher: {
-      "@type": "Organization",
+      '@type': 'Organization',
       name: settings.siteTitle,
     } as Organization,
   };

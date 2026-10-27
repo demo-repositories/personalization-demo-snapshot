@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from 'react';
 
 interface SegmentPreviewContextType {
   previewSegmentId: string | null;
@@ -18,4 +18,4 @@ export function useSegmentPreview() {
   return context;
 }
 
-export { SegmentPreviewContext }; 
+export { SegmentPreviewContext };
